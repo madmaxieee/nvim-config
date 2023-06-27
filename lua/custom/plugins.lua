@@ -84,5 +84,12 @@ local plugins = {
     end,
   },
   -- end Copilot
+  {
+    "Shatur/neovim-session-manager",
+    lazy = false,
+    config = function()
+      require "custom.configs.session-manager"
+    end,
+  },
 }
 return plugins

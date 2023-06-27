@@ -2,7 +2,7 @@
 local M = {}
 
 M.ui = {
-  theme = 'tokyodark',
+  theme = 'tokyonight',
 }
 
 M.plugins = 'custom.plugins'

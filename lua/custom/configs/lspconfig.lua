@@ -10,6 +10,7 @@ local servers = {
   "pyright",
   "tsserver",
   "tailwindcss",
+  "cmake",
 }
 
 for _, lsp in ipairs(servers) do

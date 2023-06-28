@@ -16,6 +16,7 @@ local sources = {
   lint.mypy,
   lint.fish,
   lint.eslint_d,
+  lint.cpplint,
 
   actions.eslint_d,
 }

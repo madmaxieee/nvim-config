@@ -10,7 +10,9 @@ mappings.custom = {
     ["<C-u>"] = { "<C-u>zz", "go up half screen" },
     ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
 
-    ["<leader>cp"] = { "<cmd> Copilot panel open <CR>", "Open copilot panel" },
+    -- ["<A-l>"] = { "<cmd> Copilot suggestion accept <CR>", "Accept copilot suggestion" },
+    -- ["<A-]>"] = { "<cmd> Copilot suggestion next <CR>", "Next copilot suggestion" },
+    -- ["<A-[>"] = { "<cmd> Copilot suggestion prev <CR>", "Previous copilot suggestion" },
   },
 }
 

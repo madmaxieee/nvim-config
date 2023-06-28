@@ -1,7 +1,7 @@
 local opts = {
   panel = {
-    enabled = true,
-    auto_refresh = true,
+    enabled = false,
+    auto_refresh = false,
     layout = {
       position = "bottom", -- | top | left | right
       ratio = 0.4,

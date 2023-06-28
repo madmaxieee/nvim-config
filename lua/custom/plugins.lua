@@ -22,18 +22,14 @@ local plugins = {
   },
   {
     "williamboman/mason.nvim",
-    opts = function()
-      require "custom.configs.mason"
-    end,
+    opts = require "custom.configs.mason",
   },
   -- Copilot
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     build = ":Copilot auth",
-    opts = function()
-      require "custom.configs.copilot"
-    end,
+    opts = require "custom.configs.copilot",
   },
   {
     "nvim-lualine/lualine.nvim",
@@ -90,6 +86,10 @@ local plugins = {
     config = function()
       require "custom.configs.session-manager"
     end,
+  },
+  {
+    "stevearc/dressing.nvim",
+    opts = {},
   },
 }
 return plugins

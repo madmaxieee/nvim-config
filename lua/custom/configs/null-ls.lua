@@ -14,6 +14,8 @@ local sources = {
   lint.shellcheck,
   lint.ruff,
   lint.mypy,
+  lint.fish,
+  lint.eslint_d,
 
   actions.eslint_d,
 }

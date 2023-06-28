@@ -8,6 +8,8 @@ local servers = {
   "cssls",
   "clangd",
   "pyright",
+  "tsserver",
+  "tailwindcss",
 }
 
 for _, lsp in ipairs(servers) do

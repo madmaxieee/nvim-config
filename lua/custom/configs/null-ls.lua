@@ -5,7 +5,7 @@ local lint = null_ls.builtins.diagnostics
 local actions = null_ls.builtins.code_actions
 
 local sources = {
-  formatting.prettier,
+  formatting.prettierd,
   formatting.stylua,
   formatting.clang_format,
   formatting.isort,
@@ -15,7 +15,7 @@ local sources = {
   lint.ruff,
   lint.mypy,
 
-  actions.eslint,
+  actions.eslint_d,
 }
 
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})

@@ -1,10 +1,8 @@
 local plugins = {
   {
-    "ggandor/leap.nvim",
-    -- leap.nvim lazy loads itself
-    lazy = false,
-    config = function()
-      require("leap").add_default_mappings(true)
+    "nvim-treesitter/nvim-treesitter",
+    opts = function()
+      return require "custom.configs.treesitter"
     end,
   },
   {
@@ -22,14 +20,26 @@ local plugins = {
   },
   {
     "williamboman/mason.nvim",
-    opts = require "custom.configs.mason",
+    opts = function()
+      return require "custom.configs.mason"
+    end,
   },
-  -- Copilot
+  -- extra plugins
+  {
+    "ggandor/leap.nvim",
+    -- leap.nvim lazy loads itself
+    lazy = false,
+    config = function()
+      require("leap").add_default_mappings(true)
+    end,
+  },
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     build = ":Copilot auth",
-    opts = require "custom.configs.copilot",
+    opts = function()
+      return require "custom.configs.copilot"
+    end,
   },
   {
     "nvim-lualine/lualine.nvim",
@@ -79,7 +89,6 @@ local plugins = {
       end)
     end,
   },
-  -- end Copilot
   {
     "Shatur/neovim-session-manager",
     lazy = false,

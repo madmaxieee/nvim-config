@@ -19,6 +19,7 @@ local opts = {
     "json-lsp",
     "luaformatter",
     "mypy",
+    "markdownlint",
     "nginx-language-server",
     "prettier",
     "prettierd",

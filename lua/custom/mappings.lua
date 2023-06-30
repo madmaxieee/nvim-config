@@ -5,7 +5,19 @@ mappings.disabled = {
 }
 
 mappings.custom = {
+  i = {
+    ["<A-j>"] = { "<cmd> m+ <CR>", "Move current line down" },
+    ["<A-k>"] = { "<cmd> m-- <CR>", "Move current line up" },
+    ["<A-down>"] = { "<cmd> m+ <CR>", "Move current line down" },
+    ["<A-up>"] = { "<cmd> m-- <CR>", "Move current line up" },
+  },
+
   n = {
+    ["<A-j>"] = { "<cmd> m+ <CR>", "Move current line down" },
+    ["<A-k>"] = { "<cmd> m-- <CR>", "Move current line up" },
+    ["<A-down>"] = { "<cmd> m+ <CR>", "Move current line down" },
+    ["<A-up>"] = { "<cmd> m-- <CR>", "Move current line up" },
+
     ["<C-d>"] = { "<C-d>zz", "Go down half screen" },
     ["<C-u>"] = { "<C-u>zz", "Go up half screen" },
     ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },

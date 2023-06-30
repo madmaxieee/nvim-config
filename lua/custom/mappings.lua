@@ -22,6 +22,17 @@ mappings.custom = {
       "Open URL or file",
     },
 
+    ["<leader>tc"] = {
+      function()
+        if vim.o.colorcolumn == "" then
+          vim.opt.colorcolumn = "80"
+        else
+          vim.opt.colorcolumn = ""
+        end
+      end,
+      "Toggle colorcolumn",
+    },
+
     -- Copilot related mappings are managed by the plugin itself
     -- ["<A-l>"] = { "<cmd> Copilot suggestion accept <CR>", "Accept copilot suggestion" },
     -- ["<A-]>"] = { "<cmd> Copilot suggestion next <CR>", "Next copilot suggestion" },

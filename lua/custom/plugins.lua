@@ -34,6 +34,14 @@ local plugins = {
     end,
   },
   {
+    "nvim-treesitter/nvim-treesitter-context",
+    config = function()
+      require("treesitter-context").setup {
+        multiline_threshold = 20, -- Maximum number of lines to collapse for a single context line
+      }
+    end,
+  },
+  {
     "zbirenbaum/copilot.lua",
     event = "InsertEnter",
     opts = function()

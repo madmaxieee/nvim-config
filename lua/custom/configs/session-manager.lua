@@ -15,15 +15,15 @@ vim.api.nvim_create_autocmd({ "User" }, {
   end,
 })
 
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-  group = augroup,
-  callback = function()
-    if vim.bo.filetype ~= "git" and not vim.bo.filetype ~= "gitcommit" and not vim.bo.filetype ~= "gitrebase" then
-      local tree_is_visible = require("nvim-tree.api").tree.is_visible()
-      require("session_manager").autosave_session()
-      if tree_is_visible then
-        require("nvim-tree.api").tree.toggle(false, true)
-      end
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "VimLeave" }, {
+--   group = augroup,
+--   callback = function()
+--     if vim.bo.filetype ~= "git" and not vim.bo.filetype ~= "gitcommit" and not vim.bo.filetype ~= "gitrebase" then
+--       local tree_is_visible = require("nvim-tree.api").tree.is_visible()
+--       require("session_manager").autosave_session()
+--       if tree_is_visible then
+--         require("nvim-tree.api").tree.toggle(false, true)
+--       end
+--     end
+--   end,
+-- })

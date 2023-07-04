@@ -35,7 +35,7 @@ local plugins = {
   },
   {
     "zbirenbaum/copilot.lua",
-    event = "UIEnter",
+    event = "InsertEnter",
     opts = function()
       return require "custom.configs.copilot"
     end,
@@ -97,6 +97,7 @@ local plugins = {
   },
   {
     "stevearc/dressing.nvim",
+    event = "VeryLazy",
     opts = {},
   },
 }

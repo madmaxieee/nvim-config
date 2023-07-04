@@ -22,6 +22,8 @@ mappings.custom = {
     ["<C-u>"] = { "<C-u>zz", "Go up half screen" },
     ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
 
+    ["<leader>s"] = { "<cmd> wa <CR>", "Save all buffers" },
+
     ["gx"] = {
       function()
         -- the original gx functionality is provided by netrw, which is hijacked by nvim-tree

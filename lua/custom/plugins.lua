@@ -5,6 +5,7 @@ local plugins = {
       return require "custom.configs.treesitter"
     end,
   },
+
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -18,12 +19,14 @@ local plugins = {
       require "custom.configs.lspconfig"
     end,
   },
+
   {
     "williamboman/mason.nvim",
     opts = function()
       return require "custom.configs.mason"
     end,
   },
+
   -- extra plugins
   {
     "ggandor/leap.nvim",
@@ -33,6 +36,7 @@ local plugins = {
       require("leap").add_default_mappings(true)
     end,
   },
+
   {
     "nvim-treesitter/nvim-treesitter-context",
     config = function()
@@ -41,6 +45,7 @@ local plugins = {
       }
     end,
   },
+
   {
     "zbirenbaum/copilot.lua",
     event = "InsertEnter",
@@ -48,6 +53,7 @@ local plugins = {
       return require "custom.configs.copilot"
     end,
   },
+
   {
     "nvim-lualine/lualine.nvim",
     optional = true,
@@ -80,6 +86,7 @@ local plugins = {
       })
     end,
   },
+
   {
     "zbirenbaum/copilot-cmp",
     dependencies = "copilot.lua",
@@ -96,6 +103,7 @@ local plugins = {
       end)
     end,
   },
+
   {
     "Shatur/neovim-session-manager",
     lazy = false,
@@ -103,10 +111,12 @@ local plugins = {
       require "custom.configs.session-manager"
     end,
   },
+
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
     opts = {},
   },
 }
+
 return plugins

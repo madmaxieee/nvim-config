@@ -23,6 +23,7 @@ mappings.custom = {
     ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
 
     ["<leader>s"] = { "<cmd> wa <CR>", "Save all buffers" },
+    ["<leader>y"] = { "<cmd> Telescope neoclip <CR>", "Search clipboard history" },
 
     ["gx"] = {
       function()

@@ -38,6 +38,58 @@ local plugins = {
   },
 
   {
+    "AckslD/nvim-neoclip.lua",
+    event = "VeryLazy",
+    requires = {
+      { "kkharji/sqlite.lua", module = "sqlite" },
+      { "nvim-telescope/telescope.nvim" },
+    },
+    config = function()
+      require("neoclip").setup {
+        keys = {
+          telescope = {
+            i = {
+              paste = "<cr>",
+              paste_behind = "<c-k>",
+              replay = "<c-q>", -- replay a macro
+              delete = "<c-d>", -- delete an entry
+              edit = "<c-e>", -- edit an entry
+            },
+            n = {
+              paste = "<cr>",
+              paste_behind = "P",
+              replay = "q",
+              delete = "d",
+              edit = "e",
+            },
+          },
+        },
+      }
+      require("telescope").load_extension "neoclip"
+    end,
+  },
+
+  {
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      keywords = {
+        FIX = {
+          icon = " ",
+          color = "error",
+          alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
+        },
+        TODO = { icon = " ", color = "info" },
+        HACK = { icon = " ", color = "warning" },
+        WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+        PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+        TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+      },
+    },
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter-context",
     config = function()
       require("treesitter-context").setup {

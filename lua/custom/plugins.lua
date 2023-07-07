@@ -36,6 +36,7 @@ local plugins = {
   --     require("leap").add_default_mappings(true)
   --   end,
   -- },
+
   {
     "folke/flash.nvim",
     event = "VeryLazy",

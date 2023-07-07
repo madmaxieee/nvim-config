@@ -10,6 +10,7 @@ local sources = {
   formatting.clang_format,
   formatting.isort,
   formatting.black,
+  formatting.fish_indent,
 
   lint.shellcheck,
   lint.ruff,
@@ -17,6 +18,7 @@ local sources = {
   lint.fish,
   lint.eslint_d,
   lint.cpplint,
+  lint.fish,
 
   actions.eslint_d,
 }

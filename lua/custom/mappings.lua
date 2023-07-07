@@ -17,12 +17,13 @@ mappings.custom = {
     ["<A-k>"] = { "<cmd> m-- <CR>", "Move current line up" },
     ["<A-down>"] = { "<cmd> m+ <CR>", "Move current line down" },
     ["<A-up>"] = { "<cmd> m-- <CR>", "Move current line up" },
-
-    ["<C-d>"] = { "<C-d>zz", "Go down half screen" },
-    ["<C-u>"] = { "<C-u>zz", "Go up half screen" },
-    ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
-
     ["<leader>s"] = { "<cmd> wa <CR>", "Save all buffers" },
+
+    ["<C-u>"] = { "<C-u>zz", "Go up half screen" },
+    ["<C-d>"] = { "<C-d>zz", "Go down half screen" },
+
+    ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    ["<leader>fs"] = { "<cmd> Telescope lsp_document_symbols <CR>", "Search document symbols" },
     ["<leader>y"] = { "<cmd> Telescope neoclip <CR>", "Search clipboard history" },
 
     ["gx"] = {

@@ -8,6 +8,7 @@ local servers = {
   "cssls",
   "clangd",
   "pyright",
+  "rust_analyzer",
   "tsserver",
   "tailwindcss",
   "cmake",

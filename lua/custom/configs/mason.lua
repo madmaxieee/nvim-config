@@ -25,6 +25,8 @@ local opts = {
     "prettierd",
     "pyright",
     "ruff",
+    "rustfmt ",
+    "rust-analyzer",
     "shellcheck",
     "stylua",
     "svelte-language-server",

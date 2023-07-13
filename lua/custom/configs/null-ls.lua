@@ -11,6 +11,7 @@ local sources = {
   formatting.isort,
   formatting.black,
   formatting.fish_indent,
+  formatting.rustfmt,
 
   lint.shellcheck,
   lint.ruff,

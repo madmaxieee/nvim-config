@@ -3,12 +3,12 @@ local capabilities = require("plugins.configs.lspconfig").capabilities
 
 ---@diagnostic disable-next-line: different-requires
 local lspconfig = require "lspconfig"
+
 local servers = {
   "html",
   "cssls",
   "clangd",
   "pyright",
-  "rust_analyzer",
   "tsserver",
   "tailwindcss",
   "cmake",
@@ -20,3 +20,24 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+
+require("rust-tools").setup {
+  server = {
+    on_attach = function(client, bufnr)
+      on_attach(client, bufnr)
+    end,
+    capabilities = capabilities,
+    settings = {
+      ["rust-analyzer"] = {
+        checkOnSave = {
+          command = "clippy",
+        },
+      },
+    },
+  },
+  tools = {
+    hover_actions = {
+      auto_focus = true,
+    },
+  },
+}

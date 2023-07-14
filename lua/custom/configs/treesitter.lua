@@ -7,6 +7,7 @@ local opts = {
 
     "javascript",
     "typescript",
+    "tsx",
     "html",
     "css",
 
@@ -24,6 +25,10 @@ local opts = {
     "cpp",
     "rust",
     "go",
+  },
+
+  autotag = {
+    enable = true,
   },
 }
 

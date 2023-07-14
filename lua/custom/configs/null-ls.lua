@@ -15,7 +15,6 @@ local sources = {
 
   lint.shellcheck,
   lint.ruff,
-  lint.mypy,
   lint.fish,
   lint.eslint_d,
   lint.cpplint,
@@ -26,7 +25,7 @@ local sources = {
 
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 null_ls.setup {
-  debug = true,
+  -- debug = true,
   sources = sources,
   -- you can reuse a shared lspconfig on_attach callback here
   on_attach = function(client, bufnr)

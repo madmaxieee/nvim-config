@@ -27,16 +27,6 @@ local plugins = {
     end,
   },
 
-  -- extra plugins
-  -- {
-  --   "ggandor/leap.nvim",
-  --   -- leap.nvim lazy loads itself
-  --   lazy = false,
-  --   config = function()
-  --     require("leap").add_default_mappings(true)
-  --   end,
-  -- },
-
   {
     "folke/flash.nvim",
     event = "VeryLazy",
@@ -119,6 +109,7 @@ local plugins = {
 
   {
     "folke/todo-comments.nvim",
+    event = "BufReadPre",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       keywords = {
@@ -139,11 +130,10 @@ local plugins = {
 
   {
     "nvim-treesitter/nvim-treesitter-context",
-    config = function()
-      require("treesitter-context").setup {
-        multiline_threshold = 20, -- Maximum number of lines to collapse for a single context line
-      }
-    end,
+    event = "BufReadPre",
+    opts = {
+      multiline_threshold = 20, -- Maximum number of lines to collapse for a single context line
+    },
   },
 
   {
@@ -215,6 +205,24 @@ local plugins = {
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
+    opts = {},
+  },
+
+  {
+    "simrat39/rust-tools.nvim",
+    ft = "rust",
+  },
+
+  {
+    "windwp/nvim-ts-autotag",
+    event = "VeryLazy",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+  },
+
+  {
+    "folke/trouble.nvim",
+    event = "VeryLazy",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {},
   },
 }

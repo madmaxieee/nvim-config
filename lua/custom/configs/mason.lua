@@ -7,6 +7,7 @@ local opts = {
     "clangd",
     "cmake-language-server",
     "cmakelang",
+    "codespell",
     "cpptools",
     "cspell",
     "css-lsp",

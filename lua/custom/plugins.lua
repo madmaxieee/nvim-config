@@ -225,6 +225,14 @@ local plugins = {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {},
   },
+
+  {
+    "edluffy/hologram.nvim",
+    ft = { "markdown" },
+    opts = {
+      auto_display = true,
+    },
+  },
 }
 
 return plugins

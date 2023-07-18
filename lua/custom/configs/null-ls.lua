@@ -12,6 +12,7 @@ local sources = {
   formatting.black,
   formatting.fish_indent,
   formatting.rustfmt,
+  formatting.cmake_format,
 
   lint.shellcheck,
   lint.ruff,
@@ -19,6 +20,7 @@ local sources = {
   lint.eslint_d,
   lint.cpplint,
   lint.fish,
+  lint.cmake_lint,
 
   actions.eslint_d,
 }

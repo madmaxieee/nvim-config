@@ -1,4 +1,13 @@
 local plugins = {
+  -- {
+  --   "nvim-telescope/telescope.nvim",
+  --   opts = {
+  --     defaults = {
+  --       layout_config = { horizontal = { prompt_position = "bottom" } },
+  --     },
+  --   },
+  -- },
+
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function()

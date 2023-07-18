@@ -21,7 +21,7 @@ local opts = {
     },
   },
   filetypes = {
-    markdown = false,
+    -- markdown = false,
     help = false,
     gitcommit = false,
     gitrebase = false,

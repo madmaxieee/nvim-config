@@ -1,12 +1,35 @@
 local plugins = {
-  -- {
-  --   "nvim-telescope/telescope.nvim",
-  --   opts = {
-  --     defaults = {
-  --       layout_config = { horizontal = { prompt_position = "bottom" } },
-  --     },
-  --   },
-  -- },
+  {
+    "nvim-tree/nvim-tree.lua",
+    opts = {
+      filters = {
+        custom = {
+          "node_modules",
+          ".git",
+        },
+      },
+      diagnostics = {
+        enable = false,
+        icons = {
+          hint = "",
+          info = "",
+          warning = "",
+          error = "",
+        },
+      },
+      git = {
+        timeout = 500,
+        enable = true,
+      },
+      renderer = {
+        icons = {
+          show = {
+            git = true,
+          },
+        },
+      },
+    },
+  },
 
   {
     "nvim-treesitter/nvim-treesitter",

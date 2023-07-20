@@ -49,6 +49,18 @@ mappings.custom = {
       "Toggle colorcolumn",
     },
 
+    ["zR"] = {
+      function()
+        require("ufo").openAllFolds()
+      end,
+      "Open all folds",
+    },
+    ["zM"] = {
+      function()
+        require("ufo").closeAllFolds()
+      end,
+    },
+
     -- Copilot related mappings are managed by the plugin itself
     -- ["<A-l>"] = { "<cmd> Copilot suggestion accept <CR>", "Accept copilot suggestion" },
     -- ["<A-]>"] = { "<cmd> Copilot suggestion next <CR>", "Next copilot suggestion" },

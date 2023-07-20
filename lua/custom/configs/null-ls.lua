@@ -18,7 +18,7 @@ local sources = {
   lint.ruff,
   lint.fish,
   lint.eslint_d,
-  lint.clang_check,
+  -- lint.clang_check,
   lint.fish,
   lint.cmake_lint,
 

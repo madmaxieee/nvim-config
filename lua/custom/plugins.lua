@@ -68,6 +68,7 @@ local plugins = {
       "luukvbaal/statuscol.nvim",
     },
     opts = {
+      ---@diagnostic disable-next-line: unused-local
       provider_selector = function(bufnr, filetype, buftype)
         return { "treesitter", "indent" }
       end,
@@ -90,6 +91,7 @@ local plugins = {
           { text = { "%s" }, click = "v:lua.ScSa" },
           { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
         },
+        ft_ignore = { "terminal", "NvimTree" },
       }
     end,
   },
@@ -145,9 +147,9 @@ local plugins = {
   {
     "AckslD/nvim-neoclip.lua",
     event = "VeryLazy",
-    requires = {
-      { "kkharji/sqlite.lua", module = "sqlite" },
-      { "nvim-telescope/telescope.nvim" },
+    dependencies = {
+      "kkharji/sqlite.lua",
+      "nvim-telescope/telescope.nvim",
     },
     config = function()
       require("neoclip").setup {
@@ -175,8 +177,18 @@ local plugins = {
   },
 
   {
+    "kkharji/sqlite.lua",
+  },
+
+  {
     "folke/todo-comments.nvim",
     event = "BufReadPre",
+    cmd = {
+      "TodoQuickFix",
+      "TodoLocList",
+      "TodoTrouble",
+      "TodoTelescope",
+    },
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       keywords = {
@@ -188,9 +200,33 @@ local plugins = {
         TODO = { icon = " ", color = "info" },
         HACK = { icon = " ", color = "warning" },
         WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-        PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+        PERF = { icon = "󰅒", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+        NOTE = { icon = "", color = "hint", alt = { "INFO" } },
         TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+      },
+      search = {
+        command = "rg",
+        args = {
+          "--color=never",
+          "--no-heading",
+          "--with-filename",
+          "--line-number",
+          "--column",
+        },
+        -- NOTE: can't get this to work
+        pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+      },
+    },
+  },
+
+  {
+    "NvChad/nvim-colorizer.lua",
+    opts = {
+      user_default_options = {
+        RGB = true, -- #RGB hex codes
+        RRGGBB = true, -- #RRGGBB hex codes
+        names = false,
+        tailwind = true,
       },
     },
   },
@@ -245,28 +281,14 @@ local plugins = {
   },
 
   {
-    "zbirenbaum/copilot-cmp",
-    dependencies = "copilot.lua",
-    opts = {},
-    config = function(_, opts)
-      local copilot_cmp = require "copilot_cmp"
-      copilot_cmp.setup(opts)
-      -- attach cmp source whenever copilot attaches
-      -- fixes lazy-loading issues with the copilot cmp source
-      require("lazyvim.util").on_attach(function(client)
-        if client.name == "copilot" then
-          copilot_cmp._on_insert_enter {}
-        end
-      end)
-    end,
-  },
-
-  {
-    "Shatur/neovim-session-manager",
-    lazy = false,
-    config = function()
-      require "custom.configs.session-manager"
-    end,
+    "folke/persistence.nvim",
+    event = "BufReadPre",
+    opts = {
+      dir = vim.fn.expand(vim.fn.stdpath "state" .. "/sessions/"), -- directory where session files are saved
+      options = { "buffers", "curdir", "tabpages", "winsize" }, -- sessionoptions used for saving
+      pre_save = nil, -- a function to call before saving the session
+    },
+    config = true,
   },
 
   {
@@ -283,7 +305,7 @@ local plugins = {
   {
     "windwp/nvim-ts-autotag",
     event = "VeryLazy",
-    dependencies = "nvim-treesitter/nvim-treesitter",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
 
   {

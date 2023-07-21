@@ -1,7 +1,9 @@
 local mappings = {}
 
 mappings.disabled = {
-  n = {},
+  n = {
+    "<leader>td",
+  },
 }
 
 mappings.custom = {
@@ -17,7 +19,8 @@ mappings.custom = {
     ["<A-k>"] = { "<cmd> m-- <CR>", "Move current line up" },
     ["<A-down>"] = { "<cmd> m+ <CR>", "Move current line down" },
     ["<A-up>"] = { "<cmd> m-- <CR>", "Move current line up" },
-    ["<leader>s"] = { "<cmd> wa <CR>", "Save all buffers" },
+
+    ["<leader><space>"] = { "<cmd> w <CR>", "Save file" },
 
     ["<C-u>"] = { "<C-u>zz", "Go up half screen" },
     ["<C-d>"] = { "<C-d>zz", "Go down half screen" },
@@ -61,10 +64,14 @@ mappings.custom = {
       end,
     },
 
-    -- Copilot related mappings are managed by the plugin itself
-    -- ["<A-l>"] = { "<cmd> Copilot suggestion accept <CR>", "Accept copilot suggestion" },
-    -- ["<A-]>"] = { "<cmd> Copilot suggestion next <CR>", "Next copilot suggestion" },
-    -- ["<A-[>"] = { "<cmd> Copilot suggestion prev <CR>", "Previous copilot suggestion" },
+    ["<leader>gd"] = {
+      function()
+        require("gitsigns").toggle_deleted()
+      end,
+      "Toggle git deleted",
+    },
+
+    ["<leader>td"] = { "<cmd> TodoTrouble <CR>", "Open todos panel" },
   },
 }
 

@@ -12,7 +12,6 @@ local opts = {
     "cpptools",
     "cspell",
     "css-lsp",
-    "docker-compose-language-service",
     "dockerfile-language-server",
     "eslint-lsp",
     "eslint_d",

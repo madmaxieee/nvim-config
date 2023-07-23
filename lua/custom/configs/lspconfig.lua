@@ -1,4 +1,4 @@
-local on_attach = require("plugins.configs.lspconfig").on_attacs
+local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
 
 ---@diagnostic disable-next-line: different-requires

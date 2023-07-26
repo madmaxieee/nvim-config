@@ -73,6 +73,10 @@ mappings.custom = {
 
     ["<leader>td"] = { "<cmd> TodoTrouble <CR>", "Open todos panel" },
     ["<leader>ft"] = { "<cmd> TodoTelescope <CR>", "Open todos panel" },
+
+    -- (<leader>+)
+    ["<leader>="] = { "3<C-w>>", "Increase split width" },
+    ["<leader>-"] = { "3<C-w><", "Decrease split width" },
   },
 }
 

@@ -75,6 +75,14 @@ local plugins = {
       "GitConflictPrevConflict",
       "GitConflictListQf",
     },
+    init = function()
+      vim.api.nvim_create_user_command("Gcco", "GitConflictChooseOurs", {})
+      vim.api.nvim_create_user_command("Gcct", "GitConflictChooseTheirs", {})
+      vim.api.nvim_create_user_command("Gccb", "GitConflictChooseBoth", {})
+      vim.api.nvim_create_user_command("Gcn", "GitConflictNextConflict", {})
+      vim.api.nvim_create_user_command("Gcp", "GitConflictPrevConflict", {})
+      vim.api.nvim_create_user_command("Gcl", "GitConflictListQf", {})
+    end,
     config = true,
   },
 
@@ -232,7 +240,6 @@ local plugins = {
           "--line-number",
           "--column",
         },
-        -- NOTE: can't get this to work
         pattern = [[\b(KEYWORDS):]], -- ripgrep regex
       },
     },

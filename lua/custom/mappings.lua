@@ -77,6 +77,8 @@ mappings.custom = {
     -- (<leader>+)
     ["<leader>="] = { "3<C-w>>", "Increase split width" },
     ["<leader>-"] = { "3<C-w><", "Decrease split width" },
+
+    ["<leader>gg"] = { "<cmd> LazyGit <CR>", "Invoke LazyGit" },
   },
 }
 

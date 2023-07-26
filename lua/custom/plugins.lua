@@ -348,6 +348,23 @@ local plugins = {
       auto_display = true,
     },
   },
+
+  {
+    "kdheepak/lazygit.nvim",
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+      require("telescope").load_extension "lazygit"
+    end,
+  },
 }
 
 return plugins

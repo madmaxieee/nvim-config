@@ -23,9 +23,7 @@ local plugins = {
       },
       renderer = {
         icons = {
-          show = {
-            git = true,
-          },
+          show = { git = true },
         },
       },
     },
@@ -404,7 +402,12 @@ local plugins = {
   {
     "folke/noice.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      lsp = {
+        hover = { enabled = false },
+        signature = { enabled = false },
+      },
+    },
     dependencies = {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",

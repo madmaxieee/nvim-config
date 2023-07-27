@@ -391,12 +391,7 @@ local plugins = {
 
   {
     "kdheepak/lazygit.nvim",
-    cmd = {
-      "LazyGit",
-      "LazyGitConfig",
-      "LazyGitFilter",
-      "LazyGitFilterCurrentFile",
-    },
+    cmd = { "LazyGit" },
     dependencies = {
       "nvim-telescope/telescope.nvim",
       "nvim-lua/plenary.nvim",
@@ -404,6 +399,24 @@ local plugins = {
     config = function()
       require("telescope").load_extension "lazygit"
     end,
+  },
+
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {},
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
+  },
+
+  {
+    "rcarriga/nvim-notify",
+  },
+
+  {
+    "MunifTanjim/nui.nvim",
   },
 }
 

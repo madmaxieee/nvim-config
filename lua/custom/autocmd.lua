@@ -29,6 +29,7 @@ local disabled_dirs = {
   "/private/tmp",
 }
 
+-- disable persistence for certain directories
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
   group = persistenceGroup,
   callback = function()
@@ -39,7 +40,6 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
         return
       end
     end
-
     if vim.fn.argc() == 0 and not vim.g.started_with_stdin then
       require("persistence").load()
       require("nvim-tree.api").tree.toggle(false, true)
@@ -50,6 +50,7 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
   nested = true,
 })
 
+-- disable persistence if nvim started with stdin
 vim.api.nvim_create_autocmd({ "StdinReadPre" }, {
   group = persistenceGroup,
   callback = function()

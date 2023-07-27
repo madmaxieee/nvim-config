@@ -1,12 +1,26 @@
+-- ========================
+-- disable folding for certain filetypes
+-- ========================
+local disabled_fts = {
+  terminal = true,
+  nvcheatsheet = true,
+}
+
 vim.api.nvim_create_autocmd("BufEnter", {
-  group = vim.api.nvim_create_augroup("NoTerminalFold", { clear = true }),
+  group = vim.api.nvim_create_augroup("DisableFold", { clear = true }),
   callback = function()
-    if vim.bo.filetype == "terminal" then
+    local ft = vim.bo.filetype
+    if disabled_fts[ft] then
       vim.wo.foldcolumn = "0"
+      vim.wo.foldenable = false
+      vim.wo.foldmethod = "manual"
     end
   end,
 })
 
+-- ========================
+-- Persistence
+-- ========================
 local persistenceGroup = vim.api.nvim_create_augroup("Persistence", { clear = true })
 local home = vim.fn.expand "~"
 local disabled_dirs = {
@@ -40,5 +54,17 @@ vim.api.nvim_create_autocmd({ "StdinReadPre" }, {
   group = persistenceGroup,
   callback = function()
     vim.g.started_with_stdin = true
+  end,
+})
+
+-- ========================
+-- open help in vertical split
+-- ========================
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("Help", { clear = true }),
+  pattern = "help",
+  callback = function()
+    vim.cmd "wincmd L"
   end,
 })

@@ -83,6 +83,7 @@ local plugins = {
     event = "VeryLazy",
     dependencies = { "mfussenegger/nvim-dap" },
     config = function()
+      ---@diagnostic disable-next-line: different-requires
       local dap, dapui = require "dap", require "dapui"
       dapui.setup()
       dap.listeners.after.event_initialized["dapui_config"] = function()
@@ -359,11 +360,7 @@ local plugins = {
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
-    opts = {
-      input = {
-        relative = "editor",
-      },
-    },
+    opts = {},
   },
 
   {

@@ -53,14 +53,47 @@ local plugins = {
   },
 
   {
-    enabled = false,
-    "mfussenegger/nvim-dap",
-  },
-
-  {
     "williamboman/mason.nvim",
     opts = function()
       return require "custom.configs.mason"
+    end,
+  },
+
+  {
+    "mfussenegger/nvim-dap",
+    config = function(_, _)
+      require("core.utils").load_mappings "dap"
+    end,
+  },
+
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "mfussenegger/nvim-dap",
+    },
+    opts = function()
+      return require "custom.configs.mason-nvim-dap"
+    end,
+  },
+
+  {
+    "rcarriga/nvim-dap-ui",
+    event = "VeryLazy",
+    dependencies = { "mfussenegger/nvim-dap" },
+    config = function()
+      local dap, dapui = require "dap", require "dapui"
+      dapui.setup()
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
     end,
   },
 
@@ -258,6 +291,12 @@ local plugins = {
   },
 
   {
+    "folke/neodev.nvim",
+    ft = { "lua" },
+    opts = {},
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter-context",
     event = "BufReadPre",
     opts = {
@@ -320,7 +359,11 @@ local plugins = {
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      input = {
+        relative = "editor",
+      },
+    },
   },
 
   {

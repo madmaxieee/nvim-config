@@ -2,7 +2,10 @@ local mappings = {}
 
 mappings.disabled = {
   n = {
-    "<leader>td",
+    ["<leader>td"] = "",
+    ["<leader>n"] = "",
+    ["<leader>rn"] = "",
+    ["<leader>b"] = "",
   },
 }
 
@@ -52,6 +55,9 @@ mappings.custom = {
       "Toggle colorcolumn",
     },
 
+    ["<leader>tn"] = { "<cmd> set rnu! <CR>", "Toggle relative line numbers" },
+    ["<leader>nb"] = { "<cmd> enew <CR>", "New buffer" },
+
     ["zR"] = {
       function()
         require("ufo").openAllFolds()
@@ -79,6 +85,51 @@ mappings.custom = {
     ["<leader>-"] = { "3<C-w><", "Decrease split width" },
 
     ["<leader>gg"] = { "<cmd> LazyGit <CR>", "Invoke LazyGit" },
+  },
+}
+
+mappings.dap = {
+  plugin = true,
+  n = {
+    ["<leader>br"] = { "<cmd> DapToggleBreakpoint <CR>", "Toggle breakpoint at line" },
+    ["<leader>db"] = {
+      function()
+        local dap = require "dap"
+        local ft = vim.bo.filetype
+        if ft == "" then
+          print "Filetype option is required to determine which dap configs are available"
+          return
+        end
+        local configs = dap.configurations[ft]
+        if configs == nil then
+          print('Filetype "' .. ft .. '" has no dap configs')
+          return
+        end
+
+        -- always use the first config, assuming you only have one per filetype
+        local iter = pairs(configs)
+        local _, mConfig = iter(configs)
+
+        -- redraw to make ui selector disappear
+        vim.api.nvim_command "redraw"
+
+        if mConfig == nil then
+          return
+        end
+        vim.ui.input({
+          prompt = mConfig.name .. " - with args: ",
+        }, function(input)
+          if input == nil then
+            return
+          end
+          local args = vim.split(input, " ")
+          mConfig.args = args
+          dap.run(mConfig)
+        end)
+      end,
+      "Start or continue the debugger",
+    },
+    ["<leader>dt"] = { "<cmd> DapTerminate <CR>", "Terminate the debugger" },
   },
 }
 

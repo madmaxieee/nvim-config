@@ -8,8 +8,7 @@ local opts = {
     "cmake-language-server",
     "cmakelang",
     "cmakelint",
-    "codespell",
-    "cpptools",
+    "codelldb",
     "cspell",
     "css-lsp",
     "dockerfile-language-server",
@@ -22,7 +21,6 @@ local opts = {
     "mypy",
     "markdownlint",
     "nginx-language-server",
-    "prettier",
     "prettierd",
     "pyright",
     "ruff",
@@ -34,7 +32,6 @@ local opts = {
     "typescript-language-server",
     "typst-lsp",
     "yaml-language-server",
-    "yamlfmt",
   },
 }
 return opts

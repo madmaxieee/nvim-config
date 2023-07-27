@@ -400,6 +400,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
@@ -415,10 +416,12 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "rcarriga/nvim-notify",
   },
 
   {
+    enabled = false,
     "MunifTanjim/nui.nvim",
   },
 }

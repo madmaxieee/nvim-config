@@ -37,9 +37,9 @@ local dap_mappings = {
           dap.run(mConfig)
         end)
       end,
-      "Start or continue the debugger",
+      "Start debugger",
     },
-    ["<leader>dt"] = { "<cmd> DapTerminate <CR>", "Terminate the debugger" },
+    ["<leader>dt"] = { "<cmd> DapTerminate <CR>", "Terminate debugger" },
   },
 }
 

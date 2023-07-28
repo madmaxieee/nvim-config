@@ -24,9 +24,9 @@ vim.api.nvim_create_autocmd("BufEnter", {
 local persistenceGroup = vim.api.nvim_create_augroup("Persistence", { clear = true })
 local home = vim.fn.expand "~"
 local disabled_dirs = {
-  home,
-  home .. "/Downloads",
-  "/private/tmp",
+  [home] = true,
+  [home .. "/Downloads"] = true,
+  ["/private/tmp"] = true,
 }
 
 -- disable persistence for certain directories
@@ -34,13 +34,7 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
   group = persistenceGroup,
   callback = function()
     local cwd = vim.fn.getcwd()
-    for _, path in pairs(disabled_dirs) do
-      if path == cwd then
-        require("persistence").stop()
-        return
-      end
-    end
-    if vim.fn.argc() == 0 and not vim.g.started_with_stdin then
+    if vim.fn.argc() == 0 and not vim.g.started_with_stdin and not disabled_dirs[cwd] then
       require("persistence").load()
       require("nvim-tree.api").tree.toggle(false, true)
     else
@@ -61,11 +55,10 @@ vim.api.nvim_create_autocmd({ "StdinReadPre" }, {
 -- ========================
 -- open help in vertical split
 -- ========================
-
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("Help", { clear = true }),
   pattern = "help",
   callback = function()
-    vim.cmd "wincmd L"
+    -- vim.cmd "wincmd L"
   end,
 })

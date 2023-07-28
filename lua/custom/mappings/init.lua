@@ -55,4 +55,21 @@ mappings.LazyGit = {
   },
 }
 
+mappings.Persistence = {
+  n = {
+    ["<leader>ps"] = {
+      function()
+        require("persistence").stop()
+      end,
+      "Stop persistence from saving the session",
+    },
+    ["<leader>pl"] = {
+      function()
+        require("persistence").load()
+      end,
+      "Load last saved session for current directory",
+    },
+  },
+}
+
 return mappings

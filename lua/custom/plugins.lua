@@ -30,6 +30,18 @@ local plugins = {
   },
 
   {
+    "nvim-tree/nvim-web-devicons",
+    opts = {
+      override_by_extension = {
+        ["tpp"] = {
+          icon = "",
+          name = "tpp",
+        },
+      },
+    },
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = function()
       return require "custom.configs.treesitter"

@@ -4,6 +4,7 @@
 local disabled_fts = {
   terminal = true,
   nvcheatsheet = true,
+  help = true,
 }
 
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -59,6 +60,30 @@ vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("Help", { clear = true }),
   pattern = "help",
   callback = function()
-    -- vim.cmd "wincmd L"
+    vim.cmd "wincmd L"
   end,
 })
+
+-- ========================
+-- configure filetype detection
+-- ========================
+
+local filetypeGroup = vim.api.nvim_create_augroup("Filetype", { clear = true })
+
+local fileDetectionMap = {
+  ["*.tpp"] = "cpp",
+}
+
+local set_filetype = function(pattern, ft)
+  vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+    group = filetypeGroup,
+    pattern = pattern,
+    callback = function()
+      vim.bo.filetype = ft
+    end,
+  })
+end
+
+for pattern, ft in pairs(fileDetectionMap) do
+  set_filetype(pattern, ft)
+end

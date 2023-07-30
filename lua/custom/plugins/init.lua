@@ -1,5 +1,45 @@
 local plugins = {
   {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function()
+      return require "custom.plugins.configs.treesitter"
+    end,
+  },
+
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "jose-elias-alvarez/null-ls.nvim",
+      config = function()
+        require "custom.plugins.configs.null-ls"
+      end,
+    },
+    config = function()
+      require "plugins.configs.lspconfig"
+      require "custom.plugins.configs.lspconfig"
+    end,
+  },
+
+  {
+    "williamboman/mason.nvim",
+    opts = function()
+      return require "custom.plugins.configs.mason"
+    end,
+  },
+
+  {
+    "nvim-tree/nvim-web-devicons",
+    opts = {
+      override_by_extension = {
+        ["tpp"] = {
+          icon = "",
+          name = "tpp",
+        },
+      },
+    },
+  },
+
+  {
     "nvim-tree/nvim-tree.lua",
     opts = {
       filters = {
@@ -28,47 +68,6 @@ local plugins = {
       },
     },
   },
-
-  {
-    "nvim-tree/nvim-web-devicons",
-    opts = {
-      override_by_extension = {
-        ["tpp"] = {
-          icon = "",
-          name = "tpp",
-        },
-      },
-    },
-  },
-
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = function()
-      return require "custom.configs.treesitter"
-    end,
-  },
-
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      "jose-elias-alvarez/null-ls.nvim",
-      config = function()
-        require "custom.configs.null-ls"
-      end,
-    },
-    config = function()
-      require "plugins.configs.lspconfig"
-      require "custom.configs.lspconfig"
-    end,
-  },
-
-  {
-    "williamboman/mason.nvim",
-    opts = function()
-      return require "custom.configs.mason"
-    end,
-  },
-
   {
     "NvChad/nvterm",
     opts = {
@@ -102,7 +101,7 @@ local plugins = {
       "mfussenegger/nvim-dap",
     },
     opts = function()
-      return require "custom.configs.mason-nvim-dap"
+      return require "custom.plugins.configs.mason-nvim-dap"
     end,
   },
 
@@ -337,7 +336,7 @@ local plugins = {
     "zbirenbaum/copilot.lua",
     event = "InsertEnter",
     opts = function()
-      return require "custom.configs.copilot"
+      return require "custom.plugins.configs.copilot"
     end,
   },
 

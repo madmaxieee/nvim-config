@@ -70,8 +70,26 @@ local plugins = {
   },
 
   {
+    "NvChad/nvterm",
+    opts = {
+      terminals = {
+        type_opts = {
+          float = {
+            relative = "editor",
+            row = 0.2,
+            col = 0.25,
+            width = 0.5,
+            height = 0.6,
+            border = "single",
+          },
+        },
+      },
+    },
+  },
+
+  {
     "mfussenegger/nvim-dap",
-    config = function(_, _)
+    init = function()
       require("core.utils").load_mappings "dap"
     end,
   },

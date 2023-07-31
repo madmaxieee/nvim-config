@@ -155,6 +155,9 @@ local plugins = {
       "nvim-treesitter/nvim-treesitter",
       "luukvbaal/statuscol.nvim",
     },
+    init = function()
+      require("core.utils").load_mappings "ufo"
+    end,
     opts = {
       ---@diagnostic disable-next-line: unused-local
       provider_selector = function(bufnr, filetype, buftype)
@@ -278,6 +281,9 @@ local plugins = {
       "TodoTelescope",
     },
     dependencies = { "nvim-lua/plenary.nvim" },
+    init = function()
+      require("core.utils").load_mappings "Todo Comments"
+    end,
     opts = {
       keywords = {
         FIX = {
@@ -376,6 +382,9 @@ local plugins = {
   {
     "folke/persistence.nvim",
     event = "BufReadPre",
+    init = function()
+      require("core.utils").load_mappings "persistence"
+    end,
     opts = {
       dir = vim.fn.expand(vim.fn.stdpath "state" .. "/sessions/"), -- directory where session files are saved
       options = { "buffers", "curdir", "tabpages", "winsize" }, -- sessionoptions used for saving
@@ -423,6 +432,9 @@ local plugins = {
       "nvim-telescope/telescope.nvim",
       "nvim-lua/plenary.nvim",
     },
+    init = function()
+      require("core.utils").load_mappings "LazyGit"
+    end,
     config = function()
       require("telescope").load_extension "lazygit"
     end,

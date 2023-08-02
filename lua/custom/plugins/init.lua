@@ -68,6 +68,7 @@ local plugins = {
       },
     },
   },
+
   {
     "NvChad/nvterm",
     opts = {

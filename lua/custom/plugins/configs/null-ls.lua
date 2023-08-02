@@ -13,12 +13,12 @@ local sources = {
   formatting.fish_indent,
   formatting.rustfmt,
   formatting.cmake_format,
+  formatting.beautysh,
 
   lint.shellcheck,
   lint.ruff,
   lint.fish,
   lint.eslint_d,
-  -- lint.clang_check,
   lint.fish,
   lint.cmake_lint,
 

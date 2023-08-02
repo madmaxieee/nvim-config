@@ -2,6 +2,7 @@ local opts = {
   ensure_installed = {
     "lua-language-server",
     "bash-language-server",
+    "beautysh",
     "black",
     "clang-format",
     "clangd",

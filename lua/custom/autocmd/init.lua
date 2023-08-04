@@ -1,0 +1,6 @@
+require "custom.autocmd.comment"
+require "custom.autocmd.disable-fold"
+require "custom.autocmd.ft-detect"
+require "custom.autocmd.input-method"
+require "custom.autocmd.persistence"
+require "custom.autocmd.vhelp"

@@ -76,4 +76,16 @@ mappings.persistence = {
   },
 }
 
+mappings.Hardtime = {
+  plugin = true,
+  n = {
+    ["<leader>ht"] = {
+      function()
+        require("hardtime").toggle()
+      end,
+      "Toggle hardtime",
+    },
+  },
+}
+
 return mappings

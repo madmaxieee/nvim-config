@@ -442,6 +442,19 @@ local plugins = {
   },
 
   {
+    "m4xshen/hardtime.nvim",
+    event = "VeryLazy",
+    init = function()
+      require("core.utils").load_mappings "Hardtime"
+    end,
+    opts = {},
+    config = function(_, opts)
+      require("hardtime").setup(opts)
+      require("hardtime").enable()
+    end,
+  },
+
+  {
     enabled = false,
     "folke/noice.nvim",
     event = "VeryLazy",

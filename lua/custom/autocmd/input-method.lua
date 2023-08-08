@@ -2,7 +2,7 @@ local inputMethodGroup = vim.api.nvim_create_augroup("InputMethod", { clear = tr
 
 if vim.fn.has "mac" == 1 then
   -- store original input method when entering vim and leaving insert mode, then switch to english
-  vim.api.nvim_create_autocmd({ "VimEnter", "InsertLeave" }, {
+  vim.api.nvim_create_autocmd({ "VimEnter", "FocusGained", "InsertLeave" }, {
     group = inputMethodGroup,
     callback = function()
       vim.g.input_method = vim.fn.system({ "macism" }):match "[%w%.]+"

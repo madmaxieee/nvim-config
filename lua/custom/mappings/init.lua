@@ -54,7 +54,7 @@ mappings["Todo Comments"] = {
 mappings.LazyGit = {
   plugin = true,
   n = {
-    ["<leader>gg"] = { "<cmd> LazyGit <CR>", "Invoke LazyGit" },
+    ["<leader>lg"] = { "<cmd> LazyGit <CR>", "Invoke LazyGit" },
   },
 }
 

@@ -20,6 +20,7 @@ local native_mappings = {
     ["<leader>-"] = { "3<C-w><", "Decrease split width" },
     ["<leader>tn"] = { "<cmd> set rnu! <CR>", "Toggle relative line numbers" },
     ["<leader>nb"] = { "<cmd> enew <CR>", "New buffer" },
+    ["<leader>nt"] = { "<cmd> tabnew <CR>", "New tab" },
 
     ["gx"] = {
       function()

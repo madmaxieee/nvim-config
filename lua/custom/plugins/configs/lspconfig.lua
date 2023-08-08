@@ -1,5 +1,6 @@
 local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
+capabilities.offsetEncoding = { "utf-16" }
 
 ---@diagnostic disable-next-line: different-requires
 local lspconfig = require "lspconfig"

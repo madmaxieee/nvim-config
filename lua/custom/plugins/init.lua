@@ -88,6 +88,12 @@ local plugins = {
   },
 
   {
+    "nmac427/guess-indent.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
+
+  {
     "mfussenegger/nvim-dap",
     init = function()
       require("core.utils").load_mappings "dap"

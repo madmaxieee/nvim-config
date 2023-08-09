@@ -192,7 +192,7 @@ local plugins = {
 
   {
     "kevinhwang91/nvim-ufo",
-    event = "UIEnter",
+    event = "BufReadPre",
     dependencies = {
       "kevinhwang91/promise-async",
       "nvim-treesitter/nvim-treesitter",

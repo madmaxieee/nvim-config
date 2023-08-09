@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
     local cwd = vim.fn.getcwd()
     if vim.fn.argc() == 0 and not vim.g.started_with_stdin and not disabled_dirs[cwd] then
       require("persistence").load()
-      require("nvim-tree.api").tree.toggle(false, true)
+      -- require("nvim-tree.api").tree.toggle(false, true)
     else
       require("persistence").stop()
     end

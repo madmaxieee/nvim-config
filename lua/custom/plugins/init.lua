@@ -114,7 +114,7 @@ local plugins = {
 
   {
     "nmac427/guess-indent.nvim",
-    event = "VeryLazy",
+    cmd = { "GuessIndent" },
     init = function()
       require("core.utils").load_mappings "GuessIndent"
     end,

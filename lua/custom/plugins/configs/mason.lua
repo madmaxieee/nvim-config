@@ -22,7 +22,6 @@ local opts = {
     "mypy",
     "markdownlint",
     "nginx-language-server",
-    "prettierd",
     "pyright",
     "ruff",
     "rust-analyzer",

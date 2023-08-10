@@ -88,4 +88,11 @@ mappings.Hardtime = {
   },
 }
 
+mappings.GuessIndent = {
+  plugin = true,
+  n = {
+    ["<leader>gi"] = { "<cmd> GuessIndent <CR>", "Guess indent" },
+  },
+}
+
 return mappings

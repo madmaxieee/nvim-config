@@ -106,10 +106,10 @@ local plugins = {
         type_opts = {
           float = {
             relative = "editor",
-            row = 0.2,
+            row = 0.15,
             col = 0.25,
             width = 0.5,
-            height = 0.6,
+            height = 0.7,
             border = "single",
           },
         },
@@ -487,7 +487,9 @@ local plugins = {
     init = function()
       require("core.utils").load_mappings "Hardtime"
     end,
-    opts = {},
+    opts = {
+      disabled_filetypes = { "terminal", "NvimTree" },
+    },
     config = function(_, opts)
       require("hardtime").setup(opts)
       require("hardtime").enable()

@@ -28,6 +28,11 @@ local plugins = {
   },
 
   {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+  },
+
+  {
     "nvim-tree/nvim-web-devicons",
     opts = {
       override_by_extension = {

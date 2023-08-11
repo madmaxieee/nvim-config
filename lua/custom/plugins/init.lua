@@ -499,6 +499,20 @@ local plugins = {
   },
 
   {
+    "utilyre/barbecue.nvim",
+    event = "BufEnter",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = {},
+  },
+
+  {
+    "SmiteshP/nvim-navic",
+  },
+
+  {
     enabled = false,
     "folke/noice.nvim",
     event = "VeryLazy",

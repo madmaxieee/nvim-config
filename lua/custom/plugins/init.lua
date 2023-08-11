@@ -513,6 +513,15 @@ local plugins = {
   },
 
   {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    event = "VeryLazy",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require "custom.plugins.configs.treesitter-textobjects"
+    end,
+  },
+
+  {
     enabled = false,
     "folke/noice.nvim",
     event = "VeryLazy",

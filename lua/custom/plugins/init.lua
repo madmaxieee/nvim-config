@@ -231,7 +231,9 @@ local plugins = {
   {
     "folke/flash.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      highlight = { priority = 10000 },
+    },
     keys = {
       {
         "s",

@@ -34,4 +34,5 @@ local opts = {
     "yaml-language-server",
   },
 }
+
 return opts

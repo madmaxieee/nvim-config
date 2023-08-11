@@ -5,6 +5,7 @@ local disabled_mappings = {
     ["<leader>rn"] = "",
     ["<leader>b"] = "",
     ["<leader>h"] = "",
+    ["<c-s>"] = "",
   },
 }
 

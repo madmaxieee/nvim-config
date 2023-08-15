@@ -233,6 +233,9 @@ local plugins = {
     event = "VeryLazy",
     opts = {
       highlight = { priority = 10000 },
+      modes = {
+        char = { enabled = false },
+      },
     },
     keys = {
       {

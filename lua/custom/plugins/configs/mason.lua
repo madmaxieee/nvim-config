@@ -14,7 +14,6 @@ local opts = {
     "css-lsp",
     "dockerfile-language-server",
     "eslint-lsp",
-    "eslint_d",
     "html-lsp",
     "isort",
     "json-lsp",

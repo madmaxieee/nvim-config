@@ -18,11 +18,11 @@ local sources = {
   lint.shellcheck,
   lint.ruff,
   lint.fish,
-  lint.eslint_d,
+  -- lint.eslint_d,
   lint.fish,
   lint.cmake_lint,
 
-  actions.eslint_d,
+  -- actions.eslint_d,
 }
 
 if vim.fn.executable "prettierd" == 0 then

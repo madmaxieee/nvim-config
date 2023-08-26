@@ -15,6 +15,7 @@ local servers = {
   "tailwindcss",
   "cmake",
   "dockerls",
+  "eslint",
 }
 
 for _, lsp in ipairs(servers) do

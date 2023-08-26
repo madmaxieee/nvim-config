@@ -464,14 +464,6 @@ local plugins = {
   },
 
   {
-    "edluffy/hologram.nvim",
-    ft = { "markdown" },
-    opts = {
-      auto_display = true,
-    },
-  },
-
-  {
     "kdheepak/lazygit.nvim",
     cmd = { "LazyGit" },
     dependencies = {
@@ -522,6 +514,15 @@ local plugins = {
     config = function()
       require "custom.plugins.configs.treesitter-textobjects"
     end,
+  },
+
+  {
+    enabled = false,
+    "edluffy/hologram.nvim",
+    ft = { "markdown" },
+    opts = {
+      auto_display = true,
+    },
   },
 
   {

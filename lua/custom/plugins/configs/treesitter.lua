@@ -20,6 +20,7 @@ local opts = {
     "gitattributes",
     "gitignore",
     "dockerfile",
+    "graphql",
 
     "c",
     "cpp",

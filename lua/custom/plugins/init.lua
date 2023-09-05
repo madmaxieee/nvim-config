@@ -517,6 +517,12 @@ local plugins = {
   },
 
   {
+    "dgagn/diagflow.nvim",
+    event = "LspAttach",
+    opts = {},
+  },
+
+  {
     enabled = false,
     "edluffy/hologram.nvim",
     ft = { "markdown" },

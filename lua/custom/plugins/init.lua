@@ -105,13 +105,17 @@ local plugins = {
       defaults = {
         mappings = {
           i = {
-            ["<c-t>"] = function()
-              require("trouble.providers.telescope").open_with_trouble()
+            ["<c-t>"] = function(prompt_bufnr)
+              require "telescope.actions"
+              local trouble = require "trouble.providers.telescope"
+              trouble.open_with_trouble(prompt_bufnr)
             end,
           },
           n = {
-            ["<c-t>"] = function()
-              require("trouble.providers.telescope").open_with_trouble()
+            ["<c-t>"] = function(prompt_bufnr)
+              require "telescope.actions"
+              local trouble = require "trouble.providers.telescope"
+              trouble.open_with_trouble(prompt_bufnr)
             end,
           },
         },
@@ -480,7 +484,10 @@ local plugins = {
     "folke/trouble.nvim",
     event = "VeryLazy",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {},
+    config = function(_, opts)
+      require("core.utils").load_mappings "trouble"
+      require("trouble").setup(opts)
+    end,
   },
 
   {

@@ -1,4 +1,5 @@
 local trouble_mapping = {
+  plugin = true,
   n = {
     ["<leader>xx"] = {
       function()

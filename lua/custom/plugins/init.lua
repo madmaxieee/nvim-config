@@ -544,12 +544,6 @@ local plugins = {
   },
 
   {
-    "dgagn/diagflow.nvim",
-    event = "LspAttach",
-    opts = {},
-  },
-
-  {
     "kylechui/nvim-surround",
     event = "VeryLazy",
     config = function()
@@ -568,6 +562,29 @@ local plugins = {
         },
       }
     end,
+  },
+
+  {
+    "ivanjermakov/troublesum.nvim",
+    event = "LspAttach",
+    config = function()
+      require("troublesum").setup()
+    end,
+  },
+
+  {
+    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    event = "LspAttach",
+    config = function()
+      require("lsp_lines").setup()
+    end,
+  },
+
+  {
+    enabled = false,
+    "dgagn/diagflow.nvim",
+    event = "LspAttach",
+    opts = {},
   },
 
   {

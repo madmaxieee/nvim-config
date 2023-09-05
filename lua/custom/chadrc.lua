@@ -26,6 +26,14 @@ M.ui = {
       fg = "black2",
       bg = "sun",
     },
+    DiagnosticUnderlineError = {
+      undercurl = true,
+      fg = "red",
+    },
+    DiagnosticUnderlineWarn = {
+      undercurl = true,
+      fg = "orange",
+    },
   },
 }
 

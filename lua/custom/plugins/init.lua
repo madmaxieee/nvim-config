@@ -100,6 +100,26 @@ local plugins = {
   },
 
   {
+    "nvim-telescope/telescope.nvim",
+    opts = {
+      defaults = {
+        mappings = {
+          i = {
+            ["<c-t>"] = function()
+              require("trouble.providers.telescope").open_with_trouble()
+            end,
+          },
+          n = {
+            ["<c-t>"] = function()
+              require("trouble.providers.telescope").open_with_trouble()
+            end,
+          },
+        },
+      },
+    },
+  },
+
+  {
     "NvChad/nvterm",
     opts = {
       terminals = {
@@ -132,7 +152,6 @@ local plugins = {
 
   {
     "jay-babu/mason-nvim-dap.nvim",
-    event = "VeryLazy",
     dependencies = {
       "williamboman/mason.nvim",
       "mfussenegger/nvim-dap",
@@ -144,10 +163,11 @@ local plugins = {
 
   {
     "rcarriga/nvim-dap-ui",
-    event = "VeryLazy",
-    dependencies = { "mfussenegger/nvim-dap" },
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "jay-babu/mason-nvim-dap.nvim",
+    },
     config = function()
-      ---@diagnostic disable-next-line: different-requires
       local dap, dapui = require "dap", require "dapui"
       dapui.setup()
       dap.listeners.after.event_initialized["dapui_config"] = function()
@@ -520,6 +540,27 @@ local plugins = {
     "dgagn/diagflow.nvim",
     event = "LspAttach",
     opts = {},
+  },
+
+  {
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup {
+        keymaps = {
+          insert = "<C-g>z",
+          insert_line = "<C-g>Z",
+          normal = "yz",
+          normal_cur = "yzz",
+          normal_line = "yZ",
+          normal_cur_line = "yZZ",
+          visual = "Z",
+          visual_line = "gZ",
+          delete = "dz",
+          change = "cz",
+        },
+      }
+    end,
   },
 
   {

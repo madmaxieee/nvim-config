@@ -65,7 +65,6 @@ mappings.persistence = {
   n = {
     ["<leader>ps"] = {
       function()
-        ---@diagnostic disable-next-line: different-requires
         require("persistence").stop()
       end,
       "Stop persistence from saving the session",

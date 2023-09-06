@@ -4,6 +4,7 @@ local filetypeGroup = vim.api.nvim_create_augroup("Filetype", { clear = true })
 local fileDetectionMap = {
   ["*.tpp"] = "cpp",
   ["*.typ"] = "typst",
+  [".env*"] = "sh",
 }
 
 local set_filetype = function(pattern, ft)

@@ -1,7 +1,7 @@
 -- configure filetype detection
-local filetypeGroup = vim.api.nvim_create_augroup("Filetype", { clear = true })
+local ft_group = vim.api.nvim_create_augroup("Filetype", { clear = true })
 
-local fileDetectionMap = {
+local ft_detect_map = {
   ["*.tpp"] = "cpp",
   ["*.typ"] = "typst",
   [".env*"] = "sh",
@@ -9,7 +9,7 @@ local fileDetectionMap = {
 
 local set_filetype = function(pattern, ft)
   vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-    group = filetypeGroup,
+    group = ft_group,
     pattern = pattern,
     callback = function()
       vim.bo.filetype = ft
@@ -17,6 +17,6 @@ local set_filetype = function(pattern, ft)
   })
 end
 
-for pattern, ft in pairs(fileDetectionMap) do
+for pattern, ft in pairs(ft_detect_map) do
   set_filetype(pattern, ft)
 end

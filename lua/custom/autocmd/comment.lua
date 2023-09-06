@@ -1,13 +1,13 @@
 -- configure commentstring
-local commentstringGroup = vim.api.nvim_create_augroup("Commentstring", { clear = true })
+local commentstring_group = vim.api.nvim_create_augroup("Commentstring", { clear = true })
 
-local commentstringMap = {
+local commentstring_map = {
   ["*.dof"] = "// %s",
 }
 
 local set_commentstring = function(pattern, commentstring)
   vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-    group = commentstringGroup,
+    group = commentstring_group,
     pattern = pattern,
     callback = function()
       vim.bo.commentstring = commentstring
@@ -15,6 +15,6 @@ local set_commentstring = function(pattern, commentstring)
   })
 end
 
-for pattern, commentstring in pairs(commentstringMap) do
-  set_commentstring(pattern, commentstring)
+for pattern, string in pairs(commentstring_map) do
+  set_commentstring(pattern, string)
 end

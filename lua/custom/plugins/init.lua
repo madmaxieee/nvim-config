@@ -48,10 +48,7 @@ local plugins = {
     "nvim-tree/nvim-tree.lua",
     opts = {
       filters = {
-        custom = {
-          "node_modules",
-          ".git",
-        },
+        custom = { "node_modules", ".git" },
       },
       diagnostics = {
         enable = false,
@@ -68,7 +65,9 @@ local plugins = {
       },
       renderer = {
         icons = {
-          show = { git = true },
+          show = {
+            git = true,
+          },
         },
       },
       view = {
@@ -156,10 +155,7 @@ local plugins = {
 
   {
     "jay-babu/mason-nvim-dap.nvim",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "mfussenegger/nvim-dap",
-    },
+    dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
     opts = function()
       return require "custom.plugins.configs.mason-nvim-dap"
     end,
@@ -167,10 +163,7 @@ local plugins = {
 
   {
     "rcarriga/nvim-dap-ui",
-    dependencies = {
-      "mfussenegger/nvim-dap",
-      "jay-babu/mason-nvim-dap.nvim",
-    },
+    dependencies = { "mfussenegger/nvim-dap", "jay-babu/mason-nvim-dap.nvim" },
     config = function()
       local dap, dapui = require "dap", require "dapui"
       dapui.setup()
@@ -211,11 +204,7 @@ local plugins = {
   {
     "kevinhwang91/nvim-ufo",
     event = "BufReadPre",
-    dependencies = {
-      "kevinhwang91/promise-async",
-      "nvim-treesitter/nvim-treesitter",
-      "luukvbaal/statuscol.nvim",
-    },
+    dependencies = { "kevinhwang91/promise-async", "nvim-treesitter/nvim-treesitter", "luukvbaal/statuscol.nvim" },
     init = function()
       require("core.utils").load_mappings "ufo"
     end,
@@ -228,9 +217,7 @@ local plugins = {
     config = true,
   },
 
-  {
-    "kevinhwang91/promise-async",
-  },
+  { "kevinhwang91/promise-async" },
 
   {
     "luukvbaal/statuscol.nvim",
@@ -239,8 +226,14 @@ local plugins = {
       require("statuscol").setup {
         relculright = true,
         segments = {
-          { text = { "%s" }, click = "v:lua.ScSa" },
-          { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+          {
+            text = { "%s" },
+            click = "v:lua.ScSa",
+          },
+          {
+            text = { builtin.lnumfunc },
+            click = "v:lua.ScLa",
+          },
           {
             text = { " ", builtin.foldfunc, " " },
             condition = { builtin.not_empty, true, builtin.not_empty },
@@ -256,9 +249,13 @@ local plugins = {
     "folke/flash.nvim",
     event = "VeryLazy",
     opts = {
-      highlight = { priority = 10000 },
+      highlight = {
+        priority = 10000,
+      },
       modes = {
-        char = { enabled = false },
+        char = {
+          enabled = false,
+        },
       },
     },
     keys = {
@@ -308,10 +305,7 @@ local plugins = {
   {
     "AckslD/nvim-neoclip.lua",
     event = "VeryLazy",
-    dependencies = {
-      "kkharji/sqlite.lua",
-      "nvim-telescope/telescope.nvim",
-    },
+    dependencies = { "kkharji/sqlite.lua", "nvim-telescope/telescope.nvim" },
     config = function()
       require("neoclip").setup {
         keys = {
@@ -337,19 +331,12 @@ local plugins = {
     end,
   },
 
-  {
-    "kkharji/sqlite.lua",
-  },
+  { "kkharji/sqlite.lua" },
 
   {
     "folke/todo-comments.nvim",
     event = "BufReadPre",
-    cmd = {
-      "TodoQuickFix",
-      "TodoLocList",
-      "TodoTrouble",
-      "TodoTelescope",
-    },
+    cmd = { "TodoQuickFix", "TodoLocList", "TodoTrouble", "TodoTelescope" },
     dependencies = { "nvim-lua/plenary.nvim" },
     init = function()
       require("core.utils").load_mappings "Todo Comments"
@@ -361,22 +348,37 @@ local plugins = {
           color = "error",
           alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
         },
-        TODO = { icon = " ", color = "info" },
-        HACK = { icon = " ", color = "warning" },
-        WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-        PERF = { icon = "󰅒", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-        NOTE = { icon = "", color = "hint", alt = { "INFO" } },
-        TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+        TODO = {
+          icon = " ",
+          color = "info",
+        },
+        HACK = {
+          icon = " ",
+          color = "warning",
+        },
+        WARN = {
+          icon = " ",
+          color = "warning",
+          alt = { "WARNING", "XXX" },
+        },
+        PERF = {
+          icon = "󰅒",
+          alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" },
+        },
+        NOTE = {
+          icon = "",
+          color = "hint",
+          alt = { "INFO" },
+        },
+        TEST = {
+          icon = "⏲ ",
+          color = "test",
+          alt = { "TESTING", "PASSED", "FAILED" },
+        },
       },
       search = {
         command = "rg",
-        args = {
-          "--color=never",
-          "--no-heading",
-          "--with-filename",
-          "--line-number",
-          "--column",
-        },
+        args = { "--color=never", "--no-heading", "--with-filename", "--line-number", "--column" },
         pattern = [[\b(KEYWORDS):]], -- ripgrep regex
       },
     },
@@ -435,7 +437,10 @@ local plugins = {
           return icon .. (status.message or "")
         end,
         cond = function()
-          local ok, clients = pcall(vim.lsp.get_active_clients, { name = "copilot", bufnr = 0 })
+          local ok, clients = pcall(vim.lsp.get_active_clients, {
+            name = "copilot",
+            bufnr = 0,
+          })
           return ok and #clients > 0
         end,
         color = function()
@@ -493,10 +498,7 @@ local plugins = {
   {
     "kdheepak/lazygit.nvim",
     cmd = { "LazyGit" },
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-      "nvim-lua/plenary.nvim",
-    },
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
     init = function()
       require("core.utils").load_mappings "LazyGit"
     end,
@@ -523,16 +525,11 @@ local plugins = {
   {
     "utilyre/barbecue.nvim",
     event = "BufEnter",
-    dependencies = {
-      "SmiteshP/nvim-navic",
-      "nvim-tree/nvim-web-devicons",
-    },
+    dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
     opts = {},
   },
 
-  {
-    "SmiteshP/nvim-navic",
-  },
+  { "SmiteshP/nvim-navic" },
 
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
@@ -582,24 +579,60 @@ local plugins = {
     event = "LspAttach",
     config = function()
       require("lsp_lines").setup()
-      vim.diagnostic.config { virtual_text = false }
+      vim.diagnostic.config {
+        virtual_text = false,
+      }
     end,
   },
 
   {
     enabled = false,
-    "dgagn/diagflow.nvim",
-    event = "LspAttach",
-    opts = {},
+
+    "vhyrro/hologram.nvim",
+    ft = { "markdown" },
+    config = function()
+      require("hologram").setup {
+        auto_display = true, -- WIP automatic markdown image display, may be prone to breaking
+      }
+    end,
   },
 
   {
     enabled = false,
-    "edluffy/hologram.nvim",
+    "3rd/image.nvim",
     ft = { "markdown" },
-    opts = {
-      auto_display = true,
-    },
+    config = function()
+      -- to load lua modules installed from luarock
+      package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
+      package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;"
+
+      require("image").setup {
+        backend = "kitty",
+        integrations = {
+          markdown = {
+            enabled = true,
+            sizing_strategy = "auto",
+            download_remote_images = true,
+            clear_in_insert_mode = false,
+            only_render_image_at_cursor = false,
+          },
+          -- neorg = {
+          --   enabled = true,
+          --   download_remote_images = true,
+          --   clear_in_insert_mode = false,
+          --   only_render_image_at_cursor = false,
+          -- },
+        },
+        max_width = nil,
+        max_height = nil,
+        max_width_window_percentage = nil,
+        max_height_window_percentage = 50,
+        kitty_method = "normal",
+        kitty_tmux_write_delay = 10, -- makes rendering more reliable with Kitty+Tmux
+        window_overlap_clear_enabled = false, -- toggles images when windows are overlapped
+        window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+      }
+    end,
   },
 
   {
@@ -608,14 +641,15 @@ local plugins = {
     event = "VeryLazy",
     opts = {
       lsp = {
-        hover = { enabled = false },
-        signature = { enabled = false },
+        hover = {
+          enabled = false,
+        },
+        signature = {
+          enabled = false,
+        },
       },
     },
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
-    },
+    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
   },
 
   {

@@ -34,7 +34,7 @@ local sources = {
   formatting.cmake_format,
   formatting.beautysh,
 
-  lint.ruff,
+  -- lint.ruff,
   lint.fish,
   lint.cmake_lint,
 

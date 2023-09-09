@@ -419,42 +419,6 @@ local plugins = {
   },
 
   {
-    "nvim-lualine/lualine.nvim",
-    optional = true,
-    event = "VeryLazy",
-    opts = function(_, opts)
-      local Util = require "lazyvim.util"
-      local colors = {
-        [""] = Util.fg "Special",
-        ["Normal"] = Util.fg "Special",
-        ["Warning"] = Util.fg "DiagnosticError",
-        ["InProgress"] = Util.fg "DiagnosticWarn",
-      }
-      table.insert(opts.sections.lualine_x, 2, {
-        function()
-          local icon = require("lazyvim.config").icons.kinds.Copilot
-          local status = require("copilot.api").status.data
-          return icon .. (status.message or "")
-        end,
-        cond = function()
-          local ok, clients = pcall(vim.lsp.get_active_clients, {
-            name = "copilot",
-            bufnr = 0,
-          })
-          return ok and #clients > 0
-        end,
-        color = function()
-          if not package.loaded["copilot"] then
-            return
-          end
-          local status = require("copilot.api").status.data
-          return colors[status.status] or colors[""]
-        end,
-      })
-    end,
-  },
-
-  {
     "folke/persistence.nvim",
     event = "BufReadPre",
     init = function()
@@ -617,8 +581,57 @@ local plugins = {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
-      cmdline = {
-        view = "cmdline",
+      lsp = {
+        hover = {
+          enabled = false,
+        },
+        signature = {
+          enabled = false,
+        },
+      },
+      routes = {
+        {
+          view = "notify",
+          filter = { event = "msg_showmode" },
+        },
+        {
+          filter = {
+            event = "msg_show",
+            kind = "",
+            find = "written",
+          },
+          opts = { skip = true },
+        },
+      },
+      views = {
+        cmdline_popup = {
+          position = {
+            row = -3,
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = "auto",
+          },
+        },
+        popupmenu = {
+          relative = "editor",
+          position = {
+            row = -12,
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = 10,
+          },
+          border = {
+            style = "rounded",
+            padding = { 0, 1 },
+          },
+          win_options = {
+            winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+          },
+        },
       },
     },
     dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },

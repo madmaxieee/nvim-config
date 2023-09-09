@@ -5,7 +5,7 @@ local disabled_fts = {
   help = true,
 }
 
-vim.api.nvim_create_autocmd("BufEnter", {
+vim.api.nvim_create_autocmd({ "BufEnter", "BufNew" }, {
   group = vim.api.nvim_create_augroup("DisableFold", { clear = true }),
   callback = function()
     local ft = vim.bo.filetype

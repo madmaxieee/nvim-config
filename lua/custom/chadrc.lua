@@ -5,6 +5,9 @@ M.ui = {
   theme = "catppuccin",
   theme_toggle = { "catppuccin", "one_light" },
   transparency = false,
+  tabufline = {
+    show_numbers = true,
+  },
   hl_override = {
     Comment = {
       italic = true,

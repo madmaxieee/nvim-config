@@ -90,4 +90,15 @@ mappings.Hardtime = {
   },
 }
 
+mappings.tabufline = {
+  n = {
+    ["<leader>X"] = {
+      function()
+        require("nvchad.tabufline").closeAllBufs()
+      end,
+      "Close all buffers",
+    },
+  },
+}
+
 return mappings

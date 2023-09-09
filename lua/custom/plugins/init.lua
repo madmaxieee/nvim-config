@@ -578,6 +578,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
@@ -617,7 +618,7 @@ local plugins = {
         popupmenu = {
           relative = "editor",
           position = {
-            row = -12,
+            row = -14,
             col = "50%",
           },
           size = {
@@ -638,6 +639,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "rcarriga/nvim-notify",
     event = "VeryLazy",
     config = function()
@@ -647,6 +649,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "MunifTanjim/nui.nvim",
   },
 }

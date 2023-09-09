@@ -1,36 +1,30 @@
 local trouble_mapping = {
   plugin = true,
   n = {
-    ["<leader>xx"] = {
+    ["<leader>tt"] = {
       function()
         require("trouble").open()
       end,
       "open Trouble",
     },
-    ["<leader>xw"] = {
+    ["<leader>tw"] = {
       function()
         require("trouble").open "workspace_diagnostics"
       end,
       "open workspace diagnostics in Trouble",
     },
-    ["<leader>xd"] = {
-      function()
-        require("trouble").open "document_diagnostics"
-      end,
-      "open document diagnostics in Trouble",
-    },
-    ["<leader>xq"] = {
+    ["<leader>tq"] = {
       function()
         require("trouble").open "quickfix"
       end,
       "open in quickfix Trouble",
     },
-    ["<leader>xl"] = {
-      function()
-        require("trouble").open "loclist"
-      end,
-      "open loclist in Trouble",
-    },
+    -- ["<leader>xl"] = {
+    --   function()
+    --     require("trouble").open "loclist"
+    --   end,
+    --   "open loclist in Trouble",
+    -- },
     ["gR"] = {
       function()
         require("trouble").open "lsp_references"

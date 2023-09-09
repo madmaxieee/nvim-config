@@ -1,3 +1,4 @@
+require "custom.autocmd.autoreload"
 require "custom.autocmd.comment"
 require "custom.autocmd.disable-fold"
 require "custom.autocmd.disable-lsp"

@@ -8,6 +8,8 @@ mappings.dap = require "custom.mappings.dap"
 
 mappings.trouble = require "custom.mappings.trouble"
 
+mappings.tabufline = require "custom.mappings.tabufline"
+
 mappings.gitsigns = {
   n = {
     ["<leader>gd"] = {
@@ -86,17 +88,6 @@ mappings.Hardtime = {
         require("hardtime").toggle()
       end,
       "Toggle hardtime",
-    },
-  },
-}
-
-mappings.tabufline = {
-  n = {
-    ["<leader>X"] = {
-      function()
-        require("nvchad.tabufline").closeAllBufs()
-      end,
-      "Close all buffers",
     },
   },
 }

@@ -614,24 +614,17 @@ local plugins = {
   },
 
   {
-    enabled = false,
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
-      lsp = {
-        hover = {
-          enabled = false,
-        },
-        signature = {
-          enabled = false,
-        },
+      cmdline = {
+        view = "cmdline",
       },
     },
     dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
   },
 
   {
-    enabled = false,
     "rcarriga/nvim-notify",
     event = "VeryLazy",
     config = function()
@@ -641,7 +634,6 @@ local plugins = {
   },
 
   {
-    enabled = false,
     "MunifTanjim/nui.nvim",
   },
 }

@@ -388,6 +388,7 @@ local plugins = {
     "lukas-reineke/indent-blankline.nvim",
     opts = {
       context_char = "▏",
+      show_first_indent_level = true,
     },
   },
 

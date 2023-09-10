@@ -20,9 +20,6 @@ M.ui = {
       bg = "NONE",
       underline = true,
     },
-    IndentBlanklineChar = {
-      fg = "light_grey",
-    },
   },
   hl_add = {
     FlashBackdrop = {

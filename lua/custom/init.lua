@@ -10,5 +10,8 @@ vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 vim.opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
+vim.opt.listchars:append "space:⋅"
+vim.opt.list = true
+
 require "custom.usercmd"
 require "custom.autocmd"

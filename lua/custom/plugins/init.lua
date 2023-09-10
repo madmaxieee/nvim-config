@@ -385,6 +385,13 @@ local plugins = {
   },
 
   {
+    "lukas-reineke/indent-blankline.nvim",
+    opts = {
+      context_char = "▏",
+    },
+  },
+
+  {
     "NvChad/nvim-colorizer.lua",
     opts = {
       user_default_options = {

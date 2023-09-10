@@ -12,6 +12,17 @@ M.ui = {
     Comment = {
       italic = true,
     },
+    IndentBlanklineContextChar = {
+      fg = "purple",
+    },
+    IndentBlanklineContextStart = {
+      sp = "purple",
+      bg = "NONE",
+      underline = true,
+    },
+    IndentBlanklineChar = {
+      fg = "light_grey",
+    },
   },
   hl_add = {
     FlashBackdrop = {

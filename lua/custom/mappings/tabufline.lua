@@ -26,6 +26,18 @@ local tabufline_mappings = {
     ["<A-8>"] = { go_to_buf(8), "Go to buffer 8" },
     ["<A-9>"] = { go_to_buf(9), "Go to buffer 9" },
     ["<A-0>"] = { go_to_buf(10), "Go to buffer 10" },
+    ["<A-[>"] = {
+      function()
+        require("nvchad.tabufline").move_buf(-1)
+      end,
+      "Move buffer to the left",
+    },
+    ["<A-]>"] = {
+      function()
+        require("nvchad.tabufline").move_buf(1)
+      end,
+      "Move buffer to the right",
+    },
   },
 }
 

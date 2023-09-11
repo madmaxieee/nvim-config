@@ -7,6 +7,7 @@ local native_mappings = {
   },
 
   n = {
+    ["U"] = { "<C-r>", "redo" },
     ["<C-u>"] = { "<C-u>zz", "Go up half screen" },
     ["<C-d>"] = { "<C-d>zz", "Go down half screen" },
 

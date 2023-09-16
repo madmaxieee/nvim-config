@@ -51,7 +51,7 @@ local sources = {
   -- },
 }
 
-if vim.fn.executable "prettierd" == 0 then
+if not vim.fn.executable "prettierd" then
   vim.notify "prettierd not found, install with: pnpm i -g @fsouza/prettierd"
 end
 

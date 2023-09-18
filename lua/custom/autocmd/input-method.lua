@@ -48,7 +48,7 @@ end
 
 if vim.fn.has "mac" then
   -- store original input method when entering vim and leaving insert mode, then switch to english
-  vim.api.nvim_create_autocmd({ "VimEnter", "InsertLeave" }, {
+  vim.api.nvim_create_autocmd({ "InsertLeave" }, {
     group = input_method_group,
     callback = function()
       save_input_method()

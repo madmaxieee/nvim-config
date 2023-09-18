@@ -51,10 +51,6 @@ local sources = {
   -- },
 }
 
-if not vim.fn.executable "prettierd" then
-  vim.notify "prettierd not found, install with: pnpm i -g @fsouza/prettierd"
-end
-
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 null_ls.setup {
   -- debug = true,

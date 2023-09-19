@@ -492,6 +492,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "m4xshen/hardtime.nvim",
     event = "VeryLazy",
     init = function()

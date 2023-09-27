@@ -33,18 +33,6 @@ local plugins = {
   },
 
   {
-    "nvim-tree/nvim-web-devicons",
-    opts = {
-      override_by_extension = {
-        ["tpp"] = {
-          icon = "",
-          name = "tpp",
-        },
-      },
-    },
-  },
-
-  {
     "nvim-tree/nvim-tree.lua",
     opts = {
       filters = {

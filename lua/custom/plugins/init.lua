@@ -143,7 +143,16 @@ local plugins = {
   {
     "nmac427/guess-indent.nvim",
     cmd = { "GuessIndent" },
-    opts = {},
+    config = function()
+      require("guess-indent").setup {}
+
+      vim.api.nvim_create_autocmd({ "BufReadPost" }, {
+        group = vim.api.nvim_create_augroup("guess-indent", { clear = true }),
+        callback = function()
+          vim.cmd "silent GuessIndent"
+        end,
+      })
+    end,
   },
 
   {
@@ -499,7 +508,16 @@ local plugins = {
     "utilyre/barbecue.nvim",
     event = "BufEnter",
     dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
-    opts = {},
+    config = function()
+      require("barbecue").setup {}
+
+      vim.api.nvim_create_autocmd({ "BufEnter" }, {
+        group = vim.api.nvim_create_augroup("barbecue", { clear = true }),
+        callback = function()
+          require("barbecue.ui").update()
+        end,
+      })
+    end,
   },
 
   { "SmiteshP/nvim-navic" },

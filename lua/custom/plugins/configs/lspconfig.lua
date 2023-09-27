@@ -5,17 +5,17 @@ capabilities.offsetEncoding = { "utf-16" }
 local lspconfig = require "lspconfig"
 
 local servers = {
-  "html",
+  -- "html",
   "bashls",
-  "cssls",
+  -- "cssls",
   "clangd",
-  "pyright",
-  "tsserver",
-  "tailwindcss",
-  "cmake",
-  "dockerls",
-  "eslint",
-  "typst_lsp",
+  -- "pyright",
+  -- "tsserver",
+  -- "tailwindcss",
+  -- "cmake",
+  -- "dockerls",
+  -- "eslint",
+  -- "typst_lsp",
 }
 
 for _, lsp in ipairs(servers) do

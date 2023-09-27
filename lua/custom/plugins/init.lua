@@ -118,11 +118,6 @@ local plugins = {
   },
 
   {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-  },
-
-  {
     "NvChad/nvterm",
     opts = {
       terminals = {
@@ -189,6 +184,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "akinsho/git-conflict.nvim",
     cmd = {
       "GitConflictChooseOurs",
@@ -340,9 +336,13 @@ local plugins = {
     end,
   },
 
-  { "kkharji/sqlite.lua" },
+  {
+    enabled = false,
+    "kkharji/sqlite.lua",
+  },
 
   {
+    enabled = false,
     "folke/todo-comments.nvim",
     event = "BufReadPre",
     cmd = { "TodoQuickFix", "TodoLocList", "TodoTrouble", "TodoTelescope" },
@@ -402,6 +402,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "NvChad/nvim-colorizer.lua",
     opts = {
       user_default_options = {
@@ -414,6 +415,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "folke/neodev.nvim",
     ft = { "lua" },
     opts = {},
@@ -456,11 +458,13 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "simrat39/rust-tools.nvim",
     ft = "rust",
   },
 
   {
+    enabled = false,
     "windwp/nvim-ts-autotag",
     event = "VeryLazy",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
@@ -505,6 +509,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "utilyre/barbecue.nvim",
     event = "BufEnter",
     dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
@@ -520,7 +525,10 @@ local plugins = {
     end,
   },
 
-  { "SmiteshP/nvim-navic" },
+  {
+    enabled = false,
+    "SmiteshP/nvim-navic",
+  },
 
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
@@ -577,6 +585,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "madmaxieee/code-shot.nvim",
     cmd = { "CodeShot" },
     config = function()

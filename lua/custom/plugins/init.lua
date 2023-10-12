@@ -190,15 +190,7 @@ local plugins = {
 
   {
     "akinsho/git-conflict.nvim",
-    cmd = {
-      "GitConflictChooseOurs",
-      "GitConflictChooseTheirs",
-      "GitConflictChooseBoth",
-      "GitConflictChooseNone",
-      "GitConflictNextConflict",
-      "GitConflictPrevConflict",
-      "GitConflictListQf",
-    },
+    event = "VeryLazy",
     init = function()
       vim.api.nvim_create_user_command("Gcco", "GitConflictChooseOurs", {})
       vim.api.nvim_create_user_command("Gcct", "GitConflictChooseTheirs", {})

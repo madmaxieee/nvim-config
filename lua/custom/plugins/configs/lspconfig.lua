@@ -15,7 +15,7 @@ local servers = {
   "cmake",
   "dockerls",
   "eslint",
-  "typst_lsp",
+  -- "typst_lsp",
 }
 
 for _, lsp in ipairs(servers) do

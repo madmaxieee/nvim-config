@@ -2,7 +2,6 @@
 local ft_group = vim.api.nvim_create_augroup("Filetype", { clear = true })
 
 local ft_detect_map = {
-  ["*.typ"] = "typst",
   [".env*"] = "sh",
 }
 

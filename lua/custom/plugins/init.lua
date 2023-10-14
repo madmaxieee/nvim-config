@@ -453,6 +453,11 @@ local plugins = {
   },
 
   {
+    "kaarmu/typst.vim",
+    ft = "typst",
+  },
+
+  {
     "windwp/nvim-ts-autotag",
     event = "VeryLazy",
     dependencies = { "nvim-treesitter/nvim-treesitter" },

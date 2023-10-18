@@ -456,6 +456,9 @@ local plugins = {
   {
     "kaarmu/typst.vim",
     ft = "typst",
+    init = function()
+      vim.g.typst_pdf_viewer = "skim"
+    end,
   },
 
   {

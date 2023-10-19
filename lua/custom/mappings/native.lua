@@ -51,6 +51,13 @@ local native_mappings = {
       "Toggle colorcolumn",
     },
   },
+
+  v = {
+    ["<A-j>"] = { ":m '>+1<CR>gv=gv", "Move selected lines down" },
+    ["<A-k>"] = { ":m '<-2<CR>gv=gv", "Move selected lines up" },
+    ["<A-down>"] = { ":m '>+1<CR>gv=gv", "Move selected lines down" },
+    ["<A-up>"] = { ":m '<-2<CR>gv=gv", "Move selected lines up" },
+  },
 }
 
 return native_mappings

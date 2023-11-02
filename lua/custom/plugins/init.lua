@@ -578,6 +578,17 @@ local plugins = {
   },
 
   {
+    "lukas-reineke/headlines.nvim",
+    ft = { "markdown" },
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    opts = {
+      markdown = {
+        codeblock_highlight = false,
+      },
+    },
+  },
+
+  {
     "madmaxieee/code-shot.nvim",
     cmd = { "CodeShot" },
     config = function()

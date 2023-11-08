@@ -38,17 +38,17 @@ local sources = {
   lint.cmake_lint,
   lint.typos,
 
-  -- lint.shellcheck.with {
-  --   runtime_condition = cache.by_bufnr(function(params)
-  --     local bufname = vim.api.nvim_buf_get_name(params.bufnr)
-  --     if bufname:match "%.env.*" then
-  --       vim.notify "shellcheck disabled for .env.* files"
-  --       return false
-  --     else
-  --       return true
-  --     end
-  --   end),
-  -- },
+  lint.shellcheck.with {
+    runtime_condition = cache.by_bufnr(function(params)
+      local bufname = vim.api.nvim_buf_get_name(params.bufnr)
+      if bufname:match "%.env.*" then
+        vim.notify "shellcheck disabled for .env.* files"
+        return false
+      else
+        return true
+      end
+    end),
+  },
 }
 
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})

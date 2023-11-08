@@ -6,7 +6,7 @@ local lspconfig = require "lspconfig"
 
 local servers = {
   "html",
-  "bashls",
+  -- "bashls",
   "cssls",
   "clangd",
   "pyright",

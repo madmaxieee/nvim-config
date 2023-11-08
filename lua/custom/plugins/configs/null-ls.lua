@@ -34,9 +34,9 @@ local sources = {
   formatting.cmake_format,
   formatting.beautysh,
 
-  -- lint.ruff,
   lint.fish,
   lint.cmake_lint,
+  lint.typos,
 
   -- lint.shellcheck.with {
   --   runtime_condition = cache.by_bufnr(function(params)

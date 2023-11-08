@@ -416,7 +416,7 @@ local plugins = {
     "nvim-treesitter/nvim-treesitter-context",
     event = "BufReadPre",
     opts = {
-      multiline_threshold = 20, -- Maximum number of lines to collapse for a single context line
+      multiline_threshold = 10, -- Maximum number of lines to collapse for a single context line
     },
   },
 

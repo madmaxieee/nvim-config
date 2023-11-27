@@ -4,24 +4,34 @@ local formatting = null_ls.builtins.formatting
 local lint = null_ls.builtins.diagnostics
 -- local actions = null_ls.builtins.code_actions
 
-local cache = {}
-cache.next_key = 0
-cache.cache = {}
-cache.by_bufnr = function(cb)
+local shellcheck_cache = {}
+shellcheck_cache.next_key = 0
+shellcheck_cache.cache = {}
+shellcheck_cache.by_bufnr = function(cb)
   -- assign next available key, since we just want to avoid collisions
-  local key = cache.next_key
-  cache.cache[key] = {}
-  cache.next_key = cache.next_key + 1
+  local key = shellcheck_cache.next_key
+  shellcheck_cache.cache[key] = {}
+  shellcheck_cache.next_key = shellcheck_cache.next_key + 1
   return function(params)
     local bufnr = params.bufnr
     -- if we haven't cached a value yet, get it from cb
-    if cache.cache[key][bufnr] == nil then
+    if shellcheck_cache.cache[key][bufnr] == nil then
       -- make sure we always store a value so we know we've already called cb
-      cache.cache[key][bufnr] = cb(params) or false
+      shellcheck_cache.cache[key][bufnr] = cb(params) or false
     end
-    return cache.cache[key][bufnr]
+    return shellcheck_cache.cache[key][bufnr]
   end
 end
+
+vim.api.nvim_create_user_command("TyposDisableBuf", function()
+  vim.g.typos_disabled[vim.api.nvim_get_current_buf()] = true
+end, { nargs = 0 })
+
+vim.api.nvim_create_user_command("TyposEnableBuf", function()
+  vim.g.typos_disabled[vim.api.nvim_get_current_buf()] = nil
+end, { nargs = 0 })
+
+vim.g.typos_disabled = {}
 
 local sources = {
   formatting.prettierd,
@@ -36,10 +46,26 @@ local sources = {
 
   lint.fish,
   lint.cmake_lint,
-  lint.typos,
+  lint.typos.with {
+    runtime_condition = function(params)
+      if vim.g.typos_disabled[params.bufnr] then
+        return false
+      end
+
+      local filetype = vim.api.nvim_buf_get_option(params.bufnr, "filetype")
+      local to_disable = {
+        ["NvimTree"] = true,
+      }
+      if to_disable[filetype] then
+        return false
+      else
+        return true
+      end
+    end,
+  },
 
   lint.shellcheck.with {
-    runtime_condition = cache.by_bufnr(function(params)
+    runtime_condition = shellcheck_cache.by_bufnr(function(params)
       local bufname = vim.api.nvim_buf_get_name(params.bufnr)
       if bufname:match "%.env.*" then
         vim.notify "shellcheck disabled for .env.* files"

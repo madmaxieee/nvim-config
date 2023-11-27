@@ -413,6 +413,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "nvim-treesitter/nvim-treesitter-context",
     event = "BufReadPre",
     opts = {

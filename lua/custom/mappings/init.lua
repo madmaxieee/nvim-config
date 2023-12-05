@@ -25,6 +25,7 @@ mappings.telescope = {
   n = {
     ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<leader>fs"] = { "<cmd> Telescope lsp_document_symbols <CR>", "Search document symbols" },
+    ["<leader>fm"] = { "<cmd> Telescope marks <CR>", "Search marks" },
     ["<leader>y"] = { "<cmd> Telescope neoclip <CR>", "Search clipboard history" },
   },
 }

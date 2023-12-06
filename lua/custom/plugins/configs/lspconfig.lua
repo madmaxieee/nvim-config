@@ -1,8 +1,10 @@
+local lspconfig = require "lspconfig"
 local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
 capabilities.offsetEncoding = { "utf-16" }
 
-local lspconfig = require "lspconfig"
+local capabilities_no_semantic = vim.tbl_deep_extend("keep", {}, capabilities)
+capabilities_no_semantic.semanticTokensProvider = nil
 
 local servers = {
   "html",
@@ -14,43 +16,28 @@ local servers = {
   "cmake",
   "dockerls",
   "eslint",
-  "typst_lsp",
+  "yamlls",
+  "typos_lsp",
 }
-
-capabilities.semanticTokensProvider = nil
 
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
-    capabilities = capabilities,
+    capabilities = capabilities_no_semantic,
   }
 end
 
-local custom_servers = {
-  ["yamlls"] = {
-    yaml = {
-      schemas = {
-        ["https://raw.githubusercontent.com/instrumenta/kubernetes-json-schema/master/v1.18.0-standalone-strict/all.json"] = "/*.k8s.yaml",
-        ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
-      },
-    },
-  },
+lspconfig["typst_lsp"].setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
 }
-
-for lsp, config in pairs(custom_servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-    settings = config,
-  }
-end
 
 require("rust-tools").setup {
   server = {
     on_attach = function(client, bufnr)
       on_attach(client, bufnr)
     end,
-    capabilities = capabilities,
+    capabilities = capabilities_no_semantic,
     settings = {
       ["rust-analyzer"] = {
         checkOnSave = {

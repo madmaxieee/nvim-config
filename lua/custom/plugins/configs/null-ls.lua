@@ -23,16 +23,6 @@ shellcheck_cache.by_bufnr = function(cb)
   end
 end
 
-vim.api.nvim_create_user_command("TyposDisableBuf", function()
-  vim.g.typos_disabled[vim.api.nvim_get_current_buf()] = true
-end, { nargs = 0 })
-
-vim.api.nvim_create_user_command("TyposEnableBuf", function()
-  vim.g.typos_disabled[vim.api.nvim_get_current_buf()] = nil
-end, { nargs = 0 })
-
-vim.g.typos_disabled = {}
-
 local sources = {
   formatting.prettierd,
   formatting.stylua,
@@ -46,23 +36,6 @@ local sources = {
 
   lint.fish,
   lint.cmake_lint,
-  lint.typos.with {
-    runtime_condition = function(params)
-      if vim.g.typos_disabled[params.bufnr] then
-        return false
-      end
-
-      local filetype = vim.api.nvim_buf_get_option(params.bufnr, "filetype")
-      local to_disable = {
-        ["NvimTree"] = true,
-      }
-      if to_disable[filetype] then
-        return false
-      else
-        return true
-      end
-    end,
-  },
 
   lint.shellcheck.with {
     runtime_condition = shellcheck_cache.by_bufnr(function(params)

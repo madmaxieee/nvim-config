@@ -119,6 +119,11 @@ local plugins = {
   },
 
   {
+    "L3MON4D3/LuaSnip",
+    tag = "v2.0.0",
+  },
+
+  {
     "nvim-telescope/telescope-fzf-native.nvim",
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
   },

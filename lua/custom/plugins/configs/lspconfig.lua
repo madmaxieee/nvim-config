@@ -18,6 +18,7 @@ local servers = {
   "eslint",
   "yamlls",
   "typos_lsp",
+  "typst_lsp",
 }
 
 for _, lsp in ipairs(servers) do
@@ -26,11 +27,6 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities_no_semantic,
   }
 end
-
-lspconfig["typst_lsp"].setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
 
 require("rust-tools").setup {
   server = {

@@ -6,7 +6,6 @@ local lspconfig = require "lspconfig"
 
 local servers = {
   "html",
-  -- "bashls",
   "cssls",
   "clangd",
   "pyright",
@@ -15,7 +14,7 @@ local servers = {
   "cmake",
   "dockerls",
   "eslint",
-  -- "typst_lsp",
+  "typst_lsp",
 }
 
 capabilities.semanticTokensProvider = nil

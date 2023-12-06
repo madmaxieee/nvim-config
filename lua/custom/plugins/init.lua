@@ -455,6 +455,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "kaarmu/typst.vim",
     ft = "typst",
     init = function()

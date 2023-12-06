@@ -11,7 +11,6 @@ vim.opt.foldenable = true
 vim.opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 vim.opt.guicursor = "n-c-sm:block,i-ci-ve:ver25,v-r-cr-o:hor20"
 
-vim.opt.wrap = false
-
 require "custom.usercmd"
 require "custom.autocmd"
+require "custom.filetype"

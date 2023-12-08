@@ -1,18 +1,14 @@
 -- disable lsp diagnostic for certain file names
-local disable_lsp_group = vim.api.nvim_create_augroup("DisableLsp", { clear = true })
-
-vim.api.nvim_create_autocmd("BufEnter", {
-  group = disable_lsp_group,
-  pattern = { ".env*" },
-  callback = function(bufnr)
-    vim.diagnostic.disable(bufnr)
-  end,
-})
-
-vim.api.nvim_create_autocmd("BufLeave", {
-  group = disable_lsp_group,
-  pattern = { ".env*" },
-  callback = function(bufnr)
-    vim.diagnostic.enable(bufnr)
-  end,
-})
+-- local disable_lsp_group = vim.api.nvim_create_augroup("DisableLsp", { clear = true })
+-- vim.api.nvim_create_autocmd("BufCreate", {
+--   group = disable_lsp_group,
+--   pattern = { ".env*" },
+--   callback = function(event)
+--     local lsp_clients = vim.lsp.get_clients { bufnr = event.buf }
+--     for _, client in ipairs(lsp_clients) do
+--       vim.notify("Detaching " .. client.name .. " from " .. event.buf)
+--       vim.lsp.buf_detach_client(event.buf, client.id)
+--     end
+--     vim.diagnostic.disable(event.buf)
+--   end,
+-- })

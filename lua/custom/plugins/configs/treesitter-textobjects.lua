@@ -29,12 +29,12 @@ local opts = {
         ["[M"] = "@function.outer",
         ["[]"] = "@class.outer",
       },
-      goto_next = {
-        ["]d"] = "@conditional.outer",
-      },
-      goto_previous = {
-        ["[d"] = "@conditional.outer",
-      },
+      -- goto_next = {
+      --   ["]d"] = "@conditional.outer",
+      -- },
+      -- goto_previous = {
+      --   ["[d"] = "@conditional.outer",
+      -- },
     },
     swap = {
       enable = true,

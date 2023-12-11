@@ -150,15 +150,16 @@ local plugins = {
   {
     "nmac427/guess-indent.nvim",
     cmd = { "GuessIndent" },
-    config = function()
-      require("guess-indent").setup {}
-
+    init = function()
       vim.api.nvim_create_autocmd({ "BufReadPost" }, {
         group = vim.api.nvim_create_augroup("guess-indent", { clear = true }),
         callback = function()
           vim.cmd "silent GuessIndent"
         end,
       })
+    end,
+    config = function()
+      require("guess-indent").setup {}
     end,
   },
 

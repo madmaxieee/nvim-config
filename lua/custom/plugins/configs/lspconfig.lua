@@ -1,10 +1,10 @@
 local lspconfig = require "lspconfig"
 local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
-capabilities.offsetEncoding = { "utf-16" }
 
 local capabilities_no_semantic = vim.tbl_deep_extend("keep", {}, capabilities)
-capabilities_no_semantic.semanticTokensProvider = nil
+capabilities_no_semantic.offsetEncoding = { "utf-16" }
+-- capabilities_no_semantic.semanticTokensProvider = nil
 
 local servers = {
   "html",

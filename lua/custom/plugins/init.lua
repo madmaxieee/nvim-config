@@ -587,6 +587,7 @@ local plugins = {
   },
 
   {
+    enabled = false,
     "madmaxieee/code-shot.nvim",
     cmd = { "CodeShot" },
     config = function()
@@ -637,9 +638,9 @@ local plugins = {
   },
 
   {
-    enabled = false,
     "folke/noice.nvim",
-    event = "VeryLazy",
+    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+    event = "VimEnter",
     opts = {
       lsp = {
         hover = {
@@ -650,10 +651,6 @@ local plugins = {
         },
       },
       routes = {
-        {
-          view = "notify",
-          filter = { event = "msg_showmode" },
-        },
         {
           filter = {
             event = "msg_show",
@@ -694,13 +691,10 @@ local plugins = {
         },
       },
     },
-    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
   },
 
   {
-    enabled = false,
     "rcarriga/nvim-notify",
-    event = "VeryLazy",
     config = function()
       require("notify").setup {}
       vim.notify = require "notify"
@@ -708,7 +702,6 @@ local plugins = {
   },
 
   {
-    enabled = false,
     "MunifTanjim/nui.nvim",
   },
 }

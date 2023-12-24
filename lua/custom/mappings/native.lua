@@ -7,6 +7,8 @@ local native_mappings = {
   },
 
   n = {
+    ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
+
     ["U"] = { "<C-r>", "redo" },
     ["<C-u>"] = { "<C-u>zz", "Go up half screen" },
     ["<C-d>"] = { "<C-d>zz", "Go down half screen" },

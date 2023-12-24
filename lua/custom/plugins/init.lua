@@ -1,7 +1,7 @@
 local plugins = {
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "nvim-treesitter/playground" },
+    -- dependencies = { "nvim-treesitter/playground" },
     opts = function()
       return require "custom.plugins.configs.treesitter"
     end,

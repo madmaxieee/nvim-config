@@ -516,7 +516,7 @@ local plugins = {
 
   {
     "utilyre/barbecue.nvim",
-    event = "BufEnter",
+    lazy = false,
     dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
     config = function()
       require("barbecue").setup {}
@@ -639,8 +639,11 @@ local plugins = {
 
   {
     "folke/noice.nvim",
+    lazy = false,
     dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-    event = "VimEnter",
+    init = function()
+      vim.opt.cmdheight = 0
+    end,
     opts = {
       lsp = {
         hover = {
@@ -701,9 +704,7 @@ local plugins = {
     end,
   },
 
-  {
-    "MunifTanjim/nui.nvim",
-  },
+  { "MunifTanjim/nui.nvim" },
 }
 
 return plugins

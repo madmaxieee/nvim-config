@@ -520,7 +520,7 @@ local plugins = {
     dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
     config = function()
       require("barbecue").setup {}
-
+      require("barbecue.ui").update()
       vim.api.nvim_create_autocmd({ "BufEnter" }, {
         group = vim.api.nvim_create_augroup("barbecue", { clear = true }),
         callback = function()

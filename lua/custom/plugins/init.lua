@@ -93,7 +93,7 @@ local plugins = {
     dependencies = { "nvim-telescope/telescope-fzf-native.nvim" },
     opts = {
       defaults = {
-        file_ignore_patterns = { "^.git" },
+        file_ignore_patterns = { "^.git$" },
         mappings = {
           i = {
             ["<c-t>"] = function(prompt_bufnr)
@@ -122,11 +122,6 @@ local plugins = {
   {
     "L3MON4D3/LuaSnip",
     tag = "v2.0.0",
-  },
-
-  {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
   },
 
   {
@@ -499,7 +494,7 @@ local plugins = {
   },
 
   {
-    enabled = false,
+    -- enabled = false,
     "m4xshen/hardtime.nvim",
     event = "VeryLazy",
     init = function()
@@ -520,13 +515,6 @@ local plugins = {
     dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
     config = function()
       require("barbecue").setup {}
-      require("barbecue.ui").update()
-      vim.api.nvim_create_autocmd({ "BufEnter" }, {
-        group = vim.api.nvim_create_augroup("barbecue", { clear = true }),
-        callback = function()
-          require("barbecue.ui").update()
-        end,
-      })
     end,
   },
 

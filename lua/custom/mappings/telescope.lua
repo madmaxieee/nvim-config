@@ -1,6 +1,6 @@
 local telescope_mappings = {
   n = {
-    ["<leader>ff"] = { "<cmd> Telescope git_files <CR>", "Find git files" },
+    ["<leader>fg"] = { "<cmd> Telescope git_files <CR>", "Find git files" },
     ["<leader>fs"] = { "<cmd> Telescope lsp_document_symbols <CR>", "Search document symbols" },
     ["<leader>fm"] = { "<cmd> Telescope marks <CR>", "Search marks" },
     ["<leader>fj"] = { "<cmd> Telescope jumplist <CR>", "Search jumplist" },

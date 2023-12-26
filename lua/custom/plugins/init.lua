@@ -494,7 +494,7 @@ local plugins = {
   },
 
   {
-    -- enabled = false,
+    enabled = false,
     "m4xshen/hardtime.nvim",
     event = "VeryLazy",
     init = function()

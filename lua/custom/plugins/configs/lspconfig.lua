@@ -1,10 +1,7 @@
 local lspconfig = require "lspconfig"
 local on_attach = require("plugins.configs.lspconfig").on_attach
-local capabilities = require("plugins.configs.lspconfig").capabilities
-
-local capabilities_no_semantic = vim.tbl_deep_extend("keep", {}, capabilities)
-capabilities_no_semantic.offsetEncoding = { "utf-16" }
--- capabilities_no_semantic.semanticTokensProvider = nil
+local capabilities = vim.tbl_deep_extend("keep", {}, require("plugins.configs.lspconfig").capabilities)
+capabilities.offsetEncoding = { "utf-16" }
 
 local servers = {
   "html",
@@ -21,11 +18,19 @@ local servers = {
   "typst_lsp",
 }
 
+local configs = {
+  clangd = {
+    cmd = { "clangd", "--clang-tidy" },
+  },
+}
+
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
+  local config = configs[lsp] or {}
+  config = vim.tbl_deep_extend("force", config, {
     on_attach = on_attach,
-    capabilities = capabilities_no_semantic,
-  }
+    capabilities = capabilities,
+  })
+  lspconfig[lsp].setup(config)
 end
 
 require("rust-tools").setup {
@@ -33,7 +38,7 @@ require("rust-tools").setup {
     on_attach = function(client, bufnr)
       on_attach(client, bufnr)
     end,
-    capabilities = capabilities_no_semantic,
+    capabilities = capabilities,
     settings = {
       ["rust-analyzer"] = {
         checkOnSave = {

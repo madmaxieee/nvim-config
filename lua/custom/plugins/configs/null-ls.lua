@@ -33,6 +33,9 @@ local sources = {
   formatting.rustfmt,
   formatting.cmake_format,
   formatting.beautysh,
+  formatting.bibclean.with {
+    command = { "bibclean", "-max-width", "0" },
+  },
 
   lint.fish,
   lint.cmake_lint,

@@ -50,14 +50,12 @@ M.ui = {
     overriden_modules = function(modules)
       table.insert(
         modules,
-        -- 1,
         2,
         (function()
           local recording_register = vim.fn.reg_recording()
           if recording_register == "" then
             return ""
           else
-            -- return "%#St_ReplaceMode#" .. " Recording @" .. recording_register .. " %#St_EmptySpace# "
             return "%#St_ReplaceMode#"
               .. ""
               .. " Recording @"

@@ -93,7 +93,7 @@ local plugins = {
     dependencies = { "nvim-telescope/telescope-fzf-native.nvim" },
     opts = {
       defaults = {
-        file_ignore_patterns = { "^.git$" },
+        file_ignore_patterns = { "^.git/" },
         mappings = {
           i = {
             ["<c-t>"] = function(prompt_bufnr)
@@ -457,15 +457,6 @@ local plugins = {
   },
 
   {
-    enabled = false,
-    "kaarmu/typst.vim",
-    ft = "typst",
-    init = function()
-      vim.g.typst_pdf_viewer = "skim"
-    end,
-  },
-
-  {
     "windwp/nvim-ts-autotag",
     event = "VeryLazy",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
@@ -623,6 +614,27 @@ local plugins = {
         },
       }
     end,
+  },
+
+  {
+    "mrjones2014/smart-splits.nvim",
+    event = "VeryLazy",
+    init = function()
+      require("core.utils").load_mappings "smart-splits"
+    end,
+    opts = {
+      default_amount = 5,
+      resize_mode = {
+        quit_key = "<ESC>",
+        resize_keys = { "h", "j", "k", "l" },
+        silent = true,
+        hooks = {
+          on_enter = nil,
+          on_leave = nil,
+        },
+      },
+    },
+    config = true,
   },
 
   {

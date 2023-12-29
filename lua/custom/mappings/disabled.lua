@@ -1,6 +1,7 @@
 local disabled_mappings = {
   n = {
     ["<leader>td"] = "",
+    ["<leader>ch"] = "",
     ["<leader>n"] = "",
     ["<leader>rn"] = "",
     ["<leader>b"] = "",
@@ -8,6 +9,10 @@ local disabled_mappings = {
     ["<c-s>"] = "",
     ["j"] = "",
     ["k"] = "",
+    ["<A-h>"] = "",
+  },
+  t = {
+    ["<A-h>"] = "",
   },
 }
 

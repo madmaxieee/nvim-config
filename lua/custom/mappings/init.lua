@@ -12,6 +12,8 @@ mappings.tabufline = require "custom.mappings.tabufline"
 
 mappings.telescope = require "custom.mappings.telescope"
 
+mappings["smart-splits"] = require "custom.mappings.smart-splits"
+
 mappings.gitsigns = {
   n = {
     ["<leader>gd"] = {

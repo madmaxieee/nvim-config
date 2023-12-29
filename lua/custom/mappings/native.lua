@@ -20,14 +20,8 @@ local native_mappings = {
 
     ["<leader><space>"] = { "<cmd> w <CR>", "Save file" },
 
-    ["<leader>="] = { "<cmd> resize +5 <CR>", "Increase split height" }, -- (<leader>+)
-    ["<leader>+"] = { "<cmd> resize +5 <CR>", "Increase split height" },
-    ["<leader>-"] = { "<cmd> resize -5 <CR>", "Decrease split height" },
-    ["<leader>>"] = { "<cmd> vertical resize +5 <CR>", "Increase split width" },
-    ["<leader><"] = { "<cmd> vertical resize -5 <CR>", "Decrease split width" },
-
     ["<leader>tn"] = { "<cmd> set rnu! <CR>", "Toggle relative line numbers" },
-    ["<leader>nb"] = { "<cmd> enew <CR>", "New buffer" },
+    ["<leader>nb"] = { "<cmd> ene <CR>", "New buffer" },
     ["<leader>nt"] = { "<cmd> tabnew <CR>", "New tab" },
 
     ["gx"] = {

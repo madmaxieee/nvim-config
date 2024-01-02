@@ -28,6 +28,7 @@ local opts = {
     "svelte-language-server",
     "tailwindcss-language-server",
     "typescript-language-server",
+    "typos-lsp",
     "typst-lsp",
     "yaml-language-server",
   },

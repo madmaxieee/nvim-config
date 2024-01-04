@@ -45,7 +45,6 @@ local sources = {
     runtime_condition = shellcheck_cache.by_bufnr(function(params)
       local bufname = vim.api.nvim_buf_get_name(params.bufnr)
       if bufname:match "%.env.*" then
-        vim.notify "shellcheck disabled for .env.* files"
         return false
       else
         return true

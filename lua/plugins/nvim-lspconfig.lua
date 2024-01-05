@@ -1,20 +1,61 @@
 local map = require("utils").safe_keymap_set
 
 local function set_keymaps(bufnr)
-  map("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition" })
-  map("n", "gD", vim.lsp.buf.type_definition, { buffer = bufnr, desc = "Go to type definition" })
-  map("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover" })
-  map("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr, desc = "Go to implementation" })
-  map("n", "<leader>ls", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "Signature help" })
-  map("n", "[d", vim.lsp.diagnostic.goto_prev, { buffer = bufnr, desc = "Go to previous diagnostic" })
-  map("n", "]d", vim.lsp.diagnostic.goto_next, { buffer = bufnr, desc = "Go to next diagnostic" })
-  map("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "LSP code action" })
-  map("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "LSP references" })
-  map("n", "<leader>ra", vim.lsp.buf.rename, { buffer = bufnr, desc = "LSP rename" })
-  map("n", "<leader>q", vim.diagnostic.setloclist, { buffer = bufnr, desc = "Diagnostic setloclist" })
-  map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { buffer = bufnr, desc = "Add workspace folder" })
-  map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { buffer = bufnr, desc = "Remove workspace folder" })
-  map("n", "<leader>wa", vim.lsp.buf.list_workspace_folders, { buffer = bufnr, desc = "List workspace folders" })
+  map("n", "gd", function()
+    vim.lsp.buf.definition()
+  end, { buffer = bufnr, desc = "Go to definition" })
+
+  map("n", "gD", function()
+    vim.lsp.buf.type_definition()
+  end, { buffer = bufnr, desc = "Go to type definition" })
+
+  map("n", "K", function()
+    vim.lsp.buf.hover()
+  end, { buffer = bufnr, desc = "Hover" })
+
+  map("n", "gi", function()
+    vim.lsp.buf.implementation()
+  end, { buffer = bufnr, desc = "Go to implementation" })
+
+  map("n", "<leader>ls", function()
+    vim.lsp.buf.signature_help()
+  end, { buffer = bufnr, desc = "Signature help" })
+
+  map("n", "[d", function()
+    vim.lsp.diagnostic.goto_prev()
+  end, { buffer = bufnr, desc = "Go to previous diagnostic" })
+
+  map("n", "]d", function()
+    vim.lsp.diagnostic.goto_next()
+  end, { buffer = bufnr, desc = "Go to next diagnostic" })
+
+  map("n", "<leader>ca", function()
+    vim.lsp.buf.code_action()
+  end, { buffer = bufnr, desc = "LSP code action" })
+
+  map("n", "gr", function()
+    vim.lsp.buf.references()
+  end, { buffer = bufnr, desc = "LSP references" })
+
+  map("n", "<leader>ra", function()
+    vim.lsp.buf.rename()
+  end, { buffer = bufnr, desc = "LSP rename" })
+
+  map("n", "<leader>q", function()
+    vim.diagnostic.setloclist()
+  end, { buffer = bufnr, desc = "Diagnostic setloclist" })
+
+  map("n", "<leader>wa", function()
+    vim.lsp.buf.add_workspace_folder()
+  end, { buffer = bufnr, desc = "Add workspace folder" })
+
+  map("n", "<leader>wr", function()
+    vim.lsp.buf.remove_workspace_folder()
+  end, { buffer = bufnr, desc = "Remove workspace folder" })
+
+  map("n", "<leader>wa", function()
+    vim.lsp.buf.list_workspace_folders()
+  end, { buffer = bufnr, desc = "List workspace folders" })
 end
 
 local servers = {

@@ -7,5 +7,6 @@ vim.opt.cursorline = true
 vim.opt.shortmess:append "sI"
 
 vim.opt.whichwrap:append "<>[]hl"
+vim.opt.clipboard = "unnamedplus"
 
 vim.g.mapleader = " "

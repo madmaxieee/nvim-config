@@ -1,5 +1,6 @@
 return {
   "williamboman/mason.nvim",
+  build = "MasonInstallAll",
   cmd = {
     "Mason",
     "MasonInstall",
@@ -27,7 +28,6 @@ return {
       "html-lsp",
       "isort",
       "json-lsp",
-      "luaformatter",
       "mypy",
       "markdownlint",
       "nginx-language-server",

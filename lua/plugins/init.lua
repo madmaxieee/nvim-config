@@ -49,4 +49,14 @@ return {
     opts = {},
     config = true,
   },
+  {
+    "folke/neodev.nvim",
+    ft = "lua",
+    opts = {},
+  },
+  {
+    "stevearc/dressing.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
 }

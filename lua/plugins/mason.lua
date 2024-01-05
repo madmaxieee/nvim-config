@@ -43,7 +43,7 @@ return {
       "yaml-language-server",
     },
 
-    PATH = "skip",
+    PATH = "prepend",
 
     max_concurrent_installers = 10,
   },

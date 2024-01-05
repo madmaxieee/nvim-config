@@ -1,5 +1,6 @@
 return {
   "nvim-treesitter/nvim-treesitter",
+  event = { "BufRead", "BufNewFile" },
   cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
   build = ":TSUpdate",
   opts = {
@@ -15,25 +16,33 @@ return {
       "html",
       "css",
 
-      "markdown",
-      "json",
-      "yaml",
-      "kdl",
-      "make",
-      "cmake",
-      "gitattributes",
-      "gitignore",
-      "dockerfile",
-      "graphql",
-
       "c",
       "cpp",
       "rust",
       "go",
+
+      "typst",
+      "markdown",
+      "json",
+      "yaml",
+      "kdl",
+      "graphql",
+
+      "gitattributes",
+      "gitignore",
+
+      "make",
+      "cmake",
+      "dockerfile",
     },
 
     autotag = {
       enable = true,
+    },
+
+    highlight = {
+      enable = true,
+      use_languagetree = true,
     },
 
     additional_vim_regex_highlighting = false,

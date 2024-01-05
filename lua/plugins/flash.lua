@@ -1,6 +1,5 @@
 return {
   "folke/flash.nvim",
-  event = "VeryLazy",
   opts = {
     highlight = {
       priority = 10000,

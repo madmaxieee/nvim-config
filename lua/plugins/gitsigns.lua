@@ -31,7 +31,6 @@ return {
       changedelete = { text = "~" },
       untracked = { text = "│" },
     },
-    ---@diagnostic disable-next-line: unused-local
     on_attach = function(bufnr)
       local gs = require "gitsigns"
 

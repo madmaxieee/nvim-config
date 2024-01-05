@@ -27,7 +27,7 @@ return {
       desc = "Search workspace symbols",
     },
     {
-      "<leader>fm",
+      "<leader>ma",
       mode = "n",
       "<cmd> Telescope marks <CR>",
       desc = "Search marks",

@@ -1,1 +1,5 @@
+require "config.opts"
 require "config.lazy"
+require "config.usercmd"
+require "config.autocmd"
+require "config.filetype"

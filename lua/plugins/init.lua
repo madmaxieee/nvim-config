@@ -1,5 +1,6 @@
 return {
   { "nvim-lua/plenary.nvim" },
+  { "nvim-tree/nvim-web-devicons" },
   {
     enabled = false,
     "catppuccin/nvim",
@@ -21,7 +22,7 @@ return {
   },
   {
     "tpope/vim-sleuth",
-    event = "VeryLazy",
+    event = { "BufRead", "BufNewFile" },
   },
   {
     "folke/which-key.nvim",

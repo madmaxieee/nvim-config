@@ -69,7 +69,7 @@ end
 return {
   {
     "neovim/nvim-lspconfig",
-    event = "VeryLazy",
+    event = { "BufReadPre", "BufNewFile" },
     -- mason has to configure PATH first
     dependencies = {
       "williamboman/mason.nvim",

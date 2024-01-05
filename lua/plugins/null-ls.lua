@@ -17,8 +17,6 @@ shellcheck_cache.by_bufnr = function(cb)
   end
 end
 
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-
 return {
   "nvimtools/none-ls.nvim",
   event = { "BufReadPre", "BufNewFile" },
@@ -58,6 +56,9 @@ return {
         end),
       },
     }
+
+    local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+
     null_ls.setup {
       sources = sources,
       -- you can reuse a shared lspconfig on_attach callback here

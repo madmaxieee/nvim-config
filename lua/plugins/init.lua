@@ -34,4 +34,19 @@ return {
     event = "InsertEnter",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
+  {
+    "stevearc/oil.nvim",
+    cmd = "Oil",
+    keys = {
+      {
+        "<leader>o",
+        mode = "n",
+        "<cmd> Oil <CR>",
+        desc = "Open Oil",
+      },
+    },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {},
+    config = true,
+  },
 }

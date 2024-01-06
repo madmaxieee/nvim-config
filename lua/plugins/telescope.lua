@@ -1,6 +1,9 @@
 return {
   "nvim-telescope/telescope.nvim",
-  dependencies = "nvim-treesitter/nvim-treesitter",
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter",
+    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  },
   keys = {
     {
       "<leader>fg",
@@ -137,18 +140,15 @@ return {
         layout_config = {
           horizontal = {
             prompt_position = "top",
-            preview_width = 0.55,
-            results_width = 0.8,
           },
           vertical = {
             mirror = false,
           },
-          width = 0.87,
           height = 0.80,
           preview_cutoff = 120,
         },
         file_sorter = require("telescope.sorters").get_fuzzy_file,
-        file_ignore_patterns = { "node_modules", "^.git/" },
+        file_ignore_patterns = { "node_modules", "lazy-lock.json", "^.git/" },
         generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
         path_display = { "truncate" },
         winblend = 0,
@@ -169,6 +169,16 @@ return {
           hidden = true,
         },
       },
+      extensions = {
+        fzf = {
+          fuzzy = true,
+          override_generic_sorter = true,
+          override_file_sorter = true,
+          case_mode = "smart_case",
+        },
+      },
     }
+
+    require("telescope").load_extension "fzf"
   end,
 }

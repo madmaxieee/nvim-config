@@ -5,6 +5,7 @@ vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.ruler = false
 vim.opt.signcolumn = "yes"
+vim.opt.updatetime = 250
 
 -- disable nvim intro
 vim.opt.shortmess:append "sI"

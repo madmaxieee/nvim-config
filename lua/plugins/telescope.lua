@@ -87,6 +87,12 @@ return {
       desc = "Find in current buffer",
     },
     {
+      "<leader>tr",
+      mode = "n",
+      "<cmd> Telescope resume <CR>",
+      desc = "Telescope resume",
+    },
+    {
       "<leader>cm",
       mode = "n",
       "<cmd> Telescope git_commits <CR>",

@@ -22,7 +22,10 @@ return {
     "<leader>df",
     "<leader>dF",
   },
-  dependencies = { "nvim-treesitter/nvim-treesitter" },
+  dependencies = {
+    -- "nvim-treesitter/nvim-treesitter"
+    "madmaxieee/nvim-treesitter", -- use my own fork for typst support
+  },
   config = function()
     require("nvim-treesitter.configs").setup {
       textobjects = {

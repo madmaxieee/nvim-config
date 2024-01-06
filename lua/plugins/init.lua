@@ -33,7 +33,10 @@ return {
   {
     "windwp/nvim-ts-autotag",
     event = "InsertEnter",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    dependencies = {
+      -- "nvim-treesitter/nvim-treesitter"
+      "madmaxieee/nvim-treesitter", -- use my own fork for typst support
+    },
   },
   {
     "folke/neodev.nvim",

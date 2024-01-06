@@ -1,3 +1,0 @@
-[submodule "tree-sitter-typst"]
-	path = tree-sitter-typst
-	url = git@github.com:uben0/tree-sitter-typst.git

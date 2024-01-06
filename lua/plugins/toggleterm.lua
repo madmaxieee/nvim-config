@@ -12,20 +12,20 @@ return {
       cmd = "exec lazygit",
       direction = "float",
       hidden = true,
-      float_opts = float_window_config(0.8, 0.9, {}),
+      float_opts = float_window_config(0.8, 0.8, {}),
       on_open = function(term)
-        vim.api.nvim_buf_set_keymap(term.bufnr, "t", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<C-c>", "<cmd>close<CR>", { noremap = true, silent = true })
       end,
     }
 
-    map("n", "<leader>lg", function()
+    map("n", "<leader>gg", function()
       lazygit:toggle()
     end, { desc = "Toggle LazyGit" })
 
     require("toggleterm").setup {
       open_mapping = "<A-i>",
       direction = "float",
-      float_opts = float_window_config(0.7, 0.6, {}),
+      float_opts = float_window_config(0.8, 0.6, {}),
     }
   end,
 }

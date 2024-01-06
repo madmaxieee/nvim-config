@@ -11,7 +11,6 @@ return {
   },
   opts = {
     ensure_installed = {
-      "lua-language-server",
       "bash-language-server",
       "beautysh",
       "black",
@@ -28,6 +27,7 @@ return {
       "html-lsp",
       "isort",
       "json-lsp",
+      "lua-language-server",
       "mypy",
       "markdownlint",
       "nginx-language-server",

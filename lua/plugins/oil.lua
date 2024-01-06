@@ -1,3 +1,5 @@
+local float_window_config = require("utils").float_window_config
+
 return {
   "stevearc/oil.nvim",
   cmd = "Oil",
@@ -5,7 +7,9 @@ return {
     {
       "<leader>o",
       mode = "n",
-      "<cmd> Oil <CR>",
+      function()
+        require("oil").toggle_float()
+      end,
       desc = "Open Oil",
     },
   },
@@ -13,8 +17,8 @@ return {
   opts = {
     keymaps = {
       ["<leader><Space>"] = function()
-        vim.cmd "w"
-        require("oil").close()
+        require("oil").save()
+        require("oil").toggle_float()
       end,
       ["g?"] = "actions.show_help",
       ["<CR>"] = "actions.select",
@@ -32,6 +36,12 @@ return {
       ["gx"] = "actions.open_external",
       ["g."] = "actions.toggle_hidden",
       ["g\\"] = "actions.toggle_trash",
+    },
+    -- Configuration for the floating window in oil.open_float
+    float = {
+      override = function()
+        return float_window_config(0.7, 0.4, {})
+      end,
     },
   },
   config = true,

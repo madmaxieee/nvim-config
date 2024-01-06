@@ -17,6 +17,8 @@ shellcheck_cache.by_bufnr = function(cb)
   end
 end
 
+local on_attach = require "plugins.lsp.on_attach"
+
 return {
   "nvimtools/none-ls.nvim",
   event = { "BufReadPre", "BufNewFile" },
@@ -57,23 +59,9 @@ return {
       },
     }
 
-    local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-
     null_ls.setup {
       sources = sources,
-      -- you can reuse a shared lspconfig on_attach callback here
-      on_attach = function(client, bufnr)
-        if client.supports_method "textDocument/formatting" then
-          vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            group = augroup,
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format { async = false }
-            end,
-          })
-        end
-      end,
+      on_attach = on_attach,
     }
   end,
 }

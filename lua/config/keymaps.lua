@@ -27,10 +27,6 @@ map("n", "<leader>nt", "<cmd> tabnew <CR>", { desc = "New tab" })
 map("n", "<Tab>", "gt", { desc = "Next tab" })
 map("n", "<S-Tab>", "gT", { desc = "Previous tab" })
 
-map("n", "<leader>fm", function()
-  vim.lsp.buf.format { async = true }
-end, { desc = "LSP formatting" })
-
 -- Visual mode
 map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
 map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })

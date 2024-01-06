@@ -15,8 +15,6 @@ return {
     "[z",
     "[M",
     "[]",
-    "]d",
-    "[d",
     "<leader>s",
     "<leader>S",
     "<leader>df",

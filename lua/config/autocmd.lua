@@ -1,7 +1,7 @@
-local autocmd = vim.api.nvim_create_autocmd
 local create_augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
 
--- dont list quickfix buffers
+-- don't some buffers in the buffer list
 autocmd("FileType", {
   pattern = { "qf", "oil" },
   callback = function()
@@ -9,6 +9,7 @@ autocmd("FileType", {
   end,
 })
 
+-- open help in vertical split
 autocmd("FileType", {
   group = create_augroup("VerticalHelp", { clear = true }),
   pattern = "help",
@@ -17,6 +18,7 @@ autocmd("FileType", {
   end,
 })
 
+-- disable lsp for certain filetypes
 local disable_lsp_group = create_augroup("DisableLsp", { clear = true })
 
 local no_lsp = {

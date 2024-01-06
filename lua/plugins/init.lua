@@ -58,4 +58,17 @@ return {
       }
     end,
   },
+  {
+    "folke/zen-mode.nvim",
+    cmd = "ZenMode",
+    keys = {
+      {
+        "<leader>z",
+        mode = "n",
+        "<cmd>ZenMode<CR>",
+        { desc = "Toggle zen mode" },
+      },
+    },
+    opts = {},
+  },
 }

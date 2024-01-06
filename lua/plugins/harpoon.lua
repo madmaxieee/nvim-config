@@ -9,32 +9,31 @@ return {
   },
   init = function()
     map("n", "<leader>a", function()
-      local harpoon = require "harpoon"
-      harpoon:list():append()
+      require("harpoon"):list():append()
     end, { desc = "Append to Harpoon" })
     map("n", "<leader>j", function()
       local harpoon = require "harpoon"
-      harpoon.ui:toggle_quick_menu(harpoon:list())
+      harpoon.ui:toggle_quick_menu(harpoon:list(), {
+        ui_fallback_width = 30,
+        ui_width_ratio = 0.4,
+      })
     end, { desc = "Toggle harpoon ui" })
 
     for i = 1, 9 do
       map("n", "<leader>" .. i, function()
-        local harpoon = require "harpoon"
-        harpoon:list():select(i)
+        require("harpoon"):list():select(i)
       end, { desc = "Go to file " .. i })
     end
 
     map("n", "<Tab>", function()
-      local harpoon = require "harpoon"
-      harpoon:list():next { ui_nav_wrap = true }
+      require("harpoon"):list():next { ui_nav_wrap = true }
     end, { desc = "Next file" })
     map("n", "<S-Tab>", function()
-      local harpoon = require "harpoon"
-      harpoon:list():prev { ui_nav_wrap = true }
+      require("harpoon"):list():prev { ui_nav_wrap = true }
     end, { desc = "Previous file" })
   end,
   config = function()
     local harpoon = require "harpoon"
-    harpoon:setup()
+    harpoon:setup {}
   end,
 }

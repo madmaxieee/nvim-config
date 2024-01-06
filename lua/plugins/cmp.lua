@@ -101,6 +101,7 @@ return {
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-path",
+    "hrsh7th/cmp-nvim-lsp-signature-help",
   },
 
   opts = function()
@@ -134,6 +135,7 @@ return {
         { name = "buffer" },
         { name = "nvim_lua" },
         { name = "path" },
+        { name = "nvim_lsp_signature_help" },
       },
       formatting = {
         format = function(_, item)

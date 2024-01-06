@@ -44,4 +44,26 @@ function M.on_load(name, fn)
   end
 end
 
+-- @param height_ratio number (0.0 - 1.0)
+-- @param width_ratio number (0.0 - 1.0)
+-- @param opts table
+function M.float_window_config(height_ratio, width_ratio, opts)
+  local screen_w = vim.opt.columns:get()
+  local screen_h = vim.opt.lines:get()
+  local window_w = screen_w * width_ratio
+  local window_h = screen_h * height_ratio
+  local window_w_int = math.ceil(window_w)
+  local window_h_int = math.ceil(window_h)
+  local center_x = (screen_w - window_w) / 2
+  local center_y = (vim.opt.lines:get() - window_h) / 2
+  return {
+    border = opts.border or "rounded",
+    relative = opts.relative or "editor",
+    row = center_y,
+    col = center_x,
+    width = window_w_int,
+    height = window_h_int,
+  }
+end
+
 return M

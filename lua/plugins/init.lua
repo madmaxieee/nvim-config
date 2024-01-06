@@ -46,14 +46,6 @@ return {
     opts = {},
   },
   {
-    "utilyre/barbecue.nvim",
-    lazy = false,
-    dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
-    config = function()
-      require("barbecue").setup {}
-    end,
-  },
-  {
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     event = "LspAttach",
     config = function()

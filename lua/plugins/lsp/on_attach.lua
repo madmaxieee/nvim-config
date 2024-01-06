@@ -26,11 +26,11 @@ local function set_keymaps(bufnr)
   end, { buffer = bufnr, desc = "Signature help" })
 
   map("n", "[d", function()
-    vim.lsp.diagnostic.goto_prev()
+    vim.diagnostic.goto_prev { float = { border = "rounded" } }
   end, { buffer = bufnr, desc = "Go to previous diagnostic" })
 
   map("n", "]d", function()
-    vim.lsp.diagnostic.goto_next()
+    vim.diagnostic.goto_next { float = { border = "rounded" } }
   end, { buffer = bufnr, desc = "Go to next diagnostic" })
 
   map("n", "<leader>ca", function()

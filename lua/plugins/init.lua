@@ -36,21 +36,6 @@ return {
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
   {
-    "stevearc/oil.nvim",
-    cmd = "Oil",
-    keys = {
-      {
-        "<leader>o",
-        mode = "n",
-        "<cmd> Oil <CR>",
-        desc = "Open Oil",
-      },
-    },
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {},
-    config = true,
-  },
-  {
     "folke/neodev.nvim",
     ft = "lua",
     opts = {},
@@ -66,6 +51,16 @@ return {
     dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
     config = function()
       require("barbecue").setup {}
+    end,
+  },
+  {
+    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    event = "LspAttach",
+    config = function()
+      require("lsp_lines").setup()
+      vim.diagnostic.config {
+        virtual_text = false,
+      }
     end,
   },
 }

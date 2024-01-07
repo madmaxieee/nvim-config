@@ -15,6 +15,9 @@ vim.opt.smartindent = true
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+
 vim.opt.updatetime = 250
 
 -- disable nvim intro

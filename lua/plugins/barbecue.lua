@@ -4,6 +4,7 @@ return {
   dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
   config = function()
     require("barbecue").setup {
+      show_modified = true,
       create_autocmd = false, -- prevent barbecue from updating itself automatically
     }
 

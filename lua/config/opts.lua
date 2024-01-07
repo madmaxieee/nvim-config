@@ -17,6 +17,7 @@ vim.opt.softtabstop = 2
 
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+vim.opt.termguicolors = true
 
 vim.opt.updatetime = 250
 

@@ -22,6 +22,7 @@ return {
       mode = "n",
       function()
         require("smart-splits").swap_buf_left()
+        require("smart-splits").move_cursor_left()
       end,
       desc = "swap buffer left",
     },
@@ -30,6 +31,7 @@ return {
       mode = "n",
       function()
         require("smart-splits").swap_buf_down()
+        require("smart-splits").move_cursor_down()
       end,
     },
     {
@@ -37,6 +39,7 @@ return {
       mode = "n",
       function()
         require("smart-splits").swap_buf_up()
+        require("smart-splits").move_cursor_up()
       end,
     },
     {
@@ -44,6 +47,7 @@ return {
       mode = "n",
       function()
         require("smart-splits").swap_buf_right()
+        require("smart-splits").move_cursor_right()
       end,
       desc = "swap buffer right",
     },

@@ -1,26 +1,37 @@
 local map = require("utils").safe_keymap_set
 local float_window_config = require("utils").float_window_config
 
+local lazygit = nil
+
 return {
   "akinsho/toggleterm.nvim",
-  event = "VeryLazy",
-  keys = { "<A-i>" },
+  keys = {
+    "<A-i>",
+    {
+      "<A-g>",
+      mode = "n",
+      function()
+        if lazygit == nil then
+          return
+        end
+        lazygit:toggle()
+      end,
+      desc = "Flash",
+    },
+  },
   version = "*",
   config = function()
     local Terminal = require("toggleterm.terminal").Terminal
-    local lazygit = Terminal:new {
+    lazygit = Terminal:new {
       cmd = "exec lazygit",
       direction = "float",
       hidden = true,
       float_opts = float_window_config(0.8, 0.8, {}),
       on_open = function(term)
-        vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<C-c>", "<cmd>close<CR>", { noremap = true, silent = true })
+        map("t", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
+        map("t", "<A-g>", "<cmd>close<CR>", { buffer = term.bufnr })
       end,
     }
-
-    map("n", "<leader>gg", function()
-      lazygit:toggle()
-    end, { desc = "Toggle LazyGit" })
 
     require("toggleterm").setup {
       open_mapping = "<A-i>",

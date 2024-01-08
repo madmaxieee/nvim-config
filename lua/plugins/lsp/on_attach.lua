@@ -5,12 +5,16 @@ local function set_keymaps(bufnr)
     return
   end
 
+  local trouble_open = require("trouble").open
+
   map("n", "gd", function()
-    vim.lsp.buf.definition()
+    -- vim.lsp.buf.definition()
+    trouble_open { mode = "lsp_definitions" }
   end, { buffer = bufnr, desc = "Go to definition" })
 
   map("n", "gD", function()
-    vim.lsp.buf.type_definition()
+    -- vim.lsp.buf.type_definition()
+    trouble_open { mode = "lsp_type_definitions" }
   end, { buffer = bufnr, desc = "Go to type definition" })
 
   map("n", "K", function()
@@ -18,7 +22,8 @@ local function set_keymaps(bufnr)
   end, { buffer = bufnr, desc = "Hover" })
 
   map("n", "gi", function()
-    vim.lsp.buf.implementation()
+    -- vim.lsp.buf.implementation()
+    trouble_open { mode = "lsp_implementations" }
   end, { buffer = bufnr, desc = "Go to implementation" })
 
   map("n", "<leader>ls", function()
@@ -38,7 +43,8 @@ local function set_keymaps(bufnr)
   end, { buffer = bufnr, desc = "LSP code action" })
 
   map("n", "gr", function()
-    vim.lsp.buf.references()
+    -- vim.lsp.buf.references()
+    trouble_open { mode = "lsp_references" }
   end, { buffer = bufnr, desc = "LSP references" })
 
   map("n", "<leader>ra", function()

@@ -139,7 +139,15 @@ return {
             prompt_position = "top",
           },
         },
-        file_ignore_patterns = { "node_modules", "lazy-lock.json", "^.git/" },
+        file_ignore_patterns = {
+          "node_modules/",
+          "%.git/",
+          "%.obsidian%-?.*/",
+          "lazy%-lock%.json$",
+          "pnpm%-lock%.yaml$",
+          "package%-lock%.json$",
+          "yarn%.lock$",
+        },
         mappings = {
           n = { ["q"] = require("telescope.actions").close },
         },

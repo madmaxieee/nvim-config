@@ -1,12 +1,12 @@
 return {
   "folke/trouble.nvim",
-  cmd = "Trouble",
+  cmd = { "Trouble", "TroubleToggle" },
   keys = {
     {
-      "<leader>tt",
+      "<leader>T",
       mode = "n",
       function()
-        require("trouble").open()
+        require("trouble").toggle()
       end,
       desc = "Open Trouble",
     },

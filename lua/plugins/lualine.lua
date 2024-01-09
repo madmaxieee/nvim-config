@@ -45,15 +45,14 @@ local function show_file_info()
   local icon = " 󰈚 "
   local path = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
   local name = (path == "" and "Empty ") or path:match "([^/\\]+)[/\\]*$"
+  if name:match ".*toggleterm.*" then
+    name = string.gsub(name, ";.*$", "")
+    name = string.gsub(name, "^.*:", "")
+  end
 
   if name ~= "Empty " then
-    local devicons_present, devicons = pcall(require, "nvim-web-devicons")
-
-    if devicons_present then
-      local ft_icon = devicons.get_icon(name)
-      icon = (ft_icon ~= nil and " " .. ft_icon) or icon
-    end
-
+    local ft_icon = require("nvim-web-devicons").get_icon(name)
+    icon = (ft_icon ~= nil and " " .. ft_icon) or icon
     name = " " .. name
   end
 

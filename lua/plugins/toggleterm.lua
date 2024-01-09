@@ -52,25 +52,28 @@ return {
   end,
   config = function()
     local Terminal = require("toggleterm.terminal").Terminal
+    local function on_open(term)
+      map("t", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
+      map("n", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
+      map("t", "<A-i>", "<cmd>close<CR>", { buffer = term.bufnr })
+      if vim.fn.mode() ~= "t" then
+        vim.cmd "startinsert!"
+      end
+    end
+
     terminal = Terminal:new {
       cmd = vim.o.shell,
       direction = "float",
       hidden = true,
       float_opts = get_terminal_float_opts(),
-      on_open = function(term)
-        map("t", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
-        map("t", "<A-i>", "<cmd>close<CR>", { buffer = term.bufnr })
-      end,
+      on_open = on_open,
     }
     lazygit = Terminal:new {
       cmd = "exec lazygit",
       direction = "float",
       hidden = true,
       float_opts = get_lazygit_float_opts(),
-      on_open = function(term)
-        map("t", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
-        map("t", "<A-g>", "<cmd>close<CR>", { buffer = term.bufnr })
-      end,
+      on_open = on_open,
     }
   end,
 }

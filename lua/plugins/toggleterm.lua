@@ -17,7 +17,7 @@ return {
   keys = {
     {
       "<A-i>",
-      mode = "n",
+      mode = { "i", "n", "t" },
       function()
         if terminal then
           terminal:toggle()
@@ -27,7 +27,17 @@ return {
     },
     {
       "<A-g>",
-      mode = "n",
+      mode = { "i", "n", "t" },
+      function()
+        if lazygit then
+          lazygit:toggle()
+        end
+      end,
+      desc = "Toggle lazygit",
+    },
+    {
+      "<leader>gg",
+      mode = { "n" },
       function()
         if lazygit then
           lazygit:toggle()
@@ -52,12 +62,14 @@ return {
   end,
   config = function()
     local Terminal = require("toggleterm.terminal").Terminal
-    local function on_open(term)
-      map("t", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
-      map("n", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
-      map("t", "<A-i>", "<cmd>close<CR>", { buffer = term.bufnr })
-      if vim.fn.mode() ~= "t" then
-        vim.cmd "startinsert!"
+    local function on_open(toggle_keymap)
+      return function(term)
+        map("t", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
+        map("n", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
+        map("t", toggle_keymap, "<cmd>close<CR>", { buffer = term.bufnr })
+        if vim.fn.mode() ~= "t" then
+          vim.cmd "startinsert!"
+        end
       end
     end
 
@@ -66,14 +78,14 @@ return {
       direction = "float",
       hidden = true,
       float_opts = get_terminal_float_opts(),
-      on_open = on_open,
+      on_open = on_open "<A-i>",
     }
     lazygit = Terminal:new {
       cmd = "exec lazygit",
       direction = "float",
       hidden = true,
       float_opts = get_lazygit_float_opts(),
-      on_open = on_open,
+      on_open = on_open "<A-g>",
     }
   end,
 }

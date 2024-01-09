@@ -3,7 +3,7 @@ return {
   cmd = { "Trouble", "TroubleToggle" },
   keys = {
     {
-      "<leader>T",
+      "<leader>q",
       mode = "n",
       function()
         require("trouble").toggle()

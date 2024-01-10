@@ -52,7 +52,12 @@ return {
     require("obsidian").setup(opts)
 
     vim.api.nvim_create_user_command("Obsidian", function(_opts)
-      local command = command_map[_opts.fargs[1]]
+      local command
+      if #_opts.fargs == 0 then
+        command = "ObsidianOpen"
+      else
+        command = command_map[_opts.fargs[1]]
+      end
       if command then
         vim.cmd(command)
       else

@@ -64,7 +64,6 @@ return {
     local Terminal = require("toggleterm.terminal").Terminal
     local function on_open(toggle_keymap)
       return function(term)
-        map("t", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
         map("n", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
         map("t", toggle_keymap, "<cmd>close<CR>", { buffer = term.bufnr })
         if vim.fn.mode() ~= "t" then

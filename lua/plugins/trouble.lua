@@ -5,9 +5,7 @@ return {
     {
       "<leader>q",
       mode = "n",
-      function()
-        require("trouble").toggle()
-      end,
+      "<cmd>Trouble document_diagnostics<CR>",
       desc = "Open Trouble",
     },
   },

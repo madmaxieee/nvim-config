@@ -53,9 +53,7 @@ return {
     event = "LspAttach",
     config = function()
       require("lsp_lines").setup()
-      vim.diagnostic.config {
-        virtual_text = false,
-      }
+      vim.diagnostic.config { virtual_text = false }
     end,
   },
   {
@@ -70,5 +68,14 @@ return {
       },
     },
     opts = {},
+  },
+  {
+    "nvimdev/lspsaga.nvim",
+    event = "LspAttach",
+    dependencies = {
+      -- "nvim-treesitter/nvim-treesitter"
+      "madmaxieee/nvim-treesitter", -- use my own fork for typst support
+      "nvim-tree/nvim-web-devicons",
+    },
   },
 }

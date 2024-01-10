@@ -51,6 +51,7 @@ return {
       end, { desc = "Previous hunk", buffer = bufnr })
 
       map("n", "<leader>gb", gs.blame_line, { desc = "Blame line", buffer = bufnr })
+      map("n", "<leader>gd", gs.toggle_deleted, { desc = "Toggle Deleted", buffer = bufnr })
       map("n", "<leader>rh", gs.reset_hunk, { desc = "Reset hunk", buffer = bufnr })
     end,
   },

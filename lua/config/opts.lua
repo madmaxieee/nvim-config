@@ -41,7 +41,7 @@ vim.opt.undofile = true
 vim.g.mapleader = " "
 
 vim.fn.sign_define("DiagnosticSignError", { text = "", numhl = "DiagnosticDefaultError" })
-vim.fn.sign_define("DiagnosticSignWarning", { text = "", numhl = "DiagnosticDefaultWarn" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "", numhl = "DiagnosticDefaultWarn" })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", numhl = "DiagnosticDefaultHint" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", numhl = "DiagnosticDefaultInfo" })
 vim.fn.sign_define("DiagnosticSignOther", { text = "", numhl = "DiagnosticDefaultOther" })

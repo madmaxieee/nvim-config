@@ -44,6 +44,7 @@ local on_attach = require "plugins.lsp.on_attach"
 
 return {
   {
+    cond = not vim.g.disable_lsp,
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     -- mason has to configure PATH first
@@ -63,6 +64,7 @@ return {
     end,
   },
   {
+    cond = not vim.g.disable_lsp,
     "simrat39/rust-tools.nvim",
     ft = "rust",
     opts = {

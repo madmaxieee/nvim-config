@@ -1,5 +1,6 @@
 require "config.opts"
 require "config.autocmd"
+require "config.condition"
 require "config.lazy"
 require "config.usercmd"
 require "config.keymaps"

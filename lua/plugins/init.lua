@@ -49,7 +49,9 @@ return {
     opts = {},
   },
   {
-    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    -- the original repo is broken, use my mirror
+    -- "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    "madmaxieee/lsp_lines.nvim",
     event = "LspAttach",
     config = function()
       require("lsp_lines").setup()
@@ -88,6 +90,13 @@ return {
         names = false,
         tailwind = true,
       },
+    },
+  },
+  {
+    "sindrets/diffview.nvim",
+    cmd = {
+      "DiffviewOpen",
+      "DiffviewFileHistory",
     },
   },
 }

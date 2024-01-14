@@ -4,6 +4,7 @@ return {
     -- "nvim-treesitter/nvim-treesitter",
     "madmaxieee/nvim-treesitter", -- use my own fork for typst support
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    "debugloop/telescope-undo.nvim",
   },
   keys = {
     {
@@ -116,6 +117,12 @@ return {
       end,
       desc = "Grep string",
     },
+    {
+      "<leader>fu",
+      mode = "n",
+      "<cmd>Telescope undo<cr>",
+      desc = "undo history",
+    },
   },
   cmd = "Telescope",
   config = function()
@@ -177,9 +184,11 @@ return {
           override_file_sorter = true,
           case_mode = "smart_case",
         },
+        undo = {},
       },
     }
 
+    require("telescope").load_extension "undo"
     require("telescope").load_extension "fzf"
   end,
 }

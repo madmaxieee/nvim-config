@@ -24,6 +24,7 @@ return {
 
       "typst",
       "markdown",
+      "markdown_inline",
       "json",
       "yaml",
       "kdl",

@@ -30,6 +30,14 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
+  init = function()
+    vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+      pattern = vault_folder .. "/**.md",
+      callback = function()
+        vim.wo.conceallevel = 1
+      end,
+    })
+  end,
   opts = {
     workspaces = {
       {

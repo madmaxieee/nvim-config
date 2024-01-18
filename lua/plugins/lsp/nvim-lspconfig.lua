@@ -18,6 +18,10 @@ local configs = {
   clangd = {
     cmd = { "clangd", "--clang-tidy" },
   },
+  -- TODO: make this work
+  typos_lsp = {
+    cmd = { "typos-lsp", "--exclude", "node_modules/" },
+  },
   lua_ls = {
     settings = {
       Lua = {

@@ -18,7 +18,7 @@ autocmd("FileType", {
   end,
 })
 
--- disable lsp for certain filetypes
+-- disable lsp for certain filetypes and in diff mode
 local disable_lsp_group = create_augroup("DisableLsp", { clear = true })
 
 local no_lsp = {
@@ -30,7 +30,7 @@ autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
     local client_id = args.data.client_id
-    if no_lsp[vim.bo[bufnr].filetype] then
+    if no_lsp[vim.bo[bufnr].filetype] or vim.wo.diff then
       vim.schedule(function()
         vim.lsp.buf_detach_client(args.buf, client_id)
       end)

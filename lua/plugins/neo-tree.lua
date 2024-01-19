@@ -49,6 +49,9 @@ return {
     },
     window = {
       position = "float",
+      mappings = {
+        ["s"] = "",
+      },
     },
   },
 }

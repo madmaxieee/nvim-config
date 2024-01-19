@@ -23,6 +23,7 @@ local disable_lsp_group = create_augroup("DisableLsp", { clear = true })
 
 local no_lsp = {
   ["toggleterm"] = true,
+  ["help"] = true,
 }
 
 autocmd("LspAttach", {

@@ -28,17 +28,24 @@ return {
   },
   keys = {
     {
+      "<leader>h",
+      mode = "n",
+      function()
+        local harpoon = require "harpoon"
+        harpoon.ui:toggle_quick_menu(harpoon:list(), {
+          ui_fallback_width = 30,
+          ui_width_ratio = 0.4,
+        })
+      end,
+      desc = "Toggle harpoon ui",
+    },
+    {
       "<leader>j",
       mode = "n",
       function()
-        -- local harpoon = require "harpoon"
-        -- harpoon.ui:toggle_quick_menu(harpoon:list(), {
-        --   ui_fallback_width = 30,
-        --   ui_width_ratio = 0.4,
-        -- })
         toggle_telescope(require("harpoon"):list())
       end,
-      desc = "Toggle harpoon ui",
+      desc = "Open harpoon list in telescope",
     },
     {
       "<leader>a",

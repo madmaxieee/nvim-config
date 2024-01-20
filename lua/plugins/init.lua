@@ -72,15 +72,6 @@ return {
     opts = {},
   },
   {
-    "nvimdev/lspsaga.nvim",
-    event = "LspAttach",
-    dependencies = {
-      -- "nvim-treesitter/nvim-treesitter"
-      "madmaxieee/nvim-treesitter", -- use my own fork for typst support
-      "nvim-tree/nvim-web-devicons",
-    },
-  },
-  {
     "NvChad/nvim-colorizer.lua",
     event = "BufReadPre",
     opts = {

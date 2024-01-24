@@ -126,6 +126,8 @@ return {
   },
   cmd = "Telescope",
   config = function()
+    local actions = require "telescope.actions"
+
     require("telescope").setup {
       defaults = {
         vimgrep_arguments = {
@@ -158,10 +160,10 @@ return {
         mappings = {
           i = {
             ["<c-t>"] = function(prompt_bufnr)
-              require "telescope.actions"
               local trouble = require "trouble.providers.telescope"
               trouble.open_with_trouble(prompt_bufnr)
             end,
+            ["<c-f>"] = actions.to_fuzzy_refine,
           },
           n = {
             ["<c-t>"] = function(prompt_bufnr)

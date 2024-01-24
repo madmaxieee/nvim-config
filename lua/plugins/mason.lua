@@ -41,6 +41,7 @@ return {
       "typos-lsp",
       "typst-lsp",
       "yaml-language-server",
+      "xmlformatter",
     },
 
     PATH = "prepend",

@@ -7,10 +7,10 @@ map("i", "<C-k>", "<Up>", { desc = "Move up" })
 map("i", "<C-l>", "<Right>", { desc = "Move right" })
 
 -- Normal mode
-map("n", "<A-j>", "<cmd> m+ <CR>", { desc = "Move current line down" })
-map("n", "<A-k>", "<cmd> m-- <CR>", { desc = "Move current line up" })
-map("n", "<A-down>", "<cmd> m+ <CR>", { desc = "Move current line down" })
-map("n", "<A-up>", "<cmd> m-- <CR>", { desc = "Move current line up" })
+-- map("n", "<A-j>", "<cmd> m+ <CR>", { desc = "Move current line down" })
+-- map("n", "<A-k>", "<cmd> m-- <CR>", { desc = "Move current line up" })
+-- map("n", "<A-down>", "<cmd> m+ <CR>", { desc = "Move current line down" })
+-- map("n", "<A-up>", "<cmd> m-- <CR>", { desc = "Move current line up" })
 
 map("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
 map("n", "<C-j>", "<C-w>j", { desc = "Go to down window" })
@@ -32,10 +32,10 @@ map("n", "<leader>x", "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>", {
 })
 
 -- Visual mode
-map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
-map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
-map("v", "<A-down>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
-map("v", "<A-up>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
+-- map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
+-- map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
+-- map("v", "<A-down>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
+-- map("v", "<A-up>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
 
 -- Terminal mode
 map("t", "<C-x>", vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), { desc = "Escape terminal mode" })

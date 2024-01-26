@@ -64,8 +64,8 @@ return {
     local Terminal = require("toggleterm.terminal").Terminal
     local function on_open(toggle_keymap)
       return function(term)
-        map("n", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr })
-        map("t", toggle_keymap, "<cmd>close<CR>", { buffer = term.bufnr })
+        map("n", "<C-c>", "<cmd>close<CR>", { buffer = term.bufnr, desc = "close toggleterm" })
+        map("t", toggle_keymap, "<cmd>close<CR>", { buffer = term.bufnr, desc = "toggle term" })
         if vim.fn.mode() ~= "t" then
           vim.cmd "startinsert!"
         end

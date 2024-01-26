@@ -59,6 +59,9 @@ return {
       "<Tab>",
       mode = "n",
       function()
+        if vim.bo.filetype == "toggleterm" then
+          return
+        end
         require("harpoon"):list():next { ui_nav_wrap = true }
       end,
       desc = "Next Harpoon",
@@ -67,6 +70,9 @@ return {
       "<S-Tab>",
       mode = "n",
       function()
+        if vim.bo.filetype == "toggleterm" then
+          return
+        end
         require("harpoon"):list():prev { ui_nav_wrap = true }
       end,
       desc = "Previous Harpoon",

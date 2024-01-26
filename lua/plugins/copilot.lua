@@ -15,8 +15,7 @@ return {
       auto_trigger = true,
       debounce = 75,
       keymap = {
-        -- accept = "<A-l>",
-        accept = "<A-;>",
+        accept = "<A-l>",
         accept_word = false,
         accept_line = false,
         next = "<A-]>",

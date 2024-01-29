@@ -1,5 +1,23 @@
 local map = require("utils").safe_keymap_set
 
+local no_format = {
+  ["eslint"] = true, -- don't auto fix eslint config
+}
+
+local function format_filter(client)
+  if no_format[client.name] then
+    return false
+  end
+  local null_ls = require "null-ls"
+  if client.name == "tsserver" and null_ls.is_registered "prettierd" then
+    return false
+  end
+  if client.name == "lua_ls" and null_ls.is_registered "stylua" then
+    return false
+  end
+  return true
+end
+
 local function set_keymaps(bufnr)
   if vim.b[bufnr].lsp_keymaps_set then
     return
@@ -68,7 +86,10 @@ local function set_keymaps(bufnr)
   end, { buffer = bufnr, desc = "List workspace folders" })
 
   map("n", "<leader>fm", function()
-    vim.lsp.buf.format { async = true }
+    vim.lsp.buf.format {
+      async = true,
+      filter = format_filter,
+    }
   end, { buffer = bufnr, desc = "LSP formatting" })
 
   vim.b[bufnr].lsp_keymaps_set = true
@@ -92,9 +113,7 @@ local function on_attach(client, bufnr)
       callback = function()
         vim.lsp.buf.format {
           async = false,
-          filter = function(_client)
-            return _client.name ~= "lua_ls" -- use stylua instead
-          end,
+          filter = format_filter,
         }
       end,
     })

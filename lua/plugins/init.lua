@@ -73,7 +73,15 @@ return {
   },
   {
     "NvChad/nvim-colorizer.lua",
-    event = "BufReadPre",
+    ft = {
+      "html",
+      "css",
+      "scss",
+      "typescript",
+      "typescriptreact",
+      "javascript",
+      "javascriptreact",
+    },
     opts = {
       user_default_options = {
         RGB = true, -- #RGB hex codes
@@ -89,5 +97,22 @@ return {
       "DiffviewOpen",
       "DiffviewFileHistory",
     },
+  },
+  {
+    "RRethy/vim-illuminate",
+    event = "LspAttach",
+    dependencies = {
+      -- "nvim-treesitter/nvim-treesitter"
+      "madmaxieee/nvim-treesitter", -- use my own fork for typst support
+    },
+    config = function()
+      require("illuminate").configure {
+        providers = {
+          "lsp",
+          "treesitter",
+          "regex",
+        },
+      }
+    end,
   },
 }

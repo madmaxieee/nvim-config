@@ -171,6 +171,7 @@ return {
               local trouble = require "trouble.providers.telescope"
               trouble.open_with_trouble(prompt_bufnr)
             end,
+            ["<c-f>"] = actions.to_fuzzy_refine,
           },
         },
       },

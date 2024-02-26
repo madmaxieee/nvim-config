@@ -38,7 +38,6 @@ return {
       formatting.black,
       formatting.fish_indent,
       formatting.rustfmt,
-      formatting.cmake_format,
       formatting.beautysh,
       formatting.typstfmt,
       formatting.xmlformat,

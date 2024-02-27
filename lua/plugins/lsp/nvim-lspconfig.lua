@@ -43,7 +43,8 @@ local configs = {
   },
 }
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities =
+  vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), { offsetEncoding = { "utf-16" } })
 local on_attach = require "plugins.lsp.on_attach"
 
 return {

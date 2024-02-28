@@ -23,7 +23,7 @@ require("lazy").setup {
     version = false, -- always use the latest git commit
   },
   install = {
-    missing = false,
+    missing = true,
     colorscheme = { "tokyonight" },
   },
   checker = { enabled = true }, -- automatically check for plugin updates

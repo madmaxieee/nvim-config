@@ -1,4 +1,4 @@
--- -- Example for configuring Neovim to load user-installed installed Lua rocks:
+-- allow neovim to access the lua modules installed via luarocks
 package.path = package.path
   .. ";"
   .. vim.fn.expand "$HOME"

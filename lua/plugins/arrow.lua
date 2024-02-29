@@ -24,8 +24,19 @@ return {
       function()
         local filename = require("arrow.utils").get_path_for "%"
         require("arrow.persist").save(filename)
+        vim.notify("Saved " .. filename .. " to arrow", vim.log.levels.INFO, { title = "Arrow" })
       end,
-      desc = "Add to arrow",
+      desc = "Add current file to arrow",
+    },
+    {
+      "<leader>x",
+      mode = "n",
+      function()
+        local filename = require("arrow.utils").get_path_for "%"
+        require("arrow.persist").remove(filename)
+        vim.notify("Removed " .. filename .. " from arrow", vim.log.levels.INFO, { title = "Arrow" })
+      end,
+      desc = "Remove current file from arrow",
     },
   },
   opts = {

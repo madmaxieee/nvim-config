@@ -27,9 +27,9 @@ map("n", "<leader>nt", "<cmd> tabnew <CR>", { desc = "New tab" })
 map("n", "<leader>nb", "<cmd> vnew <CR>", { desc = "New buffer" })
 -- map("n", "<Tab>", "gt", { desc = "Next tab" })
 -- map("n", "<S-Tab>", "gT", { desc = "Previous tab" })
-map("n", "<leader>x", "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>", {
-  desc = "Delete buffer without closing window",
-})
+-- map("n", "<leader>x", "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>", {
+--   desc = "Delete buffer without closing window",
+-- })
 
 -- Visual mode
 map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })

@@ -2,7 +2,7 @@ return {
   "mrjones2014/smart-splits.nvim",
   keys = {
     {
-      "H",
+      "<A-h>",
       mode = "n",
       function()
         require("smart-splits").resize_left()
@@ -10,7 +10,7 @@ return {
       desc = "resize left",
     },
     {
-      "L",
+      "<A-l>",
       mode = "n",
       function()
         require("smart-splits").resize_right()

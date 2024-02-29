@@ -81,6 +81,12 @@ return {
       },
       lualine_b = {
         { "file-info", fmt = show_file_info },
+        {
+          "arrow",
+          fmt = function()
+            return require("arrow.statusline").text_for_statusline_with_icons()
+          end,
+        },
       },
       lualine_c = {
         { "_branch", fmt = show_branch },

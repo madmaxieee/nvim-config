@@ -25,6 +25,10 @@ map("n", "U", "<C-r>", { desc = "Redo" })
 map("n", "<leader><space>", "<cmd> update <CR>", { desc = "Save file" })
 map("n", "<leader>nt", "<cmd> tabnew <CR>", { desc = "New tab" })
 map("n", "<leader>nb", "<cmd> vnew <CR>", { desc = "New buffer" })
+
+map("n", "H", "^", { desc = "Move to first character" })
+map("n", "L", "$", { desc = "Move to last character" })
+
 -- map("n", "<Tab>", "gt", { desc = "Next tab" })
 -- map("n", "<S-Tab>", "gT", { desc = "Previous tab" })
 -- map("n", "<leader>x", "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>", {

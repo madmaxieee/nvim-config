@@ -3,7 +3,8 @@ return {
   keys = {
     ";",
     {
-      "H",
+      -- "H",
+      "<S-Tab>",
       mode = "n",
       function()
         require("arrow.persist").previous()
@@ -11,7 +12,8 @@ return {
       { desc = "Go to previous buffer" },
     },
     {
-      "L",
+      -- "L",
+      "<Tab>",
       mode = "n",
       function()
         require("arrow.persist").next()
@@ -42,6 +44,7 @@ return {
   opts = {
     show_icons = true,
     leader_key = ";",
+    -- separate_by_branch = true, -- Bookmarks will be separated by git branch
     separate_save_and_remove = true,
     index_keys = "asdfghjkl123456789",
     mappings = {

@@ -17,7 +17,6 @@ return {
       formatting.isort,
       formatting.black,
       formatting.fish_indent,
-      formatting.rustfmt,
       formatting.beautysh,
       formatting.typstfmt,
       formatting.xmlformat,

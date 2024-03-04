@@ -12,6 +12,7 @@ local servers = {
   "yamlls",
   "typos_lsp",
   "typst_lsp",
+  "bashls",
 }
 
 local configs = {

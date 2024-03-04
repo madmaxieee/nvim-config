@@ -4,10 +4,11 @@ local no_format = {
   ["eslint"] = true, -- don't auto fix eslint config
 }
 
-local function format_filter(client)
+local function formatter_filter(client)
   if no_format[client.name] then
     return false
   end
+  ---@diagnostic disable-next-line: different-requires
   local null_ls = require "null-ls"
   if client.name == "tsserver" and null_ls.is_registered "prettierd" then
     return false
@@ -88,7 +89,7 @@ local function set_keymaps(bufnr)
   map("n", "<leader>fm", function()
     vim.lsp.buf.format {
       async = true,
-      filter = format_filter,
+      filter = formatter_filter,
     }
   end, { buffer = bufnr, desc = "LSP formatting" })
 
@@ -113,7 +114,7 @@ local function on_attach(client, bufnr)
       callback = function()
         vim.lsp.buf.format {
           async = false,
-          filter = format_filter,
+          filter = formatter_filter,
         }
       end,
     })

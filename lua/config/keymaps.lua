@@ -28,6 +28,8 @@ map("n", "<leader>nb", "<cmd> vnew <CR>", { desc = "New buffer" })
 
 map("n", "H", "^", { desc = "Move to first character" })
 map("n", "L", "$", { desc = "Move to last character" })
+map("v", "H", "^", { desc = "Move to first character" })
+map("v", "L", "$", { desc = "Move to last character" })
 
 -- map("n", "<Tab>", "gt", { desc = "Next tab" })
 -- map("n", "<S-Tab>", "gT", { desc = "Previous tab" })

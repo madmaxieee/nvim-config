@@ -50,7 +50,7 @@ return {
     mappings = {
       edit = "e",
       delete_mode = "D",
-      clear_all_items = "C",
+      clear_all_items = "c",
       -- used as save if separate_save_and_remove is true
       toggle = "S",
       open_vertical = "v",

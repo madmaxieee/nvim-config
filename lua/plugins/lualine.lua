@@ -65,7 +65,7 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     options = {
-      globalstatus = true,
+      globalstatus = false,
       section_separators = "",
       refresh = {
         statusline = 250,
@@ -90,6 +90,7 @@ return {
       },
       lualine_c = {
         { "_branch", fmt = show_branch },
+        "diff",
         "diagnostics",
       },
       lualine_x = {
@@ -102,6 +103,16 @@ return {
       lualine_z = {
         "location",
       },
+    },
+    inactive_sections = {
+      lualine_a = {},
+      lualine_b = {
+        { "file-info", fmt = show_file_info },
+      },
+      lualine_c = { "diagnostics" },
+      lualine_x = { "location" },
+      lualine_y = {},
+      lualine_z = {},
     },
   },
 }

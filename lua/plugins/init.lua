@@ -46,7 +46,11 @@ return {
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      input = {
+        insert_only = false,
+      },
+    },
   },
   {
     -- the original repo is broken, use my mirror

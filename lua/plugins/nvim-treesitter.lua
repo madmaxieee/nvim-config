@@ -37,6 +37,8 @@ return {
       "make",
       "cmake",
       "dockerfile",
+
+      "regex",
     },
 
     autotag = {

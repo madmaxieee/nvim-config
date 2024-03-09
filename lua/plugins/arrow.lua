@@ -1,4 +1,5 @@
 return {
+  enabled = not vim.g.minimal_mode,
   "otavioschwanck/arrow.nvim",
   keys = {
     ";",

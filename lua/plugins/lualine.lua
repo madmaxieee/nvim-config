@@ -84,7 +84,9 @@ return {
         {
           "arrow",
           fmt = function()
-            return require("arrow.statusline").text_for_statusline_with_icons()
+            if not vim.g.minimal_mode then
+              return require("arrow.statusline").text_for_statusline_with_icons()
+            end
           end,
         },
       },

@@ -17,7 +17,6 @@ local argv = vim.fn.argv()
 -- { "/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.UDKOra60Bm.fish" }
 -- { "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.0jb32zqIvy.fish" }
 if vim.fn.has "mac" == 1 then
-  print(argv[1])
   if argc == 1 and string.match(argv[1], "/var/folders/pg/.+/T/tmp%.%w+%.fish$") then
     vim.g.minimal_mode = true
     return

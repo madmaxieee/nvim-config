@@ -8,7 +8,7 @@ package.path = package.path
 
 require "config.opts"
 require "config.autocmd"
-require "config.condition"
+require "config.minimal_mode"
 require "config.lazy"
 require "config.usercmd"
 require "config.keymaps"

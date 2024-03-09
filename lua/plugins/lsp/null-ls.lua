@@ -1,7 +1,7 @@
 local on_attach = require "plugins.lsp.on_attach"
 
 return {
-  cond = not vim.g.disable_lsp,
+  cond = not vim.g.minimal_mode,
   "nvimtools/none-ls.nvim",
   event = { "BufReadPre", "BufNewFile" },
   config = function()

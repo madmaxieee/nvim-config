@@ -1,6 +1,7 @@
 local is_opening_dir = vim.fn.argc() > 0 and vim.fn.isdirectory(vim.fn.argv()[0])
 
 return {
+  enabled = not vim.g.minimal_mode,
   -- don't lazy load if opening a directory, since we want to hijack netrw
   lazy = not is_opening_dir,
   "nvim-neo-tree/neo-tree.nvim",

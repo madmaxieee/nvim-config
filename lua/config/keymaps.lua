@@ -45,3 +45,6 @@ map("v", "<A-up>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
 
 -- Terminal mode
 map("t", "<C-x>", vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), { desc = "Escape terminal mode" })
+
+-- move the content in register to the system clipboard
+map("n", "<leader>y", '"+y', { desc = "Copy to clipboard" })

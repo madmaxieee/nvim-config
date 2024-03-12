@@ -33,7 +33,7 @@ vim.opt.shortmess:append "sI"
 vim.opt.whichwrap:append "<>[]hl"
 
 -- yank to system clipboard
-vim.opt.clipboard = "unnamedplus"
+-- vim.opt.clipboard = "unnamedplus"
 
 -- make undo persistent
 vim.opt.undofile = true

@@ -50,12 +50,6 @@ return {
       desc = "Git status",
     },
     {
-      "<leader>y",
-      mode = "n",
-      "<cmd> Telescope neoclip <CR>",
-      desc = "Search clipboard history",
-    },
-    {
       "<leader>ff",
       mode = "n",
       "<cmd> Telescope find_files <CR>",

@@ -16,6 +16,9 @@ local function formatter_filter(client)
   if client.name == "lua_ls" and null_ls.is_registered "stylua" then
     return false
   end
+  if client.name == "cmake" then
+    return false
+  end
   return true
 end
 

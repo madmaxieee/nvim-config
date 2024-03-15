@@ -30,6 +30,7 @@ return {
       "rust-analyzer",
       "stylua",
       "svelte-language-server",
+      "taplo",
       "tailwindcss-language-server",
       "typescript-language-server",
       "typos-lsp",

@@ -17,8 +17,7 @@ return {
     "[]",
   },
   dependencies = {
-    -- "nvim-treesitter/nvim-treesitter"
-    "madmaxieee/nvim-treesitter", -- use my own fork for typst support
+    "nvim-treesitter/nvim-treesitter",
   },
   config = function()
     require("nvim-treesitter.configs").setup {

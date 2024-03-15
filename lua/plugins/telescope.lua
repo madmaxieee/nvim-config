@@ -1,8 +1,7 @@
 return {
   "nvim-telescope/telescope.nvim",
   dependencies = {
-    -- "nvim-treesitter/nvim-treesitter",
-    "madmaxieee/nvim-treesitter", -- use my own fork for typst support
+    "nvim-treesitter/nvim-treesitter",
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     "debugloop/telescope-undo.nvim",
   },

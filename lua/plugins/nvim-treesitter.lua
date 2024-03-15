@@ -1,6 +1,5 @@
 return {
-  -- "nvim-treesitter/nvim-treesitter",
-  "madmaxieee/nvim-treesitter", -- use my own fork for typst support
+  "nvim-treesitter/nvim-treesitter",
   event = { "BufRead", "BufNewFile" },
   cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
   build = ":TSUpdate",

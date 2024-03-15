@@ -34,8 +34,7 @@ return {
     "windwp/nvim-ts-autotag",
     event = "InsertEnter",
     dependencies = {
-      -- "nvim-treesitter/nvim-treesitter"
-      "madmaxieee/nvim-treesitter", -- use my own fork for typst support
+      "nvim-treesitter/nvim-treesitter",
     },
   },
   {
@@ -106,8 +105,7 @@ return {
     "RRethy/vim-illuminate",
     event = "LspAttach",
     dependencies = {
-      -- "nvim-treesitter/nvim-treesitter"
-      "madmaxieee/nvim-treesitter", -- use my own fork for typst support
+      "nvim-treesitter/nvim-treesitter",
     },
     config = function()
       require("illuminate").configure {

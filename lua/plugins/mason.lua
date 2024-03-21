@@ -37,6 +37,7 @@ return {
       "typst-lsp",
       "yaml-language-server",
       "xmlformatter",
+      "zls",
     },
 
     PATH = "prepend",

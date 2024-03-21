@@ -13,7 +13,8 @@ local servers = {
   "typos_lsp",
   "typst_lsp",
   "bashls",
-  "taplo",
+  "taplo", -- toml
+  "zls",
 }
 
 local configs = {

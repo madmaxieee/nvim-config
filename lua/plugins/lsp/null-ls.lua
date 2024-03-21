@@ -17,9 +17,7 @@ return {
       formatting.isort,
       formatting.black,
       formatting.fish_indent,
-      formatting.beautysh,
       formatting.typstfmt,
-      formatting.xmlformat,
       formatting.bibclean.with {
         command = { "bibclean", "-max-width", "0" },
       },

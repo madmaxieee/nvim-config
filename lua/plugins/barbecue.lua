@@ -3,6 +3,10 @@ return {
   "utilyre/barbecue.nvim",
   lazy = false,
   dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },
+  init = function()
+    -- to avoid layout shift when the winbar is loaded
+    vim.opt.winbar = " "
+  end,
   config = function()
     require("barbecue").setup {
       show_modified = true,

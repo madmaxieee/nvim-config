@@ -1,5 +1,7 @@
 local map = require("utils").safe_keymap_set
 
+map("i", "kj", "<Esc>", { desc = "Exit insert mode" })
+
 -- Insert mode
 map("i", "<C-h>", "<Left>", { desc = "Move left" })
 map("i", "<C-j>", "<Down>", { desc = "Move down" })

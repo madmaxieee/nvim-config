@@ -1,4 +1,5 @@
 return {
+  cond = not vim.g.minimal_mode,
   "utilyre/barbecue.nvim",
   lazy = false,
   dependencies = { "SmiteshP/nvim-navic", "nvim-tree/nvim-web-devicons" },

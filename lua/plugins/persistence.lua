@@ -1,5 +1,5 @@
 return {
-  enabled = not vim.g.minimal_mode,
+  cond = not vim.g.minimal_mode,
   "folke/persistence.nvim",
   event = "BufReadPre",
   init = function()

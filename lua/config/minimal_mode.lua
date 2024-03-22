@@ -22,3 +22,9 @@ if vim.fn.has "mac" == 1 then
     return
   end
 end
+if vim.fn.has "linux" == 1 then
+  if argc == 1 and string.match(argv[1], "/tmp/tmp%.%w+%.fish$") then
+    vim.g.minimal_mode = true
+    return
+  end
+end

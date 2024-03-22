@@ -4,6 +4,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     "debugloop/telescope-undo.nvim",
+    "AckslD/nvim-neoclip.lua",
   },
   keys = {
     {
@@ -116,6 +117,12 @@ return {
       "<cmd>Telescope undo<cr>",
       desc = "undo history",
     },
+    {
+      "<leader>p",
+      mode = "n",
+      "<cmd>Telescope neoclip<cr>",
+      desc = "neoclip",
+    },
   },
   cmd = "Telescope",
   config = function()
@@ -186,5 +193,6 @@ return {
 
     require("telescope").load_extension "undo"
     require("telescope").load_extension "fzf"
+    require("telescope").load_extension "neoclip"
   end,
 }

@@ -25,7 +25,7 @@ return {
       "<leader>a",
       mode = "n",
       function()
-        local filename = require("arrow.utils").get_path_for "%"
+        local filename = require("arrow.utils").get_current_buffer_path()
         require("arrow.persist").save(filename)
         vim.notify("Saved " .. filename .. " to arrow", vim.log.levels.INFO, { title = "Arrow" })
       end,
@@ -35,7 +35,7 @@ return {
       "<leader>x",
       mode = "n",
       function()
-        local filename = require("arrow.utils").get_path_for "%"
+        local filename = require("arrow.utils").get_current_buffer_path()
         require("arrow.persist").remove(filename)
         vim.notify("Removed " .. filename .. " from arrow", vim.log.levels.INFO, { title = "Arrow" })
       end,

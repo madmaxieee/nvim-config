@@ -6,5 +6,8 @@ return {
     "sindrets/diffview.nvim",
     "nvim-telescope/telescope.nvim",
   },
+  init = function()
+    vim.cmd.cabbrev("G", "Neogit")
+  end,
   config = true,
 }

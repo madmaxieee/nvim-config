@@ -29,6 +29,7 @@ return {
       "kdl",
       "graphql",
 
+      "vim",
       "vimdoc",
       "gitattributes",
       "gitignore",

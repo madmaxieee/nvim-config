@@ -37,6 +37,10 @@ return {
       ["g."] = "actions.toggle_hidden",
       ["g\\"] = "actions.toggle_trash",
     },
+    view_options = {
+      -- Show files and directories that start with "."
+      show_hidden = true,
+    },
     -- Configuration for the floating window in oil.open_float
     float = {
       override = function()

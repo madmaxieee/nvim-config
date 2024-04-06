@@ -20,7 +20,7 @@ local function toggle_telescope(harpoon_files)
 end
 
 return {
-  enabled = false,
+  cond = false,
   "ThePrimeagen/harpoon",
   branch = "harpoon2",
   dependencies = {

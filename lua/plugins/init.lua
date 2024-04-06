@@ -2,7 +2,7 @@ return {
   { "nvim-lua/plenary.nvim" },
   { "nvim-tree/nvim-web-devicons" },
   {
-    enabled = false,
+    cond = false,
     "catppuccin/nvim",
     lazy = false,
     name = "catppuccin",
@@ -12,7 +12,6 @@ return {
     end,
   },
   {
-    -- enabled = false,
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
@@ -116,13 +115,5 @@ return {
         },
       }
     end,
-  },
-  {
-    enabled = false,
-    "dgagn/diagflow.nvim",
-    event = "LspAttach",
-    opts = {
-      scope = "line",
-    },
   },
 }

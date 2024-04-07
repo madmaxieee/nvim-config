@@ -20,6 +20,7 @@ return {
       "css-lsp",
       "dockerfile-language-server",
       "eslint-lsp",
+      "gopls",
       "html-lsp",
       "isort",
       "json-lsp",

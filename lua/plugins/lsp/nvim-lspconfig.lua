@@ -15,6 +15,7 @@ local servers = {
   "bashls",
   "taplo", -- toml
   "zls",
+  "gopls",
 }
 
 local configs = {

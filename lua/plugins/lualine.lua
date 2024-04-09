@@ -35,7 +35,11 @@ end
 
 local function show_lsp_status()
   for _, client in ipairs(vim.lsp.get_clients()) do
-    if client.attached_buffers[vim.api.nvim_get_current_buf()] and client.name ~= "null-ls" then
+    if
+      client.attached_buffers[vim.api.nvim_get_current_buf()]
+      and client.name ~= "null-ls"
+      and client.name ~= "typos_ls"
+    then
       return (vim.o.columns > 100 and "   LSP ~ " .. client.name) or "   LSP "
     end
   end

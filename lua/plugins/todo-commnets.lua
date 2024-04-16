@@ -1,7 +1,7 @@
 return {
   "folke/todo-comments.nvim",
   dependencies = { "nvim-lua/plenary.nvim" },
-  event = "BufReadPre",
+  event = { "BufReadPre", "BufNewFile" },
   cmd = { "TodoQuickFix", "TodoLocList", "TodoTrouble", "TodoTelescope" },
   keys = {
     {
@@ -19,6 +19,10 @@ return {
   },
   opts = {
     keywords = {
+      DEBUG = {
+        icon = " ",
+        color = "warning",
+      },
       FIX = {
         icon = " ",
         color = "error",
@@ -52,10 +56,14 @@ return {
         alt = { "TESTING", "PASSED", "FAILED" },
       },
     },
+    -- allow comments like these to work:
+    -- NOTE -
+    -- NOTE:
+    highlight = {
+      pattern = [[.*<(KEYWORDS)\s*(-|:)]],
+    },
     search = {
-      command = "rg",
-      args = { "--color=never", "--no-heading", "--with-filename", "--line-number", "--column" },
-      pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+      pattern = [[\b(KEYWORDS)(:|\s?-)]],
     },
   },
 }

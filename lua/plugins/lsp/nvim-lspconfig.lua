@@ -22,6 +22,24 @@ local configs = {
   clangd = {
     cmd = { "clangd", "--clang-tidy" },
   },
+  tsserver = {
+    handlers = {
+      ["textDocument/publishDiagnostics"] = function(_, params, ctx, config)
+        if params.diagnostics ~= nil then
+          local idx = 1
+          while idx <= #params.diagnostics do
+            local code = params.diagnostics[idx].code
+            if code == 71007 then
+              table.remove(params.diagnostics, idx)
+            else
+              idx = idx + 1
+            end
+          end
+        end
+        vim.lsp.diagnostic.on_publish_diagnostics(_, params, ctx, config)
+      end,
+    },
+  },
   -- TODO: make this work
   typos_lsp = {
     cmd = { "typos-lsp", "--exclude", "node_modules/" },

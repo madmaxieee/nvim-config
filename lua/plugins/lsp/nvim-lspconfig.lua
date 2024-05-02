@@ -29,6 +29,7 @@ local configs = {
           local idx = 1
           while idx <= #params.diagnostics do
             local code = params.diagnostics[idx].code
+            -- ignore client component props must be serializable error
             if code == 71007 then
               table.remove(params.diagnostics, idx)
             else
@@ -39,10 +40,6 @@ local configs = {
         vim.lsp.diagnostic.on_publish_diagnostics(_, params, ctx, config)
       end,
     },
-  },
-  -- TODO: make this work
-  typos_lsp = {
-    cmd = { "typos-lsp", "--exclude", "node_modules/" },
   },
   lua_ls = {
     settings = {

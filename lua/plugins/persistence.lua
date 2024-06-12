@@ -39,9 +39,7 @@ return {
     -- sessionoptions used for saving
     options = { "buffers", "curdir", "tabpages", "winsize" },
     -- a function to call before saving the session
-    pre_save = function()
-      require("neogit").close()
-    end,
+    pre_save = nil,
   },
   config = true,
 }

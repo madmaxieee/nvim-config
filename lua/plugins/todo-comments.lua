@@ -16,6 +16,22 @@ return {
       "<cmd>TodoTelescope<cr>",
       desc = "Search for todos in telescope",
     },
+    {
+      "]t",
+      mode = "n",
+      function()
+        require("todo-comments").jump_next()
+      end,
+      desc = "Next todo comment",
+    },
+    {
+      "[t",
+      mode = "n",
+      function()
+        require("todo-comments").jump_prev()
+      end,
+      desc = "Previous todo comment",
+    },
   },
   opts = {
     keywords = {
@@ -60,6 +76,7 @@ return {
     -- NOTE -
     -- NOTE:
     highlight = {
+      multiline = false,
       pattern = [[.*<(KEYWORDS)\s*(-|:)]],
     },
     search = {

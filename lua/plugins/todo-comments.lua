@@ -83,4 +83,12 @@ return {
       pattern = [[\b(KEYWORDS)(:|\s?-)]],
     },
   },
+  init = function()
+    vim.api.nvim_set_hl(0, "@comment.hint", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.info", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.note", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.todo", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.error", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.warning", { link = "@comment" })
+  end,
 }

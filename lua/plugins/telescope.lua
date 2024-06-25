@@ -69,6 +69,14 @@ return {
       desc = "Live grep",
     },
     {
+      "<leader>fW",
+      mode = "n",
+      function()
+        require("telescope.builtin").live_grep { additional_args = { "--hidden" } }
+      end,
+      desc = "Live grep including hidden files",
+    },
+    {
       "<leader>fb",
       mode = "n",
       "<cmd> Telescope buffers <CR>",

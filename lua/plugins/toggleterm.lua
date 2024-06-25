@@ -45,6 +45,7 @@ local function create_lazygit()
 end
 
 return {
+  cond = false,
   "akinsho/toggleterm.nvim",
   keys = {
     {

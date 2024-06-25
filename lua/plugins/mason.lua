@@ -23,6 +23,7 @@ return {
       "gopls",
       "html-lsp",
       "isort",
+      "jdtls",
       "json-lsp",
       "lua-language-server",
       "markdownlint",

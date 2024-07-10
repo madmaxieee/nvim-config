@@ -2,6 +2,7 @@ local map = require("utils").safe_keymap_set
 
 local no_format = {
   ["eslint"] = true, -- don't auto fix eslint config
+  ["cmake"] = true,
 }
 
 local function formatter_filter(client)
@@ -14,9 +15,6 @@ local function formatter_filter(client)
     return false
   end
   if client.name == "lua_ls" and null_ls.is_registered "stylua" then
-    return false
-  end
-  if client.name == "cmake" then
     return false
   end
   return true
@@ -109,7 +107,7 @@ local function on_attach(client, bufnr)
   if client.supports_method "textDocument/semanticTokens" then
     client.server_capabilities.semanticTokensProvider = nil
   end
-  if client.supports_method "textDocument/formatting" then
+  if client.supports_method "textDocument/formatting" or client.name == "jdtls" then
     vim.api.nvim_clear_autocmds { group = lsp_formatting_group, buffer = bufnr }
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = lsp_formatting_group,

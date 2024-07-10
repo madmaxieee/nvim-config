@@ -21,7 +21,6 @@ return {
       "css-lsp",
       "dockerfile-language-server",
       "eslint-lsp",
-      "google-java-format",
       "gopls",
       "html-lsp",
       "isort",

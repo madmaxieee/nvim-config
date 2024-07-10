@@ -66,4 +66,13 @@ function M.float_window_config(height_ratio, width_ratio, opts)
   }
 end
 
+function M.in_list(array, x)
+  for _, v in ipairs(array) do
+    if v == x then
+      return true
+    end
+  end
+  return false
+end
+
 return M

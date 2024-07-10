@@ -1,3 +1,5 @@
+local in_list = require("utils").in_list
+
 local servers = {
   "lua_ls",
   "html",
@@ -19,27 +21,37 @@ local servers = {
   "jdtls",
 }
 
+local function diagnostics_filter(to_filter)
+  return function(_, params, ctx, config)
+    if params.diagnostics ~= nil then
+      local idx = 1
+      while idx <= #params.diagnostics do
+        local code = params.diagnostics[idx].code
+        if in_list(to_filter, code) then
+          table.remove(params.diagnostics, idx)
+        else
+          idx = idx + 1
+        end
+      end
+    end
+    vim.lsp.diagnostic.on_publish_diagnostics(_, params, ctx, config)
+  end
+end
+
 local configs = {
   clangd = {
     cmd = { "clangd", "--clang-tidy" },
   },
   tsserver = {
     handlers = {
-      ["textDocument/publishDiagnostics"] = function(_, params, ctx, config)
-        if params.diagnostics ~= nil then
-          local idx = 1
-          while idx <= #params.diagnostics do
-            local code = params.diagnostics[idx].code
-            -- ignore client component props must be serializable error
-            if code == 71007 then
-              table.remove(params.diagnostics, idx)
-            else
-              idx = idx + 1
-            end
-          end
-        end
-        vim.lsp.diagnostic.on_publish_diagnostics(_, params, ctx, config)
-      end,
+      -- 71007: ignore client component props must be serializable error
+      ["textDocument/publishDiagnostics"] = diagnostics_filter { 71007 },
+    },
+  },
+  jdtls = {
+    handlers = {
+      -- 16: file is not a project-file
+      ["textDocument/publishDiagnostics"] = diagnostics_filter { "16" },
     },
   },
   lua_ls = {

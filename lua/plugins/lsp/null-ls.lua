@@ -22,7 +22,9 @@ return {
         command = { "bibclean", "-max-width", "0" },
       },
 
-      lint.checkstyle.with { extra_args = { "-c", vim.fn.stdpath "config" .. "/misc/google_checks.xml" } },
+      lint.checkstyle.with {
+        extra_args = { "-c", vim.fn.stdpath "config" .. "/misc/google_checks.xml" },
+      },
       lint.fish,
     }
 

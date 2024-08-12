@@ -1,6 +1,8 @@
 return {
   "williamboman/mason.nvim",
-  build = "MasonInstallAll",
+  build = function(_)
+    vim.cmd "MasonInstallAll"
+  end,
   cmd = {
     "Mason",
     "MasonInstall",

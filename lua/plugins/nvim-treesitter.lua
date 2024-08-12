@@ -39,6 +39,7 @@ return {
       "dockerfile",
 
       "regex",
+      "nix",
     },
 
     autotag = {

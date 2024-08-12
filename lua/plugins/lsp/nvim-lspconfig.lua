@@ -19,6 +19,7 @@ local servers = {
   "zls",
   "gopls",
   "jdtls",
+  "nil_ls",
 }
 
 local function diagnostics_filter(to_filter)

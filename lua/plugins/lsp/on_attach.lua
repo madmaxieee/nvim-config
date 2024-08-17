@@ -104,9 +104,7 @@ local function on_attach(client, bufnr)
   if not client then
     return
   end
-  if client.supports_method "textDocument/semanticTokens" then
-    client.server_capabilities.semanticTokensProvider = nil
-  end
+  client.server_capabilities.semanticTokensProvider = nil
   if client.supports_method "textDocument/formatting" or client.name == "jdtls" then
     vim.api.nvim_clear_autocmds { group = lsp_formatting_group, buffer = bufnr }
     vim.api.nvim_create_autocmd("BufWritePre", {

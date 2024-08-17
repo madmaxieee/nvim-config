@@ -32,6 +32,7 @@ return {
       "markdownlint",
       "nginx-language-server",
       "pyright",
+      "pylint",
       "rust-analyzer",
       "stylua",
       "svelte-language-server",

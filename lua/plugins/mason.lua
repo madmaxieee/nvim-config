@@ -40,7 +40,7 @@ end, {})
 return {
   "williamboman/mason.nvim",
   build = function(_)
-    vim.cmd "MasonInstallAll"
+    vim.cmd("MasonInstall " .. table.concat(ensure_installed, " "))
   end,
   cmd = {
     "Mason",

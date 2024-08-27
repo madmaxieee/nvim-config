@@ -69,6 +69,16 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     options = {
+      disabled_filetypes = {
+        statusline = {
+          "dapui_scopes",
+          "dapui_breakpoints",
+          "dapui_stacks",
+          "dapui_watches",
+          "dapui_console",
+          "dap-repl",
+        },
+      },
       globalstatus = false,
       section_separators = "",
       refresh = {

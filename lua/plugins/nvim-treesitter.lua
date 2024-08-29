@@ -20,6 +20,7 @@ return {
       "cpp",
       "rust",
       "go",
+      "java",
 
       "typst",
       "markdown",

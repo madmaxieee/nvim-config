@@ -23,7 +23,7 @@ require("lazy").setup {
     version = false, -- always use the latest git commit
   },
   install = {
-    missing = true,
+    missing = false,
     colorscheme = { "tokyonight" },
   },
   checker = {

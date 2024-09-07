@@ -7,7 +7,7 @@ return {
     priority = 1000,
     opts = {},
     init = function()
-      if vim.fn.has "mac" then
+      if vim.fn.has "mac" == 1 then
         vim.cmd.colorscheme "tokyonight-moon"
       else
         vim.cmd.colorscheme "tokyonight-night"

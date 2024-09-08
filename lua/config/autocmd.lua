@@ -1,7 +1,7 @@
 local create_augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
--- don't some buffers in the buffer list
+-- don't include some buffers in the buffer list
 autocmd("FileType", {
   pattern = { "qf", "oil" },
   callback = function()

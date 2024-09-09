@@ -35,7 +35,7 @@ local function detach_client(client_id, bufnr)
     vim.lsp.buf_detach_client(bufnr, client_id)
   end)
   vim.diagnostic.hide(nil, bufnr)
-  vim.diagnostic.disable(bufnr)
+  vim.diagnostic.enable(false, { bufnr = bufnr })
 end
 
 autocmd("LspAttach", {
@@ -43,6 +43,10 @@ autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
     local client_id = args.data.client_id
+    if vim.g.no_lsp then
+      detach_client(client_id, bufnr)
+      return
+    end
     if no_lsp_filetype[vim.bo[bufnr].filetype] or vim.wo.diff then
       detach_client(client_id, bufnr)
       return

@@ -9,6 +9,7 @@ return {
       [home] = true,
       [home .. "/Downloads"] = true,
       ["/private/tmp"] = true,
+      ["/tmp"] = true,
     }
 
     -- disable persistence for certain directories

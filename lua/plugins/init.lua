@@ -115,8 +115,12 @@ return {
     event = "InsertEnter",
     config = function()
       require("better_escape").setup {
-        mapping = { "kj", "jk" },
         timeout = vim.o.timeoutlen,
+        default_mappings = false,
+        mappings = {
+          i = { k = { j = "<esc>" } },
+          c = { k = { j = "<esc>" } },
+        },
       }
     end,
   },

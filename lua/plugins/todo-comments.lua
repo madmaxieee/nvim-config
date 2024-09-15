@@ -33,6 +33,14 @@ return {
       desc = "Previous todo comment",
     },
   },
+  init = function()
+    vim.api.nvim_set_hl(0, "@comment.hint", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.info", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.note", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.todo", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.error", { link = "@comment" })
+    vim.api.nvim_set_hl(0, "@comment.warning", { link = "@comment" })
+  end,
   opts = {
     keywords = {
       DEBUG = {
@@ -77,18 +85,10 @@ return {
     -- NOTE:
     highlight = {
       multiline = false,
-      pattern = [[.*<(KEYWORDS)\s*(-|:)]],
+      pattern = [[.*<(KEYWORDS)\s*[:-]{1}]], -- pattern or table of patterns, used for highlighting (vim regex)
     },
     search = {
-      pattern = [[\b(KEYWORDS)(:|\s?-)]],
+      pattern = [[\b(KEYWORDS)\s?[:-]{1}]],
     },
   },
-  init = function()
-    vim.api.nvim_set_hl(0, "@comment.hint", { link = "@comment" })
-    vim.api.nvim_set_hl(0, "@comment.info", { link = "@comment" })
-    vim.api.nvim_set_hl(0, "@comment.note", { link = "@comment" })
-    vim.api.nvim_set_hl(0, "@comment.todo", { link = "@comment" })
-    vim.api.nvim_set_hl(0, "@comment.error", { link = "@comment" })
-    vim.api.nvim_set_hl(0, "@comment.warning", { link = "@comment" })
-  end,
 }

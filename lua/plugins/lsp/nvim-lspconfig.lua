@@ -6,7 +6,7 @@ local servers = {
   "cssls",
   "clangd",
   "pyright",
-  "tsserver",
+  "ts_ls",
   "tailwindcss",
   "cmake",
   "dockerls",

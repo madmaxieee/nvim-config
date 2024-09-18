@@ -24,7 +24,7 @@ return {
       formatting.nixfmt,
 
       lint.checkstyle.with {
-        extra_args = { "-c", vim.fn.stdpath "config" .. "/misc/google_checks.xml" },
+        extra_args = { "-c", (vim.fn.stdpath "config") .. "/misc/google_checks.xml" },
       },
       lint.fish,
       lint.pylint,

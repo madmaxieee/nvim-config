@@ -84,7 +84,7 @@ return {
     -- NOTE -
     -- NOTE:
     highlight = {
-      multiline = false,
+      multiline = true,
       pattern = [[.*<(KEYWORDS)\s*[:-]{1}]], -- pattern or table of patterns, used for highlighting (vim regex)
     },
     search = {

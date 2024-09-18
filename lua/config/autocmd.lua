@@ -43,10 +43,6 @@ autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
     local client_id = args.data.client_id
-    if vim.g.no_lsp then
-      detach_client(client_id, bufnr)
-      return
-    end
     if no_lsp_filetype[vim.bo[bufnr].filetype] or vim.wo.diff then
       detach_client(client_id, bufnr)
       return

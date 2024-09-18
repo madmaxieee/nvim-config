@@ -3,6 +3,17 @@ return {
   "folke/persistence.nvim",
   event = "BufReadPre",
   init = function()
+    local session_options = {
+      "buffers",
+      "curdir",
+      "folds",
+      "help",
+      "tabpages",
+      "winsize",
+      "globals",
+    }
+    vim.o.sessionoptions = table.concat(session_options, ",")
+
     local persistence_group = vim.api.nvim_create_augroup("Persistence", { clear = true })
     local home = vim.fn.expand "~"
     local disabled_dirs = {
@@ -35,12 +46,9 @@ return {
     })
   end,
   opts = {
-    -- directory where session files are saved
-    dir = vim.fn.expand(vim.fn.stdpath "state" .. "/sessions/"),
-    -- sessionoptions used for saving
-    options = { "buffers", "curdir", "tabpages", "winsize" },
-    -- a function to call before saving the session
-    pre_save = nil,
+    dir = vim.fn.expand(vim.fn.stdpath "state") .. "/sessions/",
+    need = 1,
+    branch = true,
   },
   config = true,
 }

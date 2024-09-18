@@ -27,6 +27,8 @@ vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
 vim.opt.foldmethod = "expr"
 
+vim.opt.linebreak = true
+
 -- disable nvim intro
 vim.opt.shortmess:append "sI"
 

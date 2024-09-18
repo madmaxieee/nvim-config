@@ -99,6 +99,8 @@ end
 
 local lsp_formatting_group = vim.api.nvim_create_augroup("LspFormatting", {})
 
+vim.g.format_on_save = true
+
 local function on_attach(client, bufnr)
   set_keymaps(bufnr)
   if not client then
@@ -111,13 +113,23 @@ local function on_attach(client, bufnr)
       group = lsp_formatting_group,
       buffer = bufnr,
       callback = function()
-        vim.lsp.buf.format {
-          async = false,
-          filter = formatter_filter,
-        }
+        if vim.g.format_on_save then
+          vim.lsp.buf.format {
+            async = false,
+            filter = formatter_filter,
+          }
+        end
       end,
     })
   end
 end
+
+vim.api.nvim_create_user_command("FormatOnSave", function()
+  vim.g.format_on_save = true
+end, {})
+
+vim.api.nvim_create_user_command("NoFormatOnSave", function()
+  vim.g.format_on_save = false
+end, {})
 
 return on_attach

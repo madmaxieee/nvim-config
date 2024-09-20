@@ -3,9 +3,9 @@ return {
   "otavioschwanck/arrow.nvim",
   keys = {
     ";",
+    "m",
     {
-      -- "H",
-      "<S-Tab>",
+      "H",
       mode = "n",
       function()
         require("arrow.persist").previous()
@@ -13,52 +13,35 @@ return {
       { desc = "Go to previous buffer" },
     },
     {
-      -- "L",
-      "<Tab>",
+      "L",
       mode = "n",
       function()
         require("arrow.persist").next()
       end,
       { desc = "Go to next buffer" },
     },
-    {
-      "<leader>a",
-      mode = "n",
-      function()
-        local filename = require("arrow.utils").get_current_buffer_path()
-        require("arrow.persist").save(filename)
-        vim.notify("Saved " .. filename .. " to arrow", vim.log.levels.INFO, { title = "Arrow" })
-      end,
-      desc = "Add current file to arrow",
-    },
-    {
-      "<leader>x",
-      mode = "n",
-      function()
-        local filename = require("arrow.utils").get_current_buffer_path()
-        require("arrow.persist").remove(filename)
-        vim.notify("Removed " .. filename .. " from arrow", vim.log.levels.INFO, { title = "Arrow" })
-      end,
-      desc = "Remove current file from arrow",
-    },
   },
   opts = {
     show_icons = true,
     leader_key = ";",
-    -- separate_by_branch = true, -- Bookmarks will be separated by git branch
-    separate_save_and_remove = true,
-    index_keys = "asdfghjkl123456789",
+    buffer_leader_key = "m",
+    separate_save_and_remove = false,
+    index_keys = "sfghjkzbnmwrtyuiopl123456789",
     mappings = {
       edit = "e",
-      delete_mode = "D",
+      delete_mode = "d",
       clear_all_items = "c",
       -- used as save if separate_save_and_remove is true
-      toggle = "S",
+      toggle = "a",
       open_vertical = "v",
       open_horizontal = "-",
       quit = "q",
       -- only used if separate_save_and_remove is true
       remove = "x",
+    },
+    per_buffer_config = {
+      lines = 4,
+      sort_automatically = false,
     },
   },
 }

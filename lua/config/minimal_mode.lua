@@ -28,3 +28,9 @@ if vim.fn.has "linux" == 1 then
     return
   end
 end
+
+-- when nvim is used in vipe (my script)
+if argc == 1 and string.match(argv[1], "/tmp/vipe%.[0-9]+%.txt$") then
+  vim.g.minimal_mode = true
+  return
+end

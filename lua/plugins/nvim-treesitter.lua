@@ -50,9 +50,8 @@ return {
     highlight = {
       enable = true,
       use_languagetree = true,
+      additional_vim_regex_highlighting = false,
     },
-
-    additional_vim_regex_highlighting = false,
 
     indent = { enable = true },
 
@@ -65,7 +64,16 @@ return {
     },
   },
   config = function(_, opts)
-    require("nvim-treesitter.configs").setup(opts)
+    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+    parser_config.d2 = {
+      install_info = {
+        url = "https://codeberg.org/p8i/tree-sitter-d2.git",
+        revision = "main",
+        files = { "src/parser.c", "src/scanner.c" },
+      },
+      filetype = "d2",
+    }
     vim.treesitter.language.register("markdown", "mdx")
+    require("nvim-treesitter.configs").setup(opts)
   end,
 }

@@ -12,6 +12,7 @@ return {
   opts = {
     mappings = { status = { ["<space>"] = "Stage" } },
     disable_hint = true,
+    integrations = { telescope = true, diffview = true },
   },
   config = true,
 }

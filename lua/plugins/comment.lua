@@ -21,6 +21,7 @@ end
 local commentstring_filetype_map = {
   kdl = "// %s",
   kitty = "# %s",
+  d2 = "# %s",
 }
 
 local set_commentstring_filetype = function(filetype, commentstring)

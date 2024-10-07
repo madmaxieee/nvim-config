@@ -1,3 +1,5 @@
+local can_use_copilot = vim.fn.expand "$USER" ~= "maxcchuang"
+
 local function config_copilot()
   require("copilot").setup {
     panel = {
@@ -34,18 +36,21 @@ local function config_copilot()
   end
 end
 
-vim.api.nvim_create_user_command("EnableCopilot", function()
-  vim.g.EnableCopilot = 1
-  config_copilot()
-end, {})
-vim.api.nvim_create_user_command("DisableCopilot", function()
-  vim.g.EnableCopilot = 0
-  if vim.fn.exists "Copilot" then
-    vim.cmd "Copilot disable"
-  end
-end, {})
+if can_use_copilot then
+  vim.api.nvim_create_user_command("EnableCopilot", function()
+    vim.g.EnableCopilot = 1
+    config_copilot()
+  end, {})
+  vim.api.nvim_create_user_command("DisableCopilot", function()
+    vim.g.EnableCopilot = 0
+    if vim.fn.exists "Copilot" then
+      vim.cmd "Copilot disable"
+    end
+  end, {})
+end
 
 return {
+  cond = can_use_copilot,
   "zbirenbaum/copilot.lua",
   cmd = "Copilot",
   config = config_copilot,

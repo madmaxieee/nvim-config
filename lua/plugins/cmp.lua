@@ -41,7 +41,9 @@ local icons = {
 }
 
 return {
-  "hrsh7th/nvim-cmp",
+  -- "hrsh7th/nvim-cmp",
+  -- trying this cool fork out now
+  "iguanacucumber/magazine.nvim",
   event = "InsertEnter",
   dependencies = {
     {

@@ -1,7 +1,5 @@
-return {
-  "zbirenbaum/copilot.lua",
-  cmd = "Copilot",
-  opts = {
+local function config_copilot()
+  require("copilot").setup {
     panel = {
       enabled = false,
       auto_refresh = false,
@@ -28,5 +26,27 @@ return {
       gitrebase = false,
       ["*"] = true,
     },
-  },
+  }
+  if vim.g.EnableCopilot == 1 then
+    vim.cmd "Copilot enable"
+  else
+    vim.cmd "Copilot disable"
+  end
+end
+
+vim.api.nvim_create_user_command("EnableCopilot", function()
+  vim.g.EnableCopilot = 1
+  config_copilot()
+end, {})
+vim.api.nvim_create_user_command("DisableCopilot", function()
+  vim.g.EnableCopilot = 0
+  if vim.fn.exists "Copilot" then
+    vim.cmd "Copilot disable"
+  end
+end, {})
+
+return {
+  "zbirenbaum/copilot.lua",
+  cmd = "Copilot",
+  config = config_copilot,
 }

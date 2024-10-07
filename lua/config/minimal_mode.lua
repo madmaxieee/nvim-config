@@ -1,12 +1,11 @@
 vim.api.nvim_create_user_command("MinimalMode", function()
-  vim.g.Minimal_mode = 1
+  vim.g.MinimalMode = 1
 end, {})
-
 vim.api.nvim_create_user_command("NoMinimalMode", function()
-  vim.g.Minimal_mode = 0
+  vim.g.MinimalMode = 0
 end, {})
 
-if vim.g.Minimal_mode == 1 then
+if vim.g.MinimalMode == 1 then
   vim.g.minimal_mode = true
 end
 

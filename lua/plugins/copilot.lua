@@ -43,7 +43,7 @@ if can_use_copilot then
   end, {})
   vim.api.nvim_create_user_command("DisableCopilot", function()
     vim.g.EnableCopilot = 0
-    if vim.fn.exists "Copilot" then
+    if vim.fn.exists ":Copilot" > 0 then
       vim.cmd "Copilot disable"
     end
   end, {})

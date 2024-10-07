@@ -43,7 +43,7 @@ local configs = {
   clangd = {
     cmd = { "clangd", "--clang-tidy" },
   },
-  tsserver = {
+  ts_ls = {
     handlers = {
       -- 71007: ignore client component props must be serializable error
       ["textDocument/publishDiagnostics"] = diagnostics_filter { 71007 },

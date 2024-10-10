@@ -15,7 +15,6 @@ return {
       formatting.prettierd,
       formatting.stylua,
       formatting.isort,
-      formatting.black,
       formatting.fish_indent,
       formatting.typstfmt,
       formatting.bibclean.with {
@@ -28,7 +27,6 @@ return {
         extra_args = { "-c", (vim.fn.stdpath "config") .. "/misc/google_checks.xml" },
       },
       lint.fish,
-      lint.pylint,
     }
 
     null_ls.setup {

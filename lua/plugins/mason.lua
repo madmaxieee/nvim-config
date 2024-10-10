@@ -1,7 +1,6 @@
 local ensure_installed = {
   "bash-language-server",
   "beautysh",
-  "black",
   "checkstyle",
   "clangd",
   "cmake-language-server",
@@ -19,7 +18,7 @@ local ensure_installed = {
   "nil",
   "nginx-language-server",
   "pyright",
-  "pylint",
+  "ruff",
   "rust-analyzer",
   "stylua",
   "svelte-language-server",

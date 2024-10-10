@@ -5,6 +5,7 @@ local servers = {
   "html",
   "cssls",
   "clangd",
+  "ruff",
   "pyright",
   "ts_ls",
   "tailwindcss",

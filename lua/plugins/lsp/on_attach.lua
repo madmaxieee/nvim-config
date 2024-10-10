@@ -11,7 +11,7 @@ local function formatter_filter(client)
   end
   ---@diagnostic disable-next-line: different-requires
   local null_ls = require "null-ls"
-  if client.name == "tsserver" and null_ls.is_registered "prettierd" then
+  if client.name == "ts_ls" and null_ls.is_registered "prettierd" then
     return false
   end
   if client.name == "lua_ls" and null_ls.is_registered "stylua" then

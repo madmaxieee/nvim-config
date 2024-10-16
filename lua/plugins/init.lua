@@ -142,4 +142,18 @@ return {
     },
     config = true,
   },
+  {
+    "mcauley-penney/visual-whitespace.nvim",
+    event = require("utils.events").VisualEnter,
+    config = function()
+      require("visual-whitespace").setup { highlight = { link = "VisualDimmed" } }
+    end,
+  },
+  {
+    "aaron-p1/match-visual.nvim",
+    event = require("utils.events").VisualEnter,
+    config = function()
+      require("match-visual").setup {}
+    end,
+  },
 }

@@ -9,7 +9,10 @@ package.path = package.path
 require "config.opts"
 require "config.autocmd"
 require "config.minimal_mode"
+require "config.highlight"
+
 require "config.lazy"
+
 require "config.usercmd"
 require "config.keymaps"
 require "config.filetype"

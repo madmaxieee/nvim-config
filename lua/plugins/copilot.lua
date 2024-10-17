@@ -53,5 +53,6 @@ return {
   cond = can_use_copilot,
   "zbirenbaum/copilot.lua",
   cmd = "Copilot",
+  event = "SessionLoadPost",
   config = config_copilot,
 }

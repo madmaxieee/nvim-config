@@ -87,13 +87,6 @@ local function set_keymaps(bufnr)
     vim.lsp.buf.list_workspace_folders()
   end, { buffer = bufnr, desc = "List workspace folders" })
 
-  map("n", "<leader>fm", function()
-    vim.lsp.buf.format {
-      async = true,
-      filter = formatter_filter,
-    }
-  end, { buffer = bufnr, desc = "LSP formatting" })
-
   vim.b[bufnr].lsp_keymaps_set = true
 end
 
@@ -111,7 +104,7 @@ local function on_attach(client, bufnr)
       group = lsp_formatting_group,
       buffer = bufnr,
       callback = function()
-        if vim.g.Format_on_save == 0 then
+        if vim.g.FormatOnSave == 0 then
           return
         end
         vim.lsp.buf.format {
@@ -123,12 +116,19 @@ local function on_attach(client, bufnr)
   end
 end
 
-vim.api.nvim_create_user_command("FormatOnSave", function()
-  vim.g.Format_on_save = 1
+vim.api.nvim_create_user_command("EnableFormatOnSave", function()
+  vim.g.FormatOnSave = 1
 end, {})
 
-vim.api.nvim_create_user_command("NoFormatOnSave", function()
-  vim.g.Format_on_save = 0
+vim.api.nvim_create_user_command("DisableFormatOnSave", function()
+  vim.g.FormatOnSave = 0
+end, {})
+
+vim.api.nvim_create_user_command("FormatBuffer", function()
+  vim.lsp.buf.format {
+    async = true,
+    filter = formatter_filter,
+  }
 end, {})
 
 return on_attach

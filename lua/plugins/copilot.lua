@@ -40,12 +40,14 @@ if can_use_copilot then
   vim.api.nvim_create_user_command("EnableCopilot", function()
     vim.g.EnableCopilot = 1
     config_copilot()
+    vim.notify("enabled copilot", vim.log.levels.INFO)
   end, {})
   vim.api.nvim_create_user_command("DisableCopilot", function()
     vim.g.EnableCopilot = 0
     if vim.fn.exists ":Copilot" > 0 then
       vim.cmd "Copilot disable"
     end
+    vim.notify("disabled copilot", vim.log.levels.INFO)
   end, {})
 end
 

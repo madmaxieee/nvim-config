@@ -3,7 +3,6 @@ return {
   "otavioschwanck/arrow.nvim",
   keys = {
     ";",
-    "m",
     {
       "H",
       mode = "n",
@@ -24,7 +23,6 @@ return {
   opts = {
     show_icons = true,
     leader_key = ";",
-    buffer_leader_key = "m",
     separate_save_and_remove = false,
     index_keys = "sfghjkzbnmwrtyuiopl123456789",
     mappings = {
@@ -38,10 +36,6 @@ return {
       quit = "q",
       -- only used if separate_save_and_remove is true
       remove = "x",
-    },
-    per_buffer_config = {
-      lines = 4,
-      sort_automatically = false,
     },
   },
 }

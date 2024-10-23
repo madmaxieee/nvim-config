@@ -33,7 +33,7 @@ return {
       desc = "Search workspace symbols",
     },
     {
-      "<leader>ma",
+      "<leader>fm",
       mode = "n",
       "<cmd> Telescope marks <CR>",
       desc = "Search marks",
@@ -95,7 +95,7 @@ return {
       desc = "Find in current buffer",
     },
     {
-      "<leader>tr",
+      "<leader>fr",
       mode = "n",
       "<cmd> Telescope resume <CR>",
       desc = "Telescope resume",
@@ -105,12 +105,6 @@ return {
       mode = "n",
       "<cmd> Telescope git_commits <CR>",
       desc = "Git commits",
-    },
-    {
-      "<leader>ma",
-      mode = "n",
-      "<cmd> Telescope marks <CR>",
-      desc = "telescope bookmarks",
     },
     {
       "<leader>fw",

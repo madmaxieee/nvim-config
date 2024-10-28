@@ -66,6 +66,9 @@ function M.float_window_config(height_ratio, width_ratio, opts)
   }
 end
 
+---@param array any[]
+---@param x any
+---@return boolean
 function M.in_list(array, x)
   for _, v in ipairs(array) do
     if v == x then
@@ -73,6 +76,32 @@ function M.in_list(array, x)
     end
   end
   return false
+end
+
+---@alias KeymapSpec [string,function,vim.keymap.set.Opts?]
+---@class RepeatablePairSpec
+---@field next KeymapSpec
+---@field prev KeymapSpec
+---
+---@param modes string|string[]
+---@param specs RepeatablePairSpec
+function M.map_repeatable_pair(modes, specs)
+  local map = M.safe_keymap_set
+  local next_repeat, prev_repeat = M.make_repeatable_move_pair { next = specs.next[2], prev = specs.prev[2] }
+  map(modes, specs.next[1], next_repeat, specs.next[3])
+  map(modes, specs.prev[1], prev_repeat, specs.prev[3])
+end
+
+---@class Moves
+---@field next function
+---@field prev function
+---@param moves Moves
+---@return function
+---@return function
+function M.make_repeatable_move_pair(moves)
+  local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+  local next_repeat, prev_repeat = ts_repeat_move.make_repeatable_move_pair(moves.next, moves.prev)
+  return next_repeat, prev_repeat
 end
 
 return M

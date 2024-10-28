@@ -1,6 +1,14 @@
 local map = require("utils").safe_keymap_set
 
--- map("i", "kj", "<Esc>", { desc = "Exit insert mode" })
+local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+
+map({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
+map({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
+
+map({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
+map({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })
+map({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
+map({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
 
 -- Insert mode
 map("i", "<C-h>", "<Left>", { desc = "Move left" })
@@ -27,11 +35,6 @@ map("n", "U", "<C-r>", { desc = "Redo" })
 map("n", "<leader><space>", "<cmd> update <CR>", { desc = "Save file" })
 map("n", "<leader>nt", "<cmd> tabnew <CR>", { desc = "New tab" })
 map("n", "<leader>nb", "<cmd> vnew <CR>", { desc = "New buffer" })
-
--- map("n", "H", "^", { desc = "Move to first character" })
--- map("n", "L", "$", { desc = "Move to last character" })
--- map("v", "H", "^", { desc = "Move to first character" })
--- map("v", "L", "$", { desc = "Move to last character" })
 
 -- map("n", "<Tab>", "gt", { desc = "Next tab" })
 -- map("n", "<S-Tab>", "gT", { desc = "Previous tab" })

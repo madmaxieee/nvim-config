@@ -9,7 +9,7 @@ return {
   },
   keys = {
     {
-      "<leader>fg",
+      "<leader>gg",
       mode = "n",
       "<cmd> Telescope git_files <CR>",
       desc = "Find git files",
@@ -45,7 +45,7 @@ return {
       desc = "Search jumplist",
     },
     {
-      "<leader>gs",
+      "<leader>fg",
       mode = "n",
       "<cmd> Telescope git_status <CR>",
       desc = "Git status",
@@ -193,14 +193,6 @@ return {
         },
         undo = {
           mappings = {
-            i = {
-              ["<cr>"] = require("telescope-undo.actions").yank_additions,
-              ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
-              ["<C-cr>"] = require("telescope-undo.actions").restore,
-              -- alternative defaults, for users whose terminals do questionable things with modified <cr>
-              ["<C-y>"] = require("telescope-undo.actions").yank_deletions,
-              ["<C-r>"] = require("telescope-undo.actions").restore,
-            },
             n = {
               ["y"] = require("telescope-undo.actions").yank_additions,
               ["Y"] = require("telescope-undo.actions").yank_deletions,

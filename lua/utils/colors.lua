@@ -1,3 +1,5 @@
+-- lifted from https://github.com/folke/tokyonight.nvim/blob/2e1daa1d164ad8cc3e99b44ca68e990888a66038/lua/tokyonight/util.lua
+
 local M = {}
 
 ---@param c  string|number

@@ -1,3 +1,12 @@
+local next_todo_repeat, prev_todo_repeat = require("utils").make_repeatable_move_pair {
+  next = function()
+    require("todo-comments").jump_next()
+  end,
+  prev = function()
+    require("todo-comments").jump_prev()
+  end,
+}
+
 return {
   "folke/todo-comments.nvim",
   dependencies = { "nvim-lua/plenary.nvim" },
@@ -19,17 +28,13 @@ return {
     {
       "]t",
       mode = "n",
-      function()
-        require("todo-comments").jump_next()
-      end,
+      next_todo_repeat,
       desc = "Next todo comment",
     },
     {
       "[t",
       mode = "n",
-      function()
-        require("todo-comments").jump_prev()
-      end,
+      prev_todo_repeat,
       desc = "Previous todo comment",
     },
   },

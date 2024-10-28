@@ -34,21 +34,31 @@ return {
     on_attach = function(bufnr)
       local gs = require "gitsigns"
 
-      map("n", "]h", function()
-        if vim.wo.diff then
-          return "]h"
-        end
-        vim.schedule(gs.next_hunk)
-        return "<Ignore>"
-      end, { desc = "Next hunk", buffer = bufnr })
-
-      map("n", "[h", function()
-        if vim.wo.diff then
-          return "[h"
-        end
-        vim.schedule(gs.prev_hunk)
-        return "<Ignore>"
-      end, { desc = "Previous hunk", buffer = bufnr })
+      local map_repeatable_pair = require("utils").map_repeatable_pair
+      map_repeatable_pair({ "n", "x", "o" }, {
+        next = {
+          "]h",
+          function()
+            if vim.wo.diff then
+              vim.cmd.normal { "]c", bang = true }
+            else
+              gs.nav_hunk "next"
+            end
+          end,
+          { desc = "Next hunk", buffer = bufnr },
+        },
+        prev = {
+          "[h",
+          function()
+            if vim.wo.diff then
+              vim.cmd.normal { "[c", bang = true }
+            else
+              gs.nav_hunk "prev"
+            end
+          end,
+          { desc = "Previous hunk", buffer = bufnr },
+        },
+      })
 
       map("n", "<leader>gb", gs.blame_line, { desc = "Blame line", buffer = bufnr })
       map("n", "<leader>gd", gs.toggle_deleted, { desc = "Toggle Deleted", buffer = bufnr })

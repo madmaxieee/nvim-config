@@ -50,13 +50,23 @@ local function set_keymaps(bufnr)
     vim.lsp.buf.signature_help()
   end, { buffer = bufnr, desc = "Signature help" })
 
-  map("n", "[d", function()
-    vim.diagnostic.goto_prev { float = { border = "rounded" } }
-  end, { buffer = bufnr, desc = "Go to previous diagnostic" })
-
-  map("n", "]d", function()
-    vim.diagnostic.goto_next { float = { border = "rounded" } }
-  end, { buffer = bufnr, desc = "Go to next diagnostic" })
+  local map_repeatable_pair = require("utils").map_repeatable_pair
+  map_repeatable_pair("n", {
+    next = {
+      "]d",
+      function()
+        vim.diagnostic.goto_next { float = { border = "rounded" } }
+      end,
+      { buffer = bufnr, desc = "Go to next diagnostic" },
+    },
+    prev = {
+      "[d",
+      function()
+        vim.diagnostic.goto_prev { float = { border = "rounded" } }
+      end,
+      { buffer = bufnr, desc = "Go to previous diagnostic" },
+    },
+  })
 
   map("n", "<leader>ca", function()
     vim.lsp.buf.code_action()

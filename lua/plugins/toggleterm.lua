@@ -45,21 +45,8 @@ local function create_lazygit()
 end
 
 return {
-  cond = false,
   "akinsho/toggleterm.nvim",
   keys = {
-    {
-      "<A-i>",
-      mode = { "i", "n", "t" },
-      function()
-        if terminal then
-          terminal:toggle()
-        else
-          terminal = create_terminal()
-        end
-      end,
-      desc = "Toggle terminal",
-    },
     {
       "<A-g>",
       mode = { "i", "n", "t" },

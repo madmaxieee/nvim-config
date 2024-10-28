@@ -9,22 +9,20 @@ return {
           enable = true,
           lookahead = true,
           keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
+            ["aa"] = "@parameter.outer",
+            ["ia"] = "@parameter.inner",
             ["af"] = "@function.outer",
             ["if"] = "@function.inner",
             ["ac"] = "@class.outer",
-            -- You can optionally set descriptions to the mappings (used in the desc parameter of
-            -- nvim_buf_set_keymap) which plugins like which-key display
-            ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
-            -- You can also use captures from other query groups like `locals.scm`
-            ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
+            ["ic"] = "@class.inner",
           },
           selection_modes = {
             ["@parameter.outer"] = "v",
-            ["@function.outer"] = "V",
-            ["@function.inner"] = "V",
-            ["@class.inner"] = "V",
-            ["@class.outer"] = "V",
+            ["@parameter.inner"] = "v",
+            ["@function.outer"] = "v",
+            ["@function.inner"] = "v",
+            ["@class.outer"] = "v",
+            ["@class.inner"] = "v",
           },
           include_surrounding_whitespace = true,
         },

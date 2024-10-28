@@ -1,24 +1,7 @@
 return {
   "nvim-treesitter/nvim-treesitter-textobjects",
-  keys = {
-    "]m",
-    "]]",
-    "]o",
-    "]s",
-    "]z",
-    "]M",
-    "][",
-    "[m",
-    "[[",
-    "[o",
-    "[s",
-    "[z",
-    "[M",
-    "[]",
-  },
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter",
-  },
+  event = "VeryLazy",
+  dependencies = { "nvim-treesitter/nvim-treesitter" },
   config = function()
     require("nvim-treesitter.configs").setup {
       textobjects = {

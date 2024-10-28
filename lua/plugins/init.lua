@@ -159,4 +159,23 @@ return {
       require("match-visual").setup {}
     end,
   },
+  {
+    "cbochs/grapple.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "Grapple",
+    opts = {
+      icons = true,
+      quick_select = "fdsahjkl",
+    },
+    keys = {
+      { "<leader>a", "<cmd>Grapple toggle_tags<cr>", desc = "Toggle tags menu" },
+      { "<leader>m", "<cmd>Grapple toggle<cr>", desc = "Toggle tag" },
+      { "<A-f>", "<cmd>Grapple select index=1<cr>", desc = "Select first tag" },
+      { "<A-d>", "<cmd>Grapple select index=2<cr>", desc = "Select second tag" },
+      { "<A-s>", "<cmd>Grapple select index=3<cr>", desc = "Select third tag" },
+      { "<A-a>", "<cmd>Grapple select index=4<cr>", desc = "Select fourth tag" },
+      { "L", "<cmd>Grapple cycle_tags prev<cr>", desc = "Go to previous tag" },
+      { "H", "<cmd>Grapple cycle_tags next<cr>", desc = "Go to next tag" },
+    },
+  },
 }

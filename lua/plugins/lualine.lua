@@ -66,7 +66,10 @@ end
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
-  dependencies = { "nvim-tree/nvim-web-devicons" },
+  dependencies = {
+    "nvim-tree/nvim-web-devicons",
+    "cbochs/grapple.nvim",
+  },
   opts = {
     options = {
       disabled_filetypes = {
@@ -95,14 +98,7 @@ return {
       },
       lualine_b = {
         { "file-info", fmt = show_file_info },
-        {
-          "arrow",
-          fmt = function()
-            if not vim.g.minimal_mode then
-              return require("arrow.statusline").text_for_statusline_with_icons()
-            end
-          end,
-        },
+        { "grapple" },
       },
       lualine_c = {
         { "_branch", fmt = show_branch },

@@ -152,4 +152,23 @@ return {
       require("match-visual").setup {}
     end,
   },
+  {
+    "Wansmer/treesj",
+    keys = {
+      {
+        "<leader>s",
+        mode = { "n" },
+        function()
+          require("treesj").toggle()
+        end,
+        desc = "Toggle split join",
+      },
+    },
+    dependencies = { "nvim-treesitter/nvim-treesitter" }, -- if you install parsers with `nvim-treesitter`
+    config = function()
+      require("treesj").setup {
+        use_default_keymaps = false,
+      }
+    end,
+  },
 }

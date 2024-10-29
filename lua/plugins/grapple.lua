@@ -7,7 +7,7 @@ return {
     quick_select = "1234567890",
   },
   keys = {
-    { "<leader>a", "<cmd>Grapple toggle_tags<cr>", desc = "Toggle tags menu" },
+    { "<leader>j", "<cmd>Grapple toggle_tags<cr>", desc = "Toggle tags menu" },
     { "<leader>m", "<cmd>Grapple toggle<cr>", desc = "Toggle tag" },
     { "<leader>1", "<cmd>Grapple select index=1<cr>", desc = "Select first tag" },
     { "<leader>2", "<cmd>Grapple select index=2<cr>", desc = "Select second tag" },

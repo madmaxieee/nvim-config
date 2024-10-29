@@ -13,6 +13,7 @@ return {
     mappings = { status = { ["<space>"] = "Stage" } },
     disable_hint = true,
     integrations = { telescope = true, diffview = true },
+    graph_style = "unicode",
   },
   config = true,
 }

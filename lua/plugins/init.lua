@@ -93,6 +93,15 @@ return {
       "DiffviewOpen",
       "DiffviewFileHistory",
     },
+    opts = {
+      hooks = {
+        ---@diagnostic disable-next-line: unused-local
+        diff_buf_read = function(bufnr)
+          vim.opt_local.wrap = false
+          vim.opt_local.buflisted = false
+        end,
+      },
+    },
   },
   {
     "RRethy/vim-illuminate",

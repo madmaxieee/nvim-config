@@ -65,14 +65,19 @@ return {
         icon = " ",
         color = "warning",
       },
+      WHY = {
+        icon = "? ",
+        color = "warning",
+        alt = { "WTF", "WHAT" },
+      },
       WARN = {
         icon = " ",
         color = "warning",
-        alt = { "WARNING", "XXX" },
+        alt = { "WARNING" },
       },
       PERF = {
         icon = "󰅒",
-        alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" },
+        alt = { "PERFORMANCE", "OPTIM", "OPTIMIZE" },
       },
       NOTE = {
         icon = "",
@@ -85,7 +90,7 @@ return {
         alt = { "TESTING", "PASSED", "FAILED" },
       },
     },
-    -- allow comments like these to work:
+    -- allow comments like these to work
     -- NOTE -
     -- NOTE:
     highlight = {

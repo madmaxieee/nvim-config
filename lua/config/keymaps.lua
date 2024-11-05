@@ -3,11 +3,11 @@ local map = require("utils").safe_keymap_set
 local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
 
 map({ "n", "x", "o" }, ";", function()
-  ts_repeat_move.repeat_last_move_next()
+  ts_repeat_move.repeat_last_move()
   vim.cmd "norm! zz"
 end)
 map({ "n", "x", "o" }, ",", function()
-  ts_repeat_move.repeat_last_move_previous()
+  ts_repeat_move.repeat_last_move_opposite()
   vim.cmd "norm! zz"
 end)
 

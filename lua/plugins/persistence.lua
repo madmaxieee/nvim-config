@@ -1,3 +1,8 @@
+local state_dir = vim.fn.stdpath "state"
+if type(state_dir) == "table" then
+  state_dir = state_dir[1]
+end
+
 return {
   cond = not vim.g.minimal_mode,
   "folke/persistence.nvim",
@@ -46,7 +51,7 @@ return {
     })
   end,
   opts = {
-    dir = vim.fn.expand(vim.fn.stdpath "state") .. "/sessions/",
+    dir = vim.fn.expand(state_dir) .. "/sessions/",
     need = 1,
     branch = true,
   },

@@ -31,7 +31,7 @@ return {
           set_jumps = true,
           goto_next_start = {
             ["]f"] = "@function.outer",
-            ["]]"] = { query = "@class.outer", desc = "Next class start" },
+            ["]]"] = "@class.outer",
             ["]o"] = "@loop.*",
             ["]s"] = { query = "@scope", query_group = "locals", desc = "Next scope" },
             ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold" },

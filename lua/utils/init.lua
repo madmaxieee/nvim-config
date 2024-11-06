@@ -1,12 +1,18 @@
 local M = {}
 
--- Wrapper around vim.keymap.set that will
--- not create a keymap if a lazy key handler exists.
--- It will also set `silent` to true by default.
+---Wrapper around vim.keymap.set that will
+---not create a keymap if a lazy key handler exists.
+---It will also set `silent` to true by default.
+---@param mode string,string[]
+---@param lhs string
+---@param rhs string|function
+---@param opts vim.keymap.set.Opts?
 function M.safe_keymap_set(mode, lhs, rhs, opts)
   local keys = require("lazy.core.handler").handlers.keys
   ---@cast keys LazyKeysHandler
+
   local modes = type(mode) == "string" and { mode } or mode
+  ---@cast modes string[]
 
   ---@param m string
   modes = vim.tbl_filter(function(m)

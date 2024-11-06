@@ -4,6 +4,9 @@ return {
     "DiffviewOpen",
     "DiffviewFileHistory",
   },
+  init = function()
+    vim.cmd.cabbrev("Diff", "DiffviewOpen")
+  end,
   opts = {
     hooks = {
       diff_buf_read = function(bufnr)

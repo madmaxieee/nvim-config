@@ -41,6 +41,9 @@ return {
 
       "regex",
       "nix",
+
+      "d2",
+      "just",
     },
 
     autotag = {

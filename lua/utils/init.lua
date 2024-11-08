@@ -3,7 +3,7 @@ local M = {}
 ---Wrapper around vim.keymap.set that will
 ---not create a keymap if a lazy key handler exists.
 ---It will also set `silent` to true by default.
----@param mode string,string[]
+---@param mode string|string[]
 ---@param lhs string
 ---@param rhs string|function
 ---@param opts vim.keymap.set.Opts?

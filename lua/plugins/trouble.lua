@@ -5,7 +5,7 @@ return {
     {
       "<leader>q",
       mode = "n",
-      "<cmd>Trouble document_diagnostics<CR>",
+      "<cmd>Trouble diagnostics<CR>",
       desc = "Open Trouble",
     },
   },

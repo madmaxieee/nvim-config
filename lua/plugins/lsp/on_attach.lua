@@ -1,7 +1,7 @@
 local map = require("utils").safe_keymap_set
 
 local no_format = {
-  ["eslint"] = true, -- don't auto fix eslint config
+  ["eslint"] = true, -- don't auto fix eslint errors
   ["cmake"] = true,
 }
 

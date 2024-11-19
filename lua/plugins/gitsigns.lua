@@ -16,6 +16,7 @@ return {
             require("lazy").load { plugins = { "gitsigns.nvim" } }
           end)
         end
+        vim.api.nvim_create_user_command("GitBlame", "Gitsigns blame", {})
         vim.g.loaded_gitsigns = true
       end,
     })

@@ -75,6 +75,11 @@ local configs = {
       },
     },
   },
+  typos_lsp = {
+    init_options = {
+      diagnosticSeverity = "Warning",
+    },
+  },
 }
 
 local capabilities =

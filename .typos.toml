@@ -1,0 +1,5 @@
+[default]
+extend-ignore-re = ["\"<leader>[a-zA-Z]+\""]
+
+[default.extend-words]
+noice = "noice"

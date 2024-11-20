@@ -36,7 +36,7 @@
   (block_comment)
 ] @comment
 
-; Punctiation
+; Punctuation
 ;-------------------------------------------------------------------------------
 
 (arrow) @operator

@@ -1,22 +1,28 @@
 local vault_folder = vim.fn.resolve(vim.fn.expand "~/obsidian")
 
 local command_map = {
-  ["backlinks"] = "ObsidianBacklinks",
-  ["check"] = "ObsidianCheck",
-  ["followlink"] = "ObsidianFollowLink",
-  ["link"] = "ObsidianLink",
-  ["linknew"] = "ObsidianLinkNew",
-  ["new"] = "ObsidianNew",
-  ["open"] = "ObsidianOpen",
-  ["pasteimg"] = "ObsidianPasteImg",
-  ["quickswitch"] = "ObsidianQuickSwitch",
-  ["rename"] = "ObsidianRename",
-  ["search"] = "ObsidianSearch",
-  ["template"] = "ObsidianTemplate",
-  ["today"] = "ObsidianToday",
-  ["tomorrow"] = "ObsidianTomorrow",
-  ["workspace"] = "ObsidianWorkspace",
-  ["yesterday"] = "ObsidianYesterday",
+  backlinks = "ObsidianBacklinks",
+  dailies = "ObsidianDailes",
+  extract = "ObsidianExtractNote",
+  follow = "ObsidianFollowLink",
+  link = "ObsidianLink",
+  links = "ObsidianLinks",
+  linknew = "ObsidianLinkNew",
+  new = "ObsidianNew",
+  newfromtemplate = "ObsidianNewFromTemplate",
+  open = "ObsidianOpen",
+  pasteimg = "ObsidianPasteImg",
+  rename = "ObsidianRename",
+  search = "ObsidianSearch",
+  switch = "ObsidianQuickSwitch",
+  tags = "ObsidianTags",
+  template = "ObsidianTemplate",
+  toc = "ObsidianTOC",
+  today = "ObsidianToday",
+  tomorrow = "ObsidianTomorrow",
+  check = "ObsidianToggleCheckbox",
+  workspace = "ObsidianWorkspace",
+  yesterday = "ObsidianYesterday",
 }
 
 return {
@@ -29,6 +35,7 @@ return {
   },
   dependencies = {
     "nvim-lua/plenary.nvim",
+    "nvim-telescope/telescope.nvim",
   },
   init = function()
     vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
@@ -37,39 +44,26 @@ return {
         vim.wo.conceallevel = 1
       end,
     })
+    vim.cmd.cabbrev("O", "Obsidian")
+    local map = require("utils").safe_keymap_set
+    map("n", "<leader>fo", "<cmd>ObsidianSearch<cr>", { desc = "Obsidian search" })
   end,
-  opts = {
-    workspaces = {
-      {
-        name = "notes",
-        path = "~/obsidian/notes",
+  config = function()
+    require("obsidian").setup {
+      workspaces = {
+        {
+          name = "notes",
+          path = "~/obsidian/notes",
+        },
       },
-      {
-        name = "obsidian",
-        path = "~/obsidian/obsidian",
-      },
-    },
-    -- templates = {
-    --   subdir = "templates",
-    --   date_format = "%Y-%m-%d",
-    --   time_format = "%H:%M",
-    --   substitutions = {},
-    -- },
-  },
-  config = function(_, opts)
-    require("obsidian").setup(opts)
-
-    vim.api.nvim_create_user_command("Obsidian", function(_opts)
-      local command
-      if #_opts.fargs == 0 then
-        command = "ObsidianOpen"
-      else
-        command = command_map[_opts.fargs[1]]
-      end
+    }
+    vim.api.nvim_create_user_command("Obsidian", function(opts)
+      local command = command_map[opts.fargs[1]]
+      local real_args = table.concat(opts.fargs, " ", 2)
       if command then
-        vim.cmd(command)
+        vim.cmd(command .. " " .. real_args)
       else
-        vim.notify("Invalid Obsidian command: " .. opts[1], vim.log.levels.ERROR)
+        vim.notify("Invalid Obsidian command: " .. opts.fargs[1], vim.log.levels.ERROR)
       end
     end, {
       nargs = "*",

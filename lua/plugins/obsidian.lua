@@ -2,7 +2,7 @@ local vault_folder = vim.fn.resolve(vim.fn.expand "~/obsidian")
 
 local command_map = {
   backlinks = "ObsidianBacklinks",
-  dailies = "ObsidianDailes",
+  dailies = "ObsidianDailies",
   extract = "ObsidianExtractNote",
   follow = "ObsidianFollowLink",
   link = "ObsidianLink",
@@ -28,7 +28,6 @@ local command_map = {
 return {
   "epwalsh/obsidian.nvim",
   version = "*",
-  cmd = "Obsidian",
   event = {
     "BufReadPre " .. vault_folder .. "/**.md",
     "BufNewFile " .. vault_folder .. "/**.md",
@@ -37,17 +36,6 @@ return {
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope.nvim",
   },
-  init = function()
-    vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
-      pattern = vault_folder .. "/**.md",
-      callback = function()
-        vim.wo.conceallevel = 1
-      end,
-    })
-    vim.cmd.cabbrev("O", "Obsidian")
-    local map = require("utils").safe_keymap_set
-    map("n", "<leader>fo", "<cmd>ObsidianSearch<cr>", { desc = "Obsidian search" })
-  end,
   config = function()
     require("obsidian").setup {
       workspaces = {
@@ -57,6 +45,9 @@ return {
         },
       },
     }
+
+    vim.wo.conceallevel = 1
+
     vim.api.nvim_create_user_command("Obsidian", function(opts)
       local command = command_map[opts.fargs[1]]
       local real_args = table.concat(opts.fargs, " ", 2)
@@ -75,5 +66,34 @@ return {
         end, options_list)
       end,
     })
+
+    local function git(args)
+      return vim.fn.system("git -C " .. vault_folder .. " " .. args)
+    end
+
+    vim.api.nvim_create_autocmd({ "FocusLost", "VimLeave" }, {
+      group = vim.api.nvim_create_augroup("SaveObsidian", { clear = true }),
+      callback = function()
+        if vim.fn.getcwd() ~= vault_folder then
+          return
+        end
+        local commit_time_str = git "log -1 --format=%ct"
+        local commit_time = tonumber(commit_time_str)
+        if commit_time == nil then
+          vim.notify("could not retrieve commit time.", vim.log.levels.warn)
+        end
+        local current_time = os.time()
+        if current_time - commit_time >= 3600 then
+          vim.cmd "wa"
+          git "add --all"
+          git "commit -m 'auto commit'"
+          git "push"
+        end
+      end,
+    })
+
+    vim.cmd.cabbrev("O", "Obsidian")
+    local map = require("utils").safe_keymap_set
+    map("n", "<leader>fo", "<cmd>ObsidianSearch<cr>", { desc = "Obsidian search" })
   end,
 }

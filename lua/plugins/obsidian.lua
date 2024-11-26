@@ -68,7 +68,7 @@ return {
     })
 
     local function git(args)
-      return vim.fn.system("git -C " .. vault_folder .. " " .. args)
+      return vim.fn.system("git -C '" .. vault_folder .. "' " .. args)
     end
 
     vim.api.nvim_create_autocmd({ "FocusLost", "VimLeave" }, {
@@ -80,7 +80,7 @@ return {
         local commit_time_str = git "log -1 --format=%ct"
         local commit_time = tonumber(commit_time_str)
         if commit_time == nil then
-          vim.notify("could not retrieve commit time.", vim.log.levels.warn)
+          return
         end
         local current_time = os.time()
         if current_time - commit_time >= 3600 then

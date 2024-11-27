@@ -72,16 +72,41 @@ function M.float_window_config(height_ratio, width_ratio, opts)
   }
 end
 
----@param array any[]
+---@param list any[]
 ---@param x any
 ---@return boolean
-function M.in_list(array, x)
-  for _, v in ipairs(array) do
+function M.in_list(list, x)
+  for _, v in ipairs(list) do
     if v == x then
       return true
     end
   end
   return false
+end
+
+---remove an item from a list by value
+---@param list any[]
+---@param value_to_remove any
+function M.remove_by_value(list, value_to_remove)
+  for i = #list, 1, -1 do -- Iterate backwards!
+    if list[i] == value_to_remove then
+      table.remove(list, i)
+    end
+  end
+end
+
+---filters a list
+---@param list any[]
+---@param condition fun(item: any): boolean
+---@return any[]
+function M.filter_list(list, condition)
+  local new_list = {}
+  for _, v in ipairs(list) do
+    if condition(v) then
+      table.insert(new_list, v)
+    end
+  end
+  return new_list
 end
 
 ---@alias KeymapSpec [string,function,vim.keymap.set.Opts?]

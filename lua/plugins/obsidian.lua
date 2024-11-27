@@ -54,7 +54,7 @@ local function auto_commit(interval)
     vim.cmd "wa"
     git "add --all"
     git "commit -m 'auto commit'"
-    git "push"
+    git "push --quiet"
   end
 end
 

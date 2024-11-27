@@ -1,3 +1,5 @@
+local map = require("utils").safe_keymap_set
+
 local vault_folder = vim.fn.resolve(vim.fn.expand "~/obsidian")
 
 local command_map = {
@@ -97,47 +99,48 @@ return {
         end, options_list)
       end,
     })
-
-    local auto_save_group = vim.api.nvim_create_augroup("SaveObsidian", { clear = true })
-    vim.api.nvim_create_autocmd({ "FocusGained" }, {
-      group = auto_save_group,
-      callback = function()
-        if vim.fn.getcwd() ~= vault_folder then
-          return
-        end
-        if auto_save_timer:is_active() then
-          auto_save_timer:stop()
-        end
-      end,
-    })
-    vim.api.nvim_create_autocmd({ "FocusLost" }, {
-      group = auto_save_group,
-      callback = function()
-        if vim.fn.getcwd() ~= vault_folder then
-          return
-        end
-        if not auto_save_timer:is_active() then
-          auto_save_timer:start(auto_save_interval, 0, function()
-            -- can't call vim api's like vim.cmd directly in uv callbacks
-            vim.schedule(function()
-              auto_commit(commit_interval)
-            end)
-          end)
-        end
-      end,
-    })
-    vim.api.nvim_create_autocmd({ "VimLeave" }, {
-      group = auto_save_group,
-      callback = function()
-        if vim.fn.getcwd() ~= vault_folder then
-          return
-        end
-        auto_commit(commit_interval)
-      end,
-    })
-
     vim.cmd.cabbrev("O", "Obsidian")
-    local map = require("utils").safe_keymap_set
+
+    if git "rev-parse --is-inside-work-tree" == "true\n" then
+      local auto_save_group = vim.api.nvim_create_augroup("SaveObsidian", { clear = true })
+      vim.api.nvim_create_autocmd({ "FocusGained" }, {
+        group = auto_save_group,
+        callback = function()
+          if vim.fn.getcwd() ~= vault_folder then
+            return
+          end
+          if auto_save_timer:is_active() then
+            auto_save_timer:stop()
+          end
+        end,
+      })
+      vim.api.nvim_create_autocmd({ "FocusLost" }, {
+        group = auto_save_group,
+        callback = function()
+          if vim.fn.getcwd() ~= vault_folder then
+            return
+          end
+          if not auto_save_timer:is_active() then
+            auto_save_timer:start(auto_save_interval, 0, function()
+              -- can't call vim api's like vim.cmd directly in uv callbacks
+              vim.schedule(function()
+                auto_commit(commit_interval)
+              end)
+            end)
+          end
+        end,
+      })
+      vim.api.nvim_create_autocmd({ "VimLeave" }, {
+        group = auto_save_group,
+        callback = function()
+          if vim.fn.getcwd() ~= vault_folder then
+            return
+          end
+          auto_commit(commit_interval)
+        end,
+      })
+    end
+
     map("n", "<leader>fo", "<cmd>ObsidianSearch<cr>", { desc = "Obsidian search" })
   end,
 }

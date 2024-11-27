@@ -25,6 +25,37 @@ local command_map = {
   yesterday = "ObsidianYesterday",
 }
 
+local auto_save_interval = 600 * 1000 -- milliseconds
+local commit_interval = 60 * 60 -- seconds
+
+---@diagnostic disable-next-line: undefined-field
+local auto_save_timer = vim.uv.new_timer()
+
+local function git(args)
+  local command = ("git -C '" .. vault_folder .. "' " .. args)
+  local handle = io.popen(command)
+  if handle then
+    local result = handle:read "*a"
+    handle:close()
+    return result
+  end
+end
+
+local function auto_commit(interval)
+  local commit_time_str = git "log -1 --format=%ct"
+  local commit_time = tonumber(commit_time_str)
+  if commit_time == nil then
+    return
+  end
+  local current_time = os.time()
+  if current_time - commit_time >= interval then
+    vim.cmd "wa"
+    git "add --all"
+    git "commit -m 'auto commit'"
+    git "push"
+  end
+end
+
 return {
   "epwalsh/obsidian.nvim",
   version = "*",
@@ -67,28 +98,41 @@ return {
       end,
     })
 
-    local function git(args)
-      return vim.fn.system("git -C '" .. vault_folder .. "' " .. args)
-    end
-
-    vim.api.nvim_create_autocmd({ "FocusLost", "VimLeave" }, {
-      group = vim.api.nvim_create_augroup("SaveObsidian", { clear = true }),
+    local auto_save_group = vim.api.nvim_create_augroup("SaveObsidian", { clear = true })
+    vim.api.nvim_create_autocmd({ "FocusGained" }, {
+      group = auto_save_group,
       callback = function()
         if vim.fn.getcwd() ~= vault_folder then
           return
         end
-        local commit_time_str = git "log -1 --format=%ct"
-        local commit_time = tonumber(commit_time_str)
-        if commit_time == nil then
+        if auto_save_timer:is_active() then
+          auto_save_timer:stop()
+        end
+      end,
+    })
+    vim.api.nvim_create_autocmd({ "FocusLost" }, {
+      group = auto_save_group,
+      callback = function()
+        if vim.fn.getcwd() ~= vault_folder then
           return
         end
-        local current_time = os.time()
-        if current_time - commit_time >= 3600 then
-          vim.cmd "wa"
-          git "add --all"
-          git "commit -m 'auto commit'"
-          git "push"
+        if not auto_save_timer:is_active() then
+          auto_save_timer:start(auto_save_interval, 0, function()
+            -- can't call vim api's like vim.cmd directly in uv callbacks
+            vim.schedule(function()
+              auto_commit(commit_interval)
+            end)
+          end)
         end
+      end,
+    })
+    vim.api.nvim_create_autocmd({ "VimLeave" }, {
+      group = auto_save_group,
+      callback = function()
+        if vim.fn.getcwd() ~= vault_folder then
+          return
+        end
+        auto_commit(commit_interval)
       end,
     })
 

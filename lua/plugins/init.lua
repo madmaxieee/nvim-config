@@ -172,4 +172,23 @@ return {
       }
     end,
   },
+  {
+    "famiu/bufdelete.nvim",
+    cmd = "Bd",
+    keys = {
+      {
+        "<leader>bd",
+        mode = { "n" },
+        function()
+          require("bufdelete").bufdelete(0)
+        end,
+        desc = "delete buffer without disrupting window layout",
+      },
+    },
+    config = function()
+      vim.api.nvim_create_user_command("Bd", function()
+        require("bufdelete").bufdelete(0)
+      end, { desc = "delete buffer without disrupting window layout" })
+    end,
+  },
 }

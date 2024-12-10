@@ -72,25 +72,27 @@ return {
             ["textDocument/publishDiagnostics"] = make_diagnostics_filter { "16" },
           },
         },
-        lua_ls = {
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { "vim" },
-              },
-              workspace = {
-                library = {
-                  [vim.fn.expand "$VIMRUNTIME/lua"] = true,
-                  [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
-                  [vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types"] = true,
-                  [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
-                },
-                maxPreload = 100000,
-                preloadFileSize = 10000,
-              },
-            },
-          },
-        },
+        -- managed with lazydev.nvim
+        --
+        -- lua_ls = {
+        --   settings = {
+        --     Lua = {
+        --       diagnostics = {
+        --         globals = { "vim" },
+        --       },
+        --       workspace = {
+        --         library = {
+        --           [vim.fn.expand "$VIMRUNTIME/lua"] = true,
+        --           [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
+        --           [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+        --           [vim.fn.expand "${3rd}/luv/library"] = true,
+        --         },
+        --         maxPreload = 100000,
+        --         preloadFileSize = 10000,
+        --       },
+        --     },
+        --   },
+        -- },
         typos_lsp = {
           init_options = {
             diagnosticSeverity = "Warning",

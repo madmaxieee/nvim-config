@@ -30,7 +30,6 @@ local command_map = {
 local auto_save_interval = 600 * 1000 -- milliseconds
 local commit_interval = 60 * 60 -- seconds
 
----@diagnostic disable-next-line: undefined-field
 local auto_save_timer = vim.uv.new_timer()
 
 local function git(args)

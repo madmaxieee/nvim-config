@@ -31,11 +31,6 @@ return {
     },
   },
   {
-    "folke/neodev.nvim",
-    ft = "lua",
-    opts = {},
-  },
-  {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
     opts = {

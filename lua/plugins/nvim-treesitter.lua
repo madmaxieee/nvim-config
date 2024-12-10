@@ -68,6 +68,7 @@ return {
   },
   config = function(_, opts)
     local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+    ---@diagnostic disable-next-line: inject-field
     parser_config.d2 = {
       install_info = {
         url = "https://codeberg.org/p8i/tree-sitter-d2.git",

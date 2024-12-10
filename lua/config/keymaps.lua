@@ -4,11 +4,11 @@ local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
 
 map({ "n", "x", "o" }, ";", function()
   ts_repeat_move.repeat_last_move()
-  vim.cmd "norm! zz"
+  vim.cmd.normal { "zz", bang = true }
 end)
 map({ "n", "x", "o" }, ",", function()
   ts_repeat_move.repeat_last_move_opposite()
-  vim.cmd "norm! zz"
+  vim.cmd.normal { "zz", bang = true }
 end)
 
 map({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
@@ -39,14 +39,9 @@ map("n", "<C-d>", "<C-d>zz", { desc = "Go down half screen" })
 map("n", "<Esc>", "<cmd> noh <CR>", { desc = "Clear highlights" })
 map("n", "U", "<C-r>", { desc = "Redo" })
 map("n", "<leader><space>", "<cmd> update <CR>", { desc = "Save file" })
-map("n", "<leader>nt", "<cmd> tabnew <CR>", { desc = "New tab" })
-map("n", "<leader>nb", "<cmd> vnew <CR>", { desc = "New buffer" })
-
--- map("n", "<Tab>", "gt", { desc = "Next tab" })
--- map("n", "<S-Tab>", "gT", { desc = "Previous tab" })
--- map("n", "<leader>x", "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>", {
---   desc = "Delete buffer without closing window",
--- })
+map("n", "<leader>tn", "<cmd> tabnew <CR>", { desc = "New tab" })
+map("n", "<leader>tc", "<cmd> tabclose <CR>", { desc = "Close tab" })
+map("n", "<leader>bn", "<cmd> vnew <CR>", { desc = "New buffer" })
 
 -- Visual mode
 map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })

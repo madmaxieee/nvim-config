@@ -97,8 +97,8 @@ return {
         { "macro-recording", fmt = show_macro_recording },
       },
       lualine_b = {
+        "grapple",
         { "file-info", fmt = show_file_info },
-        { "grapple" },
       },
       lualine_c = {
         { "_branch", fmt = show_branch },

@@ -17,7 +17,7 @@ return {
     { "<A-d>", "<cmd>Grapple select index=2<cr>", desc = "Select second tag" },
     { "<A-s>", "<cmd>Grapple select index=3<cr>", desc = "Select third tag" },
     { "<A-a>", "<cmd>Grapple select index=4<cr>", desc = "Select fourth tag" },
-    { "H", "<cmd>Grapple cycle_tags prev<cr>", desc = "Go to previous tag" },
-    { "L", "<cmd>Grapple cycle_tags next<cr>", desc = "Go to next tag" },
+    { "<Tab>", "<cmd>Grapple cycle_tags prev<cr>", desc = "Go to previous tag" },
+    { "<S-Tab>", "<cmd>Grapple cycle_tags next<cr>", desc = "Go to next tag" },
   },
 }

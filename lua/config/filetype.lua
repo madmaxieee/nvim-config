@@ -3,8 +3,9 @@ vim.filetype.add {
     typ = "typst",
     mdx = "mdx",
     d2 = "d2",
+    log = "log",
   },
   pattern = {
-    [".env.*"] = "sh",
+    ["\\.env.*"] = "sh",
   },
 }

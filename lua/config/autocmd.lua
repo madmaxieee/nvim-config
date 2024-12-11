@@ -1,23 +1,6 @@
 local create_augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
--- don't include some buffers in the buffer list
-autocmd("FileType", {
-  pattern = { "qf", "oil" },
-  callback = function()
-    vim.opt_local.buflisted = false
-  end,
-})
-
--- open help in vertical split
-autocmd("FileType", {
-  group = create_augroup("VerticalHelp", { clear = true }),
-  pattern = "help",
-  callback = function()
-    vim.cmd "wincmd L"
-  end,
-})
-
 -- disable lsp for certain filetypes and in diff mode
 local disable_lsp_group = create_augroup("DisableLsp", { clear = true })
 
@@ -66,9 +49,9 @@ autocmd("FocusGained", {
 })
 
 autocmd("TextYankPost", {
+  group = vim.api.nvim_create_augroup("YankHighlight", { clear = true }),
+  pattern = "*",
   callback = function()
     vim.highlight.on_yank { higroup = "Visual", timeout = 200 }
   end,
-  group = vim.api.nvim_create_augroup("YankHighlight", { clear = true }),
-  pattern = "*",
 })

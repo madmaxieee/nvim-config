@@ -20,12 +20,6 @@ return {
     "nvim-tree/nvim-web-devicons",
     "MunifTanjim/nui.nvim",
   },
-  init = function()
-    -- disable netrw
-    vim.g.loaded_netrwPlugin = true
-    vim.g.loaded_netrw = true
-    vim.g.loaded_netrw_gitignore = true
-  end,
   opts = {
     default_component_configs = {
       git_status = {

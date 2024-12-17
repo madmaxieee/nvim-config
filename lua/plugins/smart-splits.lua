@@ -33,6 +33,7 @@ return {
         require("smart-splits").swap_buf_down()
         require("smart-splits").move_cursor_down()
       end,
+      desc = "swap buffer down",
     },
     {
       "<leader>K",
@@ -41,6 +42,7 @@ return {
         require("smart-splits").swap_buf_up()
         require("smart-splits").move_cursor_up()
       end,
+      desc = "swap buffer up",
     },
     {
       "<leader>L",

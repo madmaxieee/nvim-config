@@ -5,18 +5,13 @@ return {
     {
       "<leader>q",
       mode = "n",
-      "<cmd>Trouble diagnostics<CR>",
+      "<cmd>Trouble diagnostics toggle auto_jump=false<CR>",
       desc = "Open Trouble",
     },
   },
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
-    auto_jump = {
-      "lsp_definitions",
-      "lsp_references",
-      "lsp_implementations",
-      "lsp_type_definitions",
-    },
+    auto_jump = true,
     signs = {
       error = "",
       warning = "",

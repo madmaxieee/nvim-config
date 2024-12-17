@@ -23,8 +23,6 @@ map("i", "<C-k>", "<Up>", { desc = "Move up" })
 map("i", "<C-l>", "<Right>", { desc = "Move right" })
 
 -- Normal mode
-map("n", "<A-j>", "<cmd> m+ <CR>", { desc = "Move current line down" })
-map("n", "<A-k>", "<cmd> m-- <CR>", { desc = "Move current line up" })
 map("n", "<A-down>", "<cmd> m+ <CR>", { desc = "Move current line down" })
 map("n", "<A-up>", "<cmd> m-- <CR>", { desc = "Move current line up" })
 

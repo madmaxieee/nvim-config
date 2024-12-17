@@ -1,12 +1,3 @@
-local next_todo_repeat, prev_todo_repeat = require("utils").make_repeatable_move_pair {
-  next = function()
-    require("todo-comments").jump_next()
-  end,
-  prev = function()
-    require("todo-comments").jump_prev()
-  end,
-}
-
 return {
   "folke/todo-comments.nvim",
   dependencies = { "nvim-lua/plenary.nvim" },
@@ -25,18 +16,6 @@ return {
       "<cmd>TodoTelescope<cr>",
       desc = "Search for todos in telescope",
     },
-    {
-      "]t",
-      mode = "n",
-      next_todo_repeat,
-      desc = "Next todo comment",
-    },
-    {
-      "[t",
-      mode = "n",
-      prev_todo_repeat,
-      desc = "Previous todo comment",
-    },
   },
   init = function()
     vim.api.nvim_set_hl(0, "@comment.hint", { link = "@comment" })
@@ -46,59 +25,79 @@ return {
     vim.api.nvim_set_hl(0, "@comment.error", { link = "@comment" })
     vim.api.nvim_set_hl(0, "@comment.warning", { link = "@comment" })
   end,
-  opts = {
-    keywords = {
-      DEBUG = {
-        icon = " ",
-        color = "warning",
+  config = function()
+    require("todo-comments").setup {
+      keywords = {
+        DEBUG = {
+          icon = " ",
+          color = "warning",
+        },
+        FIX = {
+          icon = " ",
+          color = "error",
+          alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
+        },
+        TODO = {
+          icon = " ",
+          color = "info",
+        },
+        HACK = {
+          icon = " ",
+          color = "warning",
+        },
+        WHY = {
+          icon = "? ",
+          color = "warning",
+          alt = { "WTF", "WHAT" },
+        },
+        WARN = {
+          icon = " ",
+          color = "warning",
+          alt = { "WARNING" },
+        },
+        PERF = {
+          icon = "󰅒",
+          alt = { "PERFORMANCE", "OPTIM", "OPTIMIZE" },
+        },
+        NOTE = {
+          icon = "",
+          color = "hint",
+          alt = { "INFO" },
+        },
+        TEST = {
+          icon = "⏲ ",
+          color = "test",
+          alt = { "TESTING", "PASSED", "FAILED" },
+        },
       },
-      FIX = {
-        icon = " ",
-        color = "error",
-        alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
+      -- allow comments like these to work
+      -- NOTE -
+      -- NOTE:
+      highlight = {
+        multiline = true,
+        pattern = [[.*<(KEYWORDS)\s*[:-]{1}]], -- pattern or table of patterns, used for highlighting (vim regex)
       },
-      TODO = {
-        icon = " ",
-        color = "info",
+      search = {
+        pattern = [[\b(KEYWORDS)\s?[:-]{1}]],
       },
-      HACK = {
-        icon = " ",
-        color = "warning",
+    }
+
+    local utils = require "utils"
+    utils.map_repeatable_pair("n", {
+      next = {
+        "]T",
+        function()
+          require("todo-comments").jump_next()
+        end,
+        { desc = "next todo comment" },
       },
-      WHY = {
-        icon = "? ",
-        color = "warning",
-        alt = { "WTF", "WHAT" },
+      prev = {
+        "[T",
+        function()
+          require("todo-comments").jump_prev()
+        end,
+        { desc = "prev todo comment" },
       },
-      WARN = {
-        icon = " ",
-        color = "warning",
-        alt = { "WARNING" },
-      },
-      PERF = {
-        icon = "󰅒",
-        alt = { "PERFORMANCE", "OPTIM", "OPTIMIZE" },
-      },
-      NOTE = {
-        icon = "",
-        color = "hint",
-        alt = { "INFO" },
-      },
-      TEST = {
-        icon = "⏲ ",
-        color = "test",
-        alt = { "TESTING", "PASSED", "FAILED" },
-      },
-    },
-    -- allow comments like these to work
-    -- NOTE -
-    -- NOTE:
-    highlight = {
-      multiline = true,
-      pattern = [[.*<(KEYWORDS)\s*[:-]{1}]], -- pattern or table of patterns, used for highlighting (vim regex)
-    },
-    search = {
-      pattern = [[\b(KEYWORDS)\s?[:-]{1}]],
-    },
-  },
+    })
+  end,
 }

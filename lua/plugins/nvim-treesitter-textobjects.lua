@@ -3,11 +3,12 @@ return {
   event = "VeryLazy",
   dependencies = { "nvim-treesitter/nvim-treesitter" },
   config = function()
+    ---@diagnostic disable-next-line: missing-fields
     require("nvim-treesitter.configs").setup {
       textobjects = {
         select = {
           enable = true,
-          lookahead = true,
+          lookahead = false,
           keymaps = {
             ["aa"] = "@parameter.outer",
             ["ia"] = "@parameter.inner",
@@ -24,7 +25,7 @@ return {
             ["@class.outer"] = "v",
             ["@class.inner"] = "v",
           },
-          include_surrounding_whitespace = true,
+          include_surrounding_whitespace = false,
         },
         move = {
           enable = true,

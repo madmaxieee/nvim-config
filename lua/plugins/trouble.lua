@@ -5,19 +5,49 @@ return {
     {
       "<leader>q",
       mode = "n",
-      "<cmd>Trouble diagnostics toggle auto_jump=false<CR>",
+      function()
+        local trouble = require "trouble"
+        if trouble.is_open() then
+          trouble.close()
+        else
+          return "<cmd>Trouble diagnostics toggle auto_jump=false<CR>"
+        end
+      end,
       desc = "Open Trouble",
     },
   },
   dependencies = { "nvim-tree/nvim-web-devicons" },
-  opts = {
-    auto_jump = true,
-    signs = {
-      error = "",
-      warning = "",
-      hint = "",
-      information = "",
-      other = "",
-    },
-  },
+  config = function()
+    local trouble = require "trouble"
+    trouble.setup {
+      auto_jump = true,
+      signs = {
+        error = "",
+        warning = "",
+        hint = "",
+        information = "",
+        other = "",
+      },
+    }
+
+    local utils = require "utils"
+    utils.map_repeatable_pair("n", {
+      next = {
+        "]t",
+        function()
+          ---@diagnostic disable-next-line: missing-fields, missing-parameter
+          trouble.next { jump = true, skip_groups = true }
+        end,
+        { desc = "jump to next trouble entry" },
+      },
+      prev = {
+        "[t",
+        function()
+          ---@diagnostic disable-next-line: missing-fields, missing-parameter
+          trouble.prev { jump = true, skip_groups = true }
+        end,
+        { desc = "jump to prev trouble entry" },
+      },
+    })
+  end,
 }

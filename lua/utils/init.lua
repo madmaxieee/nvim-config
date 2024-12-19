@@ -23,10 +23,6 @@ function M.safe_keymap_set(mode, lhs, rhs, opts)
   if #modes > 0 then
     opts = opts or {}
     opts.silent = opts.silent ~= false
-    if opts.remap and not vim.g.vscode then
-      ---@diagnostic disable-next-line: no-unknown
-      opts.remap = nil
-    end
     vim.keymap.set(modes, lhs, rhs, opts)
   end
 end

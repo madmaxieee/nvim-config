@@ -129,9 +129,12 @@ return {
       },
     },
     cmd = "Telescope",
+    init = function()
+      vim.cmd.cabbrev("T", "Telescope")
+    end,
+
     config = function()
       local actions = require "telescope.actions"
-
       require("telescope").setup {
         defaults = {
           vimgrep_arguments = {
@@ -204,12 +207,12 @@ return {
           },
         },
       }
-
       require("telescope").load_extension "undo"
       require("telescope").load_extension "fzf"
       require("telescope").load_extension "neoclip"
     end,
   },
+
   {
     "AckslD/nvim-neoclip.lua",
     dependencies = { "kkharji/sqlite.lua" },
@@ -237,6 +240,7 @@ return {
       }
     end,
   },
+
   {
     "axkirillov/easypick.nvim",
     dependencies = { "nvim-telescope/telescope.nvim" },

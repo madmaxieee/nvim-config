@@ -210,6 +210,7 @@ return {
       require("telescope").load_extension "undo"
       require("telescope").load_extension "fzf"
       require("telescope").load_extension "neoclip"
+      require("telescope").load_extension "macroscope"
     end,
   },
 
@@ -222,14 +223,25 @@ return {
         keys = {
           telescope = {
             i = {
-              paste = "<cr>",
+              select = "<c-y>",
               paste_behind = "<c-k>",
               replay = "<c-q>", -- replay a macro
               delete = "<c-d>", -- delete an entry
               edit = "<c-e>", -- edit an entry
+              custom = {
+                -- HACK: pasting in insert mode telescope somehow incorrectly moves the curosr
+                -- this is a workaround to move the cursor back to the right position
+                ["<cr>"] = function(opts)
+                  local handlers = require "neoclip.handlers"
+                  vim.cmd "norm! h"
+                  handlers.paste(opts.entry, "p")
+                  vim.cmd "norm! l"
+                end,
+              },
             },
             n = {
-              paste = "<cr>",
+              select = "y",
+              paste = { "<cr>", "p" },
               paste_behind = "P",
               replay = "q",
               delete = "d",

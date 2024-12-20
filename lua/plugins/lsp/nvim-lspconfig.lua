@@ -1,25 +1,5 @@
 local utils = require "utils"
 
--- disable lsp for certain filetypes and in diff mode
-local disable_lsp_group = vim.api.nvim_create_augroup("DisableLsp", { clear = true })
-
-local no_lsp_filetype = {
-  ["toggleterm"] = true,
-  ["help"] = true,
-}
-
-local no_lsp_file_pattern = {
-  [[/?%.env]],
-}
-
-local function detach_client(client_id, bufnr)
-  vim.schedule(function()
-    vim.lsp.buf_detach_client(bufnr, client_id)
-  end)
-  vim.diagnostic.hide(nil, bufnr)
-  vim.diagnostic.enable(false, { bufnr = bufnr })
-end
-
 vim.api.nvim_create_user_command("DetachLsp", function()
   vim.diagnostic.reset(nil, 0)
   vim.diagnostic.enable(false, { bufnr = 0 })
@@ -31,6 +11,27 @@ vim.api.nvim_create_user_command("DetachLsp", function()
   end)
 end, {})
 
+-- disable lsp for certain filetypes and in diff mode
+local disable_lsp_group = vim.api.nvim_create_augroup("DisableLsp", { clear = true })
+
+local no_lsp_filetype = {
+  ["toggleterm"] = true,
+  ["help"] = true,
+  ["log"] = true,
+}
+
+local no_lsp_file_pattern = {
+  [[/?%.env]],
+}
+
+local function detach_client(client_id, bufnr)
+  vim.schedule(function()
+    vim.lsp.buf_detach_client(bufnr, client_id)
+  end)
+  vim.diagnostic.reset(nil, bufnr)
+  vim.diagnostic.enable(false, { bufnr = bufnr })
+end
+
 vim.api.nvim_create_autocmd("LspAttach", {
   group = disable_lsp_group,
   callback = function(args)
@@ -40,8 +41,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
       detach_client(client_id, bufnr)
       return
     end
+    local filename = vim.api.nvim_buf_get_name(bufnr)
     for _, pattern in ipairs(no_lsp_file_pattern) do
-      local filename = vim.api.nvim_buf_get_name(bufnr)
       if filename:match(pattern) then
         detach_client(client_id, bufnr)
         return
@@ -99,9 +100,10 @@ return {
     cond = not vim.g.minimal_mode,
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
-    -- mason has to configure PATH first
     dependencies = {
+      -- mason has to configure PATH first
       "williamboman/mason.nvim",
+      "saghen/blink.cmp",
     },
     config = function()
       local lspconfig = require "lspconfig"
@@ -122,27 +124,26 @@ return {
             ["textDocument/publishDiagnostics"] = make_diagnostics_filter { "16" },
           },
         },
-        -- managed with lazydev.nvim
-        --
-        -- lua_ls = {
-        --   settings = {
-        --     Lua = {
-        --       diagnostics = {
-        --         globals = { "vim" },
-        --       },
-        --       workspace = {
-        --         library = {
-        --           [vim.fn.expand "$VIMRUNTIME/lua"] = true,
-        --           [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
-        --           [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
-        --           [vim.fn.expand "${3rd}/luv/library"] = true,
-        --         },
-        --         maxPreload = 100000,
-        --         preloadFileSize = 10000,
-        --       },
-        --     },
-        --   },
-        -- },
+        lua_ls = {
+          settings = {
+            Lua = {
+              diagnostics = {
+                globals = { "vim" },
+              },
+              -- -- managed with lazydev.nvim
+              -- workspace = {
+              --   library = {
+              --     [vim.fn.expand "$VIMRUNTIME/lua"] = true,
+              --     [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
+              --     [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+              --     [vim.fn.expand "${3rd}/luv/library"] = true,
+              --   },
+              --   maxPreload = 100000,
+              --   preloadFileSize = 10000,
+              -- },
+            },
+          },
+        },
         typos_lsp = {
           init_options = {
             diagnosticSeverity = "Warning",
@@ -158,37 +159,42 @@ return {
         },
       }
 
+      capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
       for _, lsp in ipairs(servers) do
         local config = configs[lsp] or {}
-        config = vim.tbl_deep_extend("force", config, {
+        config = vim.tbl_deep_extend("force", {
           capabilities = capabilities,
           on_attach = on_attach,
-        })
+        }, config)
         lspconfig[lsp].setup(config)
       end
     end,
   },
+
   {
     cond = not vim.g.minimal_mode,
     "simrat39/rust-tools.nvim",
     ft = "rust",
-    opts = {
-      server = {
-        capabilities = capabilities,
-        on_attach = on_attach,
-        settings = {
-          ["rust-analyzer"] = {
-            checkOnSave = {
-              command = "clippy",
+    config = function()
+      capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+      require("rust-tools").setup {
+        server = {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          settings = {
+            ["rust-analyzer"] = {
+              checkOnSave = {
+                command = "clippy",
+              },
             },
           },
         },
-      },
-      tools = {
-        hover_actions = {
-          auto_focus = true,
+        tools = {
+          hover_actions = {
+            auto_focus = true,
+          },
         },
-      },
-    },
+      }
+    end,
   },
 }

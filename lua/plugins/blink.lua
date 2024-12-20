@@ -33,6 +33,7 @@ return {
             "path",
             "snippets",
             "buffer",
+            "lazydev",
           },
         },
         providers = {

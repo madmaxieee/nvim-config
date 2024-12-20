@@ -44,9 +44,11 @@ return {
     -- "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     "madmaxieee/lsp_lines.nvim",
     event = "LspAttach",
+    init = function()
+      vim.diagnostic.config { virtual_text = false }
+    end,
     config = function()
       require("lsp_lines").setup()
-      vim.diagnostic.config { virtual_text = false }
     end,
   },
   {

@@ -1,3 +1,5 @@
+local data = assert(vim.fn.stdpath "data") --[[@as string]]
+
 return {
   {
     "nvim-telescope/telescope.nvim",
@@ -5,6 +7,7 @@ return {
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      "nvim-telescope/telescope-smart-history.nvim",
       "debugloop/telescope-undo.nvim",
       "AckslD/nvim-neoclip.lua",
     },
@@ -66,8 +69,9 @@ return {
       {
         "<leader>fw",
         mode = "n",
-        "<cmd> Telescope live_grep <CR>",
-        desc = "Live grep",
+        -- "<cmd> Telescope live_grep <CR>",
+        require "plugins.telescope.multi-grep",
+        desc = "Multi grep",
       },
       {
         "<leader>fW",
@@ -189,20 +193,14 @@ return {
           },
         },
         extensions = {
-          fzf = {
-            fuzzy = true,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-            case_mode = "smart_case",
+          fzf = {},
+          history = {
+            path = vim.fs.joinpath(data, "telescope_history.sqlite3"),
+            limit = 100,
           },
           undo = {
             mappings = {
-              n = {
-                ["y"] = require("telescope-undo.actions").yank_additions,
-                ["Y"] = require("telescope-undo.actions").yank_deletions,
-                ["u"] = require("telescope-undo.actions").restore,
-                ["<cr>"] = require("telescope-undo.actions").restore,
-              },
+              n = { ["<cr>"] = require("telescope-undo.actions").restore },
             },
           },
         },

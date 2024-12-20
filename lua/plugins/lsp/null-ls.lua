@@ -9,7 +9,7 @@ return {
 
     local formatting = null_ls.builtins.formatting
     local lint = null_ls.builtins.diagnostics
-    local actions = null_ls.builtins.code_actions
+    -- local actions = null_ls.builtins.code_actions
 
     local sources = {
       formatting.prettierd,
@@ -28,8 +28,6 @@ return {
         extra_args = { "-c", (vim.fn.stdpath "config") .. "/misc/google_checks.xml" },
       },
       lint.fish,
-
-      actions.gitsigns,
     }
 
     null_ls.setup {

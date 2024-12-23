@@ -2,7 +2,6 @@ local utils = require "utils"
 
 vim.api.nvim_create_user_command("DetachLsp", function()
   vim.diagnostic.reset(nil, 0)
-  vim.diagnostic.enable(false, { bufnr = 0 })
   local clients = vim.lsp.get_clients { bufnr = 0 }
   vim.schedule(function()
     for _, client in ipairs(clients) do
@@ -28,7 +27,6 @@ local function detach_client(client_id, bufnr)
   vim.schedule(function()
     vim.lsp.buf_detach_client(bufnr, client_id)
     vim.diagnostic.reset(nil, bufnr)
-    vim.diagnostic.enable(false, { bufnr = bufnr })
   end)
 end
 

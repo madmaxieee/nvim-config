@@ -1,5 +1,11 @@
 return {
   {
+    "saghen/blink.compat",
+    version = "*",
+    opts = {},
+  },
+
+  {
     "saghen/blink.cmp",
     version = "v0.*",
     event = "InsertEnter",
@@ -30,21 +36,7 @@ return {
         ghost_text = { enabled = true },
       },
       sources = {
-        default = {
-          "lsp",
-          "path",
-          "snippets",
-          "buffer",
-          "lazydev",
-        },
-        providers = {
-          lazydev = {
-            name = "LazyDev",
-            module = "lazydev.integrations.blink",
-            score_offset = 100, -- show at a higher priority than lsp
-            fallbacks = { "lsp" },
-          },
-        },
+        default = { "lsp", "path", "snippets", "buffer" },
       },
       signature = { enabled = true },
     },

@@ -2,6 +2,16 @@
 
 local M = {}
 
+local colorscheme_group = vim.api.nvim_create_augroup("ColorUtils", { clear = true })
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = colorscheme_group,
+  callback = function()
+    local normal_highlight = vim.api.nvim_get_hl(0, { name = "Normal" })
+    M.fg = normal_highlight.fg
+    M.bg = normal_highlight.bg
+  end,
+})
+
 ---@param c  string|number
 local function rgb(c)
   if type(c) == "number" then

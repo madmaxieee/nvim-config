@@ -137,6 +137,12 @@ return {
     "mcauley-penney/visual-whitespace.nvim",
     event = require("utils.events").VisualEnter,
     config = function()
+      local visual_bg = vim.api.nvim_get_hl(0, { name = "Visual" }).bg
+      local comment_fg = vim.api.nvim_get_hl(0, { name = "Comment" }).fg
+      vim.api.nvim_set_hl(0, "VisualDimmed", {
+        fg = comment_fg,
+        bg = visual_bg,
+      })
       require("visual-whitespace").setup { highlight = { link = "VisualDimmed" } }
     end,
   },

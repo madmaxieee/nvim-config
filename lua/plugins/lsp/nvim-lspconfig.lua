@@ -27,9 +27,9 @@ local no_lsp_file_pattern = {
 local function detach_client(client_id, bufnr)
   vim.schedule(function()
     vim.lsp.buf_detach_client(bufnr, client_id)
+    vim.diagnostic.reset(nil, bufnr)
+    vim.diagnostic.enable(false, { bufnr = bufnr })
   end)
-  vim.diagnostic.reset(nil, bufnr)
-  vim.diagnostic.enable(false, { bufnr = bufnr })
 end
 
 vim.api.nvim_create_autocmd("LspAttach", {

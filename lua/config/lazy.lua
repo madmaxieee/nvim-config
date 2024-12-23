@@ -42,3 +42,5 @@ require("lazy").setup {
   },
   rocks = { enabled = false },
 }
+
+vim.cmd.cabbrev("L", "Lazy")

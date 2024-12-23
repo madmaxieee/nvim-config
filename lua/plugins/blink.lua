@@ -7,6 +7,8 @@ return {
       "rafamadriz/friendly-snippets",
       "folke/lazydev.nvim",
     },
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
     opts = {
       keymap = { preset = "default" },
       appearance = {
@@ -28,25 +30,24 @@ return {
         ghost_text = { enabled = true },
       },
       sources = {
-        completion = {
-          enabled_providers = {
-            "lsp",
-            "path",
-            "snippets",
-            "buffer",
-            "lazydev",
-          },
+        default = {
+          "lsp",
+          "path",
+          "snippets",
+          "buffer",
+          "lazydev",
         },
         providers = {
-          lsp = { fallback_for = { "lazydev" } },
           lazydev = {
             name = "LazyDev",
             module = "lazydev.integrations.blink",
             score_offset = 100, -- show at a higher priority than lsp
+            fallbacks = { "lsp" },
           },
         },
       },
       signature = { enabled = true },
     },
+    opts_extend = { "sources.default" },
   },
 }

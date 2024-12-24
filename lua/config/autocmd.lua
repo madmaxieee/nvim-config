@@ -13,3 +13,13 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.highlight.on_yank { higroup = "Visual", timeout = 200 }
   end,
 })
+
+local color_utils = require "utils.colors"
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("ColorUtils", { clear = true }),
+  callback = function()
+    local normal_highlight = vim.api.nvim_get_hl(0, { name = "Normal" })
+    color_utils.fg = normal_highlight.fg
+    color_utils.bg = normal_highlight.bg
+  end,
+})

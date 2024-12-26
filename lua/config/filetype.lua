@@ -4,6 +4,7 @@ vim.filetype.add {
     mdx = "mdx",
     d2 = "d2",
     log = "log",
+    justfile = "just",
   },
   pattern = {
     ["\\.env.*"] = "sh",

@@ -72,13 +72,21 @@ local servers = {
   "nil_ls",
 }
 
+---@class DiagFilterOpts
+---@field code (number|string)[]?
+---@field message string[]?
+---@param to_filter DiagFilterOpts
 local function make_diagnostics_filter(to_filter)
+  to_filter.code = to_filter.code or {}
+  to_filter.message = to_filter.message or {}
   return function(_, params, ctx, config)
     if params.diagnostics ~= nil then
       local idx = 1
       while idx <= #params.diagnostics do
         local code = params.diagnostics[idx].code
-        if utils.in_list(to_filter, code) then
+        local message = params.diagnostics[idx].message
+        vim.print(vim.inspect(params.diagnostics[idx]))
+        if utils.in_list(to_filter.code, code) or utils.in_list(to_filter.message, message) then
           table.remove(params.diagnostics, idx)
         else
           idx = idx + 1
@@ -113,13 +121,20 @@ return {
         ts_ls = {
           handlers = {
             -- 71007: ignore client component props must be serializable error
-            ["textDocument/publishDiagnostics"] = make_diagnostics_filter { 71007 },
+            ["textDocument/publishDiagnostics"] = make_diagnostics_filter { code = { 71007 } },
           },
         },
         jdtls = {
           handlers = {
             -- 16: file is not a project-file
-            ["textDocument/publishDiagnostics"] = make_diagnostics_filter { "16" },
+            ["textDocument/publishDiagnostics"] = make_diagnostics_filter { code = { "16" } },
+          },
+        },
+        taplo = {
+          handlers = {
+            ["textDocument/publishDiagnostics"] = make_diagnostics_filter {
+              message = { "this document has been excluded" },
+            },
           },
         },
         lua_ls = {

@@ -10,7 +10,7 @@ return {
         if trouble.is_open() then
           trouble.close()
         else
-          return "<cmd>Trouble diagnostics toggle auto_jump=false<CR>"
+          vim.cmd "Trouble diagnostics toggle auto_jump=false"
         end
       end,
       desc = "Open Trouble",

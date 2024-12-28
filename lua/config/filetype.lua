@@ -8,5 +8,6 @@ vim.filetype.add {
   },
   pattern = {
     ["\\.env.*"] = "sh",
+    [".*/ghostty/config"] = "toml",
   },
 }

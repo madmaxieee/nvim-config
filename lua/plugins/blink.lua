@@ -16,7 +16,10 @@ return {
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
-      keymap = { preset = "default" },
+      keymap = {
+        preset = "default",
+        ["<A-space>"] = { "show", "show_documentation", "hide_documentation" },
+      },
       appearance = {
         use_nvim_cmp_as_default = false,
         nerd_font_variant = "mono",

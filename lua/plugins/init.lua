@@ -180,7 +180,7 @@ return {
     cmd = "Bd",
     keys = {
       {
-        "<leader>x",
+        "<leader>bd",
         mode = { "n" },
         function()
           require("bufdelete").bufdelete(0)

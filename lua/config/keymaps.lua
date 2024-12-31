@@ -61,3 +61,6 @@ map("v", "<leader>y", '"+y', { desc = "Copy to clipboard" })
 -- comment
 map("n", "<leader>/", "gcc", { desc = "Toggle comment line", remap = true })
 map("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
+
+map("n", "<leader>x", ":.lua<CR>")
+map("v", "<leader>x", ":lua<CR>")

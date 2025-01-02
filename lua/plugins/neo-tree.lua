@@ -1,4 +1,4 @@
-local is_opening_dir = vim.fn.argc() > 0 and vim.fn.isdirectory(vim.fn.argv()[0])
+local is_opening_dir = vim.fn.argc() > 0 and vim.fn.isdirectory(vim.fn.argv()[1])
 
 return {
   cond = not vim.g.minimal_mode,

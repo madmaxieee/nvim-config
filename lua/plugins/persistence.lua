@@ -8,7 +8,7 @@ return {
   "folke/persistence.nvim",
   event = "BufReadPre",
   init = function()
-    local session_options = {
+    vim.opt.sessionoptions = {
       "buffers",
       "curdir",
       "folds",
@@ -17,7 +17,6 @@ return {
       "winsize",
       "globals",
     }
-    vim.o.sessionoptions = table.concat(session_options, ",")
 
     local persistence_group = vim.api.nvim_create_augroup("Persistence", { clear = true })
     local home = vim.fn.expand "~"
@@ -33,7 +32,15 @@ return {
       group = persistence_group,
       callback = function()
         local cwd = vim.fn.getcwd()
-        if vim.fn.argc() == 0 and not vim.g.started_with_stdin and not disabled_dirs[cwd] then
+        if disabled_dirs[cwd] or vim.g.started_with_stdin then
+          require("persistence").stop()
+          return
+        end
+        local argv = vim.fn.argv()
+        local argc = vim.fn.argc()
+        if argc == 0 then
+          require("persistence").load()
+        elseif argc > 0 and vim.fn.isdirectory(argv[1]) then
           require("persistence").load()
         else
           require("persistence").stop()

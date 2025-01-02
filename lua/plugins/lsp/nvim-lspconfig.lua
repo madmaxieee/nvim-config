@@ -85,7 +85,6 @@ local function make_diagnostics_filter(to_filter)
       while idx <= #params.diagnostics do
         local code = params.diagnostics[idx].code
         local message = params.diagnostics[idx].message
-        vim.print(vim.inspect(params.diagnostics[idx]))
         if utils.in_list(to_filter.code, code) or utils.in_list(to_filter.message, message) then
           table.remove(params.diagnostics, idx)
         else

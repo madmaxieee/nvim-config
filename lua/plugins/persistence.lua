@@ -40,7 +40,7 @@ return {
         local argc = vim.fn.argc()
         if argc == 0 then
           require("persistence").load()
-        elseif argc > 0 and vim.fn.isdirectory(argv[1]) then
+        elseif argc > 0 and vim.fn.isdirectory(argv[1]) == 1 then
           require("persistence").load()
         else
           require("persistence").stop()

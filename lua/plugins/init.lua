@@ -86,7 +86,7 @@ return {
   },
   {
     "RRethy/vim-illuminate",
-    event = "LspAttach",
+    event = "VeryLazy",
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
     },

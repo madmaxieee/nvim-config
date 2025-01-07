@@ -9,7 +9,6 @@ local function formatter_filter(client)
   if no_format[client.name] then
     return false
   end
-  ---@diagnostic disable-next-line: different-requires
   local null_ls = require "null-ls"
   if client.name == "ts_ls" and null_ls.is_registered "prettierd" then
     return false

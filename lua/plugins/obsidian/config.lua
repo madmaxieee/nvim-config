@@ -1,6 +1,6 @@
 local M = {}
 
-M.create_obsidian_command = function()
+function M.create_obsidian_command()
   local command_map = {
     backlinks = "ObsidianBacklinks",
     dailies = "ObsidianDailies",
@@ -47,22 +47,21 @@ M.create_obsidian_command = function()
 end
 
 -- register cmp sources for blink.compat
-M.register_sources = function()
+function M.register_sources()
   local cmp = require "cmp"
   cmp.register_source("obsidian", require("cmp_obsidian").new())
   cmp.register_source("obsidian_new", require("cmp_obsidian_new").new())
   cmp.register_source("obsidian_tags", require("cmp_obsidian_tags").new())
 end
 
-local auto_save_timer = vim.uv.new_timer()
-assert(auto_save_timer, "Failed to create timer")
+local auto_save_timer = assert(vim.uv.new_timer(), "Failed to create timer")
 
 ---@class AutoCommitOptions
 ---@field vault_folder string
----@field auto_save_interval number
----@field commit_interval number
+---@field auto_save_interval number: check if we need to commit after inactive for [auto_save_interval] seconds
+---@field commit_interval number: only commit new changes if last commit is older than [commit_interval] seconds ago
 ---@param opts AutoCommitOptions
-M.auto_commit = function(opts)
+function M.setup_auto_commit(opts)
   local auto_save_interval = opts.auto_save_interval * 1000
   local commit_interval = opts.commit_interval
   local vault_folder = opts.vault_folder
@@ -77,7 +76,7 @@ M.auto_commit = function(opts)
     end
   end
 
-  local function auto_commit(interval)
+  local function try_commit(interval)
     local commit_time_str = git "log -1 --format=%ct"
     local commit_time = tonumber(commit_time_str)
     if commit_time == nil then
@@ -115,7 +114,7 @@ M.auto_commit = function(opts)
           auto_save_timer:start(auto_save_interval, 0, function()
             -- can't call vim api's like vim.cmd directly in uv callbacks
             vim.schedule(function()
-              auto_commit(commit_interval)
+              try_commit(commit_interval)
             end)
           end)
         end
@@ -127,7 +126,7 @@ M.auto_commit = function(opts)
         if vim.fn.getcwd() ~= vault_folder then
           return
         end
-        auto_commit(commit_interval)
+        try_commit(commit_interval)
       end,
     })
   end

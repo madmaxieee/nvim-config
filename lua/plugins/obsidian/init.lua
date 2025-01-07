@@ -1,5 +1,3 @@
-local helper = require "plugins.obsidian.helper"
-
 local vault_folder = vim.fn.resolve(vim.fn.expand "~/obsidian")
 
 return {
@@ -66,14 +64,15 @@ return {
     config = function(_, opts)
       require("obsidian").setup(opts)
 
-      helper.create_obsidian_command()
-      helper.auto_commit {
+      local config = require "plugins.obsidian.config"
+
+      config.create_obsidian_command()
+      config.setup_auto_commit {
         vault_folder = vault_folder,
-        auto_save_interval = 600,
+        auto_save_interval = 10 * 60,
         commit_interval = 60 * 60,
       }
-      -- for blink.compat to consume the sources
-      helper.register_sources()
+      config.register_sources()
 
       vim.wo.conceallevel = 1
     end,

@@ -1,5 +1,3 @@
-local float_window_config = require("utils").float_window_config
-
 local oil_show_all = false
 
 -- helper function to parse output
@@ -92,9 +90,13 @@ return {
       },
       -- Configuration for the floating window in oil.open_float
       float = {
-        override = function()
-          return float_window_config(0.7, 0.4, {})
-        end,
+        max_width = 0.4,
+        max_height = 0.7,
+      },
+      preview_win = {
+        win_options = {
+          wrap = false,
+        },
       },
     }
   end,

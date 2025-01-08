@@ -61,6 +61,7 @@ function M.float_window_config(height_ratio, width_ratio, opts)
   return {
     border = opts.border or "rounded",
     relative = opts.relative or "editor",
+    winblend = opts.winblend or 0,
     row = center_y,
     col = center_x,
     width = window_w_int,

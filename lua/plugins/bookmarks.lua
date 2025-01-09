@@ -16,7 +16,7 @@ return {
       desc = "Toggle bookmark",
     },
     {
-      "mf",
+      "<leader>fm",
       mode = "n",
       function()
         require("bookmarks").goto_bookmark()

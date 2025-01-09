@@ -37,12 +37,6 @@ return {
         desc = "Search workspace symbols",
       },
       {
-        "<leader>fm",
-        mode = "n",
-        "<cmd> Telescope marks <CR>",
-        desc = "Search marks",
-      },
-      {
         "<leader>fj",
         mode = "n",
         "<cmd> Telescope jumplist <CR>",

@@ -1,0 +1,235 @@
+local M = {}
+
+local map = require("utils").safe_keymap_set
+
+local no_format = {
+  ["eslint"] = true, -- don't auto fix eslint errors
+  ["cmake"] = true,
+}
+
+function M.formatter_filter(client)
+  if no_format[client.name] then
+    return false
+  end
+  local null_ls = require "null-ls"
+  if client.name == "ts_ls" and null_ls.is_registered "prettierd" then
+    return false
+  end
+  if client.name == "lua_ls" and null_ls.is_registered "stylua" then
+    return false
+  end
+  return true
+end
+
+local function set_keymaps(bufnr)
+  if vim.b[bufnr].lsp_keymaps_set then
+    return
+  end
+
+  local trouble_open = require("trouble").open
+
+  map("n", "gd", function()
+    -- vim.lsp.buf.definition()
+    trouble_open { mode = "lsp_definitions" }
+  end, { buffer = bufnr, desc = "Go to definition" })
+
+  map("n", "gD", function()
+    -- vim.lsp.buf.type_definition()
+    trouble_open { mode = "lsp_type_definitions" }
+  end, { buffer = bufnr, desc = "Go to type definition" })
+
+  map("n", "K", function()
+    vim.lsp.buf.hover()
+  end, { buffer = bufnr, desc = "Hover" })
+
+  map("n", "gi", function()
+    -- vim.lsp.buf.implementation()
+    trouble_open { mode = "lsp_implementations" }
+  end, { buffer = bufnr, desc = "Go to implementation" })
+
+  map("n", "<leader>ls", function()
+    vim.lsp.buf.signature_help()
+  end, { buffer = bufnr, desc = "Signature help" })
+
+  local map_repeatable_pair = require("utils").map_repeatable_pair
+  map_repeatable_pair("n", {
+    next = {
+      "]d",
+      function()
+        vim.diagnostic.goto_next { float = { border = "rounded" } }
+      end,
+      { buffer = bufnr, desc = "Go to next diagnostic" },
+    },
+    prev = {
+      "[d",
+      function()
+        vim.diagnostic.goto_prev { float = { border = "rounded" } }
+      end,
+      { buffer = bufnr, desc = "Go to previous diagnostic" },
+    },
+  })
+
+  map("n", "<leader>ca", function()
+    vim.lsp.buf.code_action()
+  end, { buffer = bufnr, desc = "LSP code action" })
+
+  map("n", "gr", function()
+    -- vim.lsp.buf.references()
+    trouble_open { mode = "lsp_references" }
+  end, { buffer = bufnr, desc = "LSP references" })
+
+  map("n", "<leader>ra", function()
+    vim.lsp.buf.rename()
+  end, { buffer = bufnr, desc = "LSP rename" })
+
+  map("n", "<leader>q", function()
+    vim.diagnostic.setloclist()
+  end, { buffer = bufnr, desc = "Diagnostic setloclist" })
+
+  map("n", "<leader>wa", function()
+    vim.lsp.buf.add_workspace_folder()
+  end, { buffer = bufnr, desc = "Add workspace folder" })
+
+  map("n", "<leader>wr", function()
+    vim.lsp.buf.remove_workspace_folder()
+  end, { buffer = bufnr, desc = "Remove workspace folder" })
+
+  map("n", "<leader>wa", function()
+    vim.lsp.buf.list_workspace_folders()
+  end, { buffer = bufnr, desc = "List workspace folders" })
+
+  vim.b[bufnr].lsp_keymaps_set = true
+end
+
+local lsp_formatting_group = vim.api.nvim_create_augroup("LspFormatting", {})
+
+function M.on_attach(client, bufnr)
+  set_keymaps(bufnr)
+
+  if not client then
+    return
+  end
+
+  if vim.g.FormatOnSave ~= 0 then
+    if client.supports_method "textDocument/formatting" or client.name == "jdtls" then
+      vim.api.nvim_clear_autocmds { group = lsp_formatting_group, buffer = bufnr }
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = lsp_formatting_group,
+        buffer = bufnr,
+        callback = function()
+          if vim.g.FormatOnSave == 0 then
+            return
+          end
+          vim.lsp.buf.format {
+            async = false,
+            filter = M.formatter_filter,
+          }
+        end,
+      })
+    end
+  end
+end
+
+function M.create_usercmds()
+  vim.api.nvim_create_user_command("EnableLsp", function()
+    vim.g.EnableLsp = 1
+    vim.notify "reload nvim for this configuration to take effect"
+  end, {})
+
+  vim.api.nvim_create_user_command("DisableLsp", function()
+    vim.g.EnableLsp = 0
+    vim.notify "reload nvim for this configuration to take effect"
+  end, {})
+
+  if M.cond() then
+    vim.api.nvim_create_user_command("EnableFormatOnSave", function()
+      vim.g.FormatOnSave = 1
+    end, {})
+
+    vim.api.nvim_create_user_command("DisableFormatOnSave", function()
+      vim.g.FormatOnSave = 0
+    end, {})
+
+    vim.api.nvim_create_user_command("FormatBuffer", function()
+      vim.lsp.buf.format {
+        async = true,
+        filter = M.formatter_filter,
+      }
+    end, {})
+  end
+
+  vim.api.nvim_create_user_command("DetachLsp", function()
+    vim.diagnostic.reset(nil, 0)
+    local clients = vim.lsp.get_clients { bufnr = 0 }
+    vim.schedule(function()
+      for _, client in ipairs(clients) do
+        vim.lsp.buf_detach_client(0, client.id)
+      end
+    end)
+  end, {})
+end
+
+local disable_lsp_group = vim.api.nvim_create_augroup("DisableLsp", { clear = true })
+local disable_semantic_token_group = vim.api.nvim_create_augroup("DisableSemanticToken", { clear = true })
+
+function M.create_autocmds()
+  local no_lsp_filetype = {
+    ["toggleterm"] = true,
+    ["help"] = true,
+    ["log"] = true,
+  }
+
+  local no_lsp_file_pattern = {
+    [[/?%.env]],
+  }
+
+  local function detach_client(client_id, bufnr)
+    vim.schedule(function()
+      vim.lsp.buf_detach_client(bufnr, client_id)
+      vim.diagnostic.reset(nil, bufnr)
+    end)
+  end
+
+  -- disable lsp for certain filetypes and in diff mode
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = disable_lsp_group,
+    callback = function(args)
+      local bufnr = args.buf
+      local client_id = args.data.client_id
+      if vim.g.DisableLsp == 1 or no_lsp_filetype[vim.bo[bufnr].filetype] or vim.wo.diff then
+        detach_client(client_id, bufnr)
+        return
+      end
+      local filename = vim.api.nvim_buf_get_name(bufnr)
+      for _, pattern in ipairs(no_lsp_file_pattern) do
+        if filename:match(pattern) then
+          detach_client(client_id, bufnr)
+          return
+        end
+      end
+    end,
+  })
+
+  local allow_server_syntax_highlighting = {}
+
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = disable_semantic_token_group,
+    callback = function(args)
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if client and not allow_server_syntax_highlighting[client.name] then
+        client.server_capabilities.semanticTokensProvider = nil
+      end
+    end,
+  })
+end
+
+function M.init()
+  M.create_usercmds()
+  M.create_autocmds()
+end
+
+function M.cond()
+  return not vim.g.minimal_mode
+end
+
+return M

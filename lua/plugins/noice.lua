@@ -6,6 +6,7 @@ return {
   },
   init = function()
     vim.opt.cmdheight = 0
+    vim.cmd.cabbrev("N", "Noice")
   end,
   opts = {
     lsp = {

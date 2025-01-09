@@ -1,53 +1,6 @@
+local lsp_config = require "plugins.lsp.config"
+
 local utils = require "utils"
-
-vim.api.nvim_create_user_command("DetachLsp", function()
-  vim.diagnostic.reset(nil, 0)
-  local clients = vim.lsp.get_clients { bufnr = 0 }
-  vim.schedule(function()
-    for _, client in ipairs(clients) do
-      vim.lsp.buf_detach_client(0, client.id)
-    end
-  end)
-end, {})
-
--- disable lsp for certain filetypes and in diff mode
-local disable_lsp_group = vim.api.nvim_create_augroup("DisableLsp", { clear = true })
-
-local no_lsp_filetype = {
-  ["toggleterm"] = true,
-  ["help"] = true,
-  ["log"] = true,
-}
-
-local no_lsp_file_pattern = {
-  [[/?%.env]],
-}
-
-local function detach_client(client_id, bufnr)
-  vim.schedule(function()
-    vim.lsp.buf_detach_client(bufnr, client_id)
-    vim.diagnostic.reset(nil, bufnr)
-  end)
-end
-
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = disable_lsp_group,
-  callback = function(args)
-    local bufnr = args.buf
-    local client_id = args.data.client_id
-    if no_lsp_filetype[vim.bo[bufnr].filetype] or vim.wo.diff then
-      detach_client(client_id, bufnr)
-      return
-    end
-    local filename = vim.api.nvim_buf_get_name(bufnr)
-    for _, pattern in ipairs(no_lsp_file_pattern) do
-      if filename:match(pattern) then
-        detach_client(client_id, bufnr)
-        return
-      end
-    end
-  end,
-})
 
 local servers = {
   "lua_ls",
@@ -96,13 +49,18 @@ local function make_diagnostics_filter(to_filter)
   end
 end
 
-local capabilities =
-  vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), { offsetEncoding = { "utf-16" } })
-local on_attach = require "plugins.lsp.on_attach"
+local function make_capabilities()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+  capabilities = vim.tbl_deep_extend("force", capabilities, {
+    offsetEncoding = { "utf-16" },
+  })
+  return capabilities
+end
 
 return {
   {
-    cond = not vim.g.minimal_mode,
+    cond = lsp_config.cond(),
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
@@ -111,8 +69,6 @@ return {
       "saghen/blink.cmp",
     },
     config = function()
-      local lspconfig = require "lspconfig"
-
       local configs = {
         clangd = {
           cmd = { "clangd", "--clang-tidy" },
@@ -171,12 +127,13 @@ return {
         },
       }
 
-      capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+      local lspconfig = require "lspconfig"
+      local capabilities = make_capabilities()
       for _, lsp in ipairs(servers) do
         local config = configs[lsp] or {}
         config = vim.tbl_deep_extend("force", {
           capabilities = capabilities,
-          on_attach = on_attach,
+          on_attach = lsp_config.on_attach,
         }, config)
         lspconfig[lsp].setup(config)
       end
@@ -184,15 +141,15 @@ return {
   },
 
   {
-    cond = not vim.g.minimal_mode,
+    cond = lsp_config.cond(),
     "simrat39/rust-tools.nvim",
     ft = "rust",
     config = function()
-      capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+      local capabilities = make_capabilities()
       require("rust-tools").setup {
         server = {
           capabilities = capabilities,
-          on_attach = on_attach,
+          on_attach = lsp_config.on_attach,
           settings = {
             ["rust-analyzer"] = {
               checkOnSave = {

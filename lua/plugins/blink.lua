@@ -40,6 +40,23 @@ return {
       },
       sources = {
         default = { "lsp", "path", "snippets", "buffer" },
+        providers = {
+          lsp = {
+            fallbacks = {},
+          },
+          path = {
+            score_offset = 3,
+            fallbacks = {},
+          },
+          snippets = {
+            score_offset = -3,
+            fallbacks = {},
+          },
+          buffer = {
+            score_offset = -3,
+            fallbacks = {},
+          },
+        },
       },
       signature = { enabled = true },
     },

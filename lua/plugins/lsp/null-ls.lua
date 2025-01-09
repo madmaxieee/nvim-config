@@ -1,7 +1,7 @@
-local on_attach = require "plugins.lsp.on_attach"
+local lsp_config = require "plugins.lsp.config"
 
 return {
-  cond = not vim.g.minimal_mode,
+  cond = lsp_config.cond(),
   "nvimtools/none-ls.nvim",
   event = { "BufReadPre", "BufNewFile" },
   config = function()
@@ -32,7 +32,7 @@ return {
 
     null_ls.setup {
       sources = sources,
-      on_attach = on_attach,
+      on_attach = lsp_config.on_attach,
     }
 
     local no_trailing_space = {

@@ -1,14 +1,3 @@
-vim.api.nvim_create_user_command("MinimalMode", function()
-  vim.g.MinimalMode = 1
-end, {})
-vim.api.nvim_create_user_command("NoMinimalMode", function()
-  vim.g.MinimalMode = 0
-end, {})
-
-if vim.g.MinimalMode == 1 then
-  vim.g.minimal_mode = true
-end
-
 -- when nvim used by tmux scrollback buffer
 if vim.env.TMUX_SCROLLBACK then
   vim.g.minimal_mode = true

@@ -1,15 +1,16 @@
 local map = require("utils").safe_keymap_set
 
-local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
-
-map({ "n", "x", "o" }, ";", function()
-  ts_repeat_move.repeat_last_move()
-  vim.cmd.normal { "zz", bang = true }
-end)
-map({ "n", "x", "o" }, ",", function()
-  ts_repeat_move.repeat_last_move_opposite()
-  vim.cmd.normal { "zz", bang = true }
-end)
+local success, ts_repeat_move = pcall(require, "nvim-treesitter.textobjects.repeatable_move")
+if success then
+  map({ "n", "x", "o" }, ";", function()
+    ts_repeat_move.repeat_last_move()
+    vim.cmd.normal { "zz", bang = true }
+  end)
+  map({ "n", "x", "o" }, ",", function()
+    ts_repeat_move.repeat_last_move_opposite()
+    vim.cmd.normal { "zz", bang = true }
+  end)
+end
 
 map({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
 map({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })

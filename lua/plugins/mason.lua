@@ -39,9 +39,6 @@ return {
       vim.cmd("MasonInstall " .. table.concat(ensure_installed, " "))
     end, {})
   end,
-  build = function(_)
-    vim.cmd("MasonInstall " .. table.concat(ensure_installed, " "))
-  end,
   cmd = {
     "Mason",
     "MasonInstall",

@@ -127,7 +127,10 @@ end
 ---@return function
 ---@return function
 function M.make_repeatable_move_pair(moves)
-  local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+  local success, ts_repeat_move = pcall(require, "nvim-treesitter.textobjects.repeatable_move")
+  if not success then
+    return moves.next, moves.prev
+  end
   local next_repeat, prev_repeat = ts_repeat_move.make_repeatable_move_pair(moves.next, moves.prev)
   return next_repeat, prev_repeat
 end

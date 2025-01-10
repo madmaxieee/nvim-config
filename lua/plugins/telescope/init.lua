@@ -63,8 +63,9 @@ return {
       {
         "<leader>fw",
         mode = "n",
-        -- "<cmd> Telescope live_grep <CR>",
-        require "plugins.telescope.multi-grep",
+        function()
+          require("plugins.telescope.multi-grep").multi_grep()
+        end,
         desc = "Multi grep",
       },
       {

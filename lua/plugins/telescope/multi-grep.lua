@@ -1,13 +1,10 @@
-local conf = require("telescope.config").values
-local finders = require "telescope.finders"
-local make_entry = require "telescope.make_entry"
-local pickers = require "telescope.pickers"
+local M = {}
 
 local function flatten(tbl)
   return vim.iter(tbl):flatten():totable()
 end
 
-return function(opts)
+function M.multi_grep(opts)
   opts = opts or {}
   opts.cwd = opts.cwd and vim.fn.expand(opts.cwd) or vim.uv.cwd()
   opts.shortcuts = opts.shortcuts or {
@@ -16,6 +13,11 @@ return function(opts)
   }
   opts.pattern = opts.pattern or "%s"
   opts.delimiter = opts.delimiter or "  "
+
+  local conf = require("telescope.config").values
+  local finders = require "telescope.finders"
+  local make_entry = require "telescope.make_entry"
+  local pickers = require "telescope.pickers"
 
   local custom_grep = finders.new_async_job {
     command_generator = function(prompt)
@@ -63,3 +65,5 @@ return function(opts)
     })
     :find()
 end
+
+return M

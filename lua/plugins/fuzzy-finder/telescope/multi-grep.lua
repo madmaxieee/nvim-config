@@ -1,8 +1,6 @@
 local M = {}
 
-local function flatten(tbl)
-  return vim.iter(tbl):flatten():totable()
-end
+local utils = require "utils"
 
 function M.multi_grep(opts)
   opts = opts or {}
@@ -46,7 +44,7 @@ function M.multi_grep(opts)
         table.insert(args, string.format(opts.pattern, pattern))
       end
 
-      return flatten {
+      return utils.flatten {
         args,
         { "--color=never", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
       }

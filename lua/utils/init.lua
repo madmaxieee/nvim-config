@@ -106,6 +106,10 @@ function M.filter_list(list, condition)
   return new_list
 end
 
+function M.flatten(tbl)
+  return vim.iter(tbl):flatten():totable()
+end
+
 ---@alias KeymapSpec [string,function,vim.keymap.set.Opts?]
 ---@class RepeatablePairSpec
 ---@field next KeymapSpec

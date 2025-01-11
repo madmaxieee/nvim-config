@@ -28,6 +28,10 @@ local function set_keymaps(bufnr)
 
   local trouble_open = require("trouble").open
 
+  map("n", "K", function()
+    vim.lsp.buf.hover()
+  end, { buffer = bufnr, desc = "Hover" })
+
   map("n", "gd", function()
     -- vim.lsp.buf.definition()
     trouble_open { mode = "lsp_definitions" }
@@ -38,9 +42,10 @@ local function set_keymaps(bufnr)
     trouble_open { mode = "lsp_type_definitions" }
   end, { buffer = bufnr, desc = "Go to type definition" })
 
-  map("n", "K", function()
-    vim.lsp.buf.hover()
-  end, { buffer = bufnr, desc = "Hover" })
+  map("n", "gr", function()
+    -- vim.lsp.buf.references()
+    trouble_open { mode = "lsp_references" }
+  end, { buffer = bufnr, desc = "LSP references" })
 
   map("n", "gi", function()
     -- vim.lsp.buf.implementation()
@@ -56,14 +61,14 @@ local function set_keymaps(bufnr)
     next = {
       "]d",
       function()
-        vim.diagnostic.goto_next { float = { border = "rounded" } }
+        vim.diagnostic.goto_next()
       end,
       { buffer = bufnr, desc = "Go to next diagnostic" },
     },
     prev = {
       "[d",
       function()
-        vim.diagnostic.goto_prev { float = { border = "rounded" } }
+        vim.diagnostic.goto_prev()
       end,
       { buffer = bufnr, desc = "Go to previous diagnostic" },
     },
@@ -73,30 +78,15 @@ local function set_keymaps(bufnr)
     vim.lsp.buf.code_action()
   end, { buffer = bufnr, desc = "LSP code action" })
 
-  map("n", "gr", function()
-    -- vim.lsp.buf.references()
-    trouble_open { mode = "lsp_references" }
-  end, { buffer = bufnr, desc = "LSP references" })
-
   map("n", "<leader>ra", function()
     vim.lsp.buf.rename()
   end, { buffer = bufnr, desc = "LSP rename" })
 
-  map("n", "<leader>q", function()
-    vim.diagnostic.setloclist()
-  end, { buffer = bufnr, desc = "Diagnostic setloclist" })
-
-  map("n", "<leader>wa", function()
-    vim.lsp.buf.add_workspace_folder()
-  end, { buffer = bufnr, desc = "Add workspace folder" })
-
-  map("n", "<leader>wr", function()
-    vim.lsp.buf.remove_workspace_folder()
-  end, { buffer = bufnr, desc = "Remove workspace folder" })
-
-  map("n", "<leader>wa", function()
-    vim.lsp.buf.list_workspace_folders()
-  end, { buffer = bufnr, desc = "List workspace folders" })
+  map("n", "<leader>ih", function()
+    local new_value = not vim.lsp.inlay_hint.is_enabled()
+    vim.lsp.inlay_hint.enable(new_value)
+    vim.notify("Inlay hints " .. (new_value and "enabled" or "disabled"))
+  end, { buffer = bufnr, desc = "toggle inlay hint" })
 
   vim.b[bufnr].lsp_keymaps_set = true
 end
@@ -106,27 +96,25 @@ local lsp_formatting_group = vim.api.nvim_create_augroup("LspFormatting", {})
 function M.on_attach(client, bufnr)
   set_keymaps(bufnr)
 
-  if not client then
-    return
+  if client.server_capabilities.inlayHintProvider then
+    vim.lsp.buf.inlay_hint(bufnr, true)
   end
 
-  if vim.g.FormatOnSave ~= 0 then
-    if client.supports_method "textDocument/formatting" or client.name == "jdtls" then
-      vim.api.nvim_clear_autocmds { group = lsp_formatting_group, buffer = bufnr }
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        group = lsp_formatting_group,
-        buffer = bufnr,
-        callback = function()
-          if vim.g.FormatOnSave == 0 then
-            return
-          end
-          vim.lsp.buf.format {
-            async = false,
-            filter = M.formatter_filter,
-          }
-        end,
-      })
-    end
+  if vim.g.FormatOnSave ~= 0 and (client.supports_method "textDocument/formatting" or client.name == "jdtls") then
+    vim.api.nvim_clear_autocmds { group = lsp_formatting_group, buffer = bufnr }
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = lsp_formatting_group,
+      buffer = bufnr,
+      callback = function()
+        if vim.g.FormatOnSave == 0 then
+          return
+        end
+        vim.lsp.buf.format {
+          async = false,
+          filter = M.formatter_filter,
+        }
+      end,
+    })
   end
 end
 

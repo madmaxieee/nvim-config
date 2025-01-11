@@ -59,111 +59,79 @@ local function make_capabilities()
 end
 
 return {
-  {
-    cond = lsp_config.cond(),
-    "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      -- mason has to configure PATH first
-      "williamboman/mason.nvim",
-      "saghen/blink.cmp",
-    },
-    config = function()
-      local configs = {
-        clangd = {
-          cmd = { "clangd", "--clang-tidy" },
-        },
-        ts_ls = {
-          handlers = {
-            -- 71007: ignore client component props must be serializable error
-            ["textDocument/publishDiagnostics"] = make_diagnostics_filter { code = { 71007 } },
-          },
-        },
-        jdtls = {
-          handlers = {
-            -- 16: file is not a project-file
-            ["textDocument/publishDiagnostics"] = make_diagnostics_filter { code = { "16" } },
-          },
-        },
-        taplo = {
-          handlers = {
-            ["textDocument/publishDiagnostics"] = make_diagnostics_filter {
-              message = { "this document has been excluded" },
-            },
-          },
-        },
-        lua_ls = {
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { "vim" },
-              },
-              -- -- managed with lazydev.nvim
-              -- workspace = {
-              --   library = {
-              --     [vim.fn.expand "$VIMRUNTIME/lua"] = true,
-              --     [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
-              --     [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
-              --     [vim.fn.expand "${3rd}/luv/library"] = true,
-              --   },
-              --   maxPreload = 100000,
-              --   preloadFileSize = 10000,
-              -- },
-            },
-          },
-        },
-        typos_lsp = {
-          init_options = {
-            diagnosticSeverity = "Warning",
-          },
-        },
-        tailwindcss = {
-          filetypes = utils.filter_list(
-            require("lspconfig.configs.tailwindcss").default_config.filetypes,
-            function(item)
-              return item ~= "markdown"
-            end
-          ),
-        },
-      }
-
-      local lspconfig = require "lspconfig"
-      local capabilities = make_capabilities()
-      for _, lsp in ipairs(servers) do
-        local config = configs[lsp] or {}
-        config = vim.tbl_deep_extend("force", {
-          capabilities = capabilities,
-          on_attach = lsp_config.on_attach,
-        }, config)
-        lspconfig[lsp].setup(config)
-      end
-    end,
+  cond = lsp_config.cond(),
+  "neovim/nvim-lspconfig",
+  event = { "BufReadPre", "BufNewFile" },
+  dependencies = {
+    -- mason has to configure PATH first
+    "williamboman/mason.nvim",
+    "saghen/blink.cmp",
   },
-
-  {
-    cond = lsp_config.cond(),
-    "simrat39/rust-tools.nvim",
-    ft = "rust",
-    config = function()
-      local capabilities = make_capabilities()
-      require("rust-tools").setup {
-        server = {
-          capabilities = capabilities,
-          on_attach = lsp_config.on_attach,
-          settings = {
-            ["rust-analyzer"] = {
-              checkOnSave = {
-                command = "clippy",
-              },
+  config = function()
+    local configs = {
+      clangd = {
+        cmd = { "clangd", "--clang-tidy" },
+      },
+      ts_ls = {
+        handlers = {
+          -- 71007: ignore client component props must be serializable error
+          ["textDocument/publishDiagnostics"] = make_diagnostics_filter { code = { 71007 } },
+        },
+      },
+      jdtls = {
+        handlers = {
+          -- 16: file is not a project-file
+          ["textDocument/publishDiagnostics"] = make_diagnostics_filter { code = { "16" } },
+        },
+      },
+      taplo = {
+        handlers = {
+          ["textDocument/publishDiagnostics"] = make_diagnostics_filter {
+            message = { "this document has been excluded" },
+          },
+        },
+      },
+      lua_ls = {
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { "vim" },
             },
+            -- -- managed with lazydev.nvim
+            -- workspace = {
+            --   library = {
+            --     [vim.fn.expand "$VIMRUNTIME/lua"] = true,
+            --     [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
+            --     [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+            --     [vim.fn.expand "${3rd}/luv/library"] = true,
+            --   },
+            --   maxPreload = 100000,
+            --   preloadFileSize = 10000,
+            -- },
           },
         },
-        tools = {
-          hover_actions = {
-            auto_focus = true,
-          },
+      },
+      typos_lsp = {
+        init_options = {
+          diagnosticSeverity = "Warning",
         },
-      }
-    end,
-  },
+      },
+      tailwindcss = {
+        filetypes = utils.filter_list(require("lspconfig.configs.tailwindcss").default_config.filetypes, function(item)
+          return item ~= "markdown"
+        end),
+      },
+    }
+
+    local lspconfig = require "lspconfig"
+    local capabilities = make_capabilities()
+    for _, lsp in ipairs(servers) do
+      local config = configs[lsp] or {}
+      config = vim.tbl_deep_extend("force", {
+        capabilities = capabilities,
+        on_attach = lsp_config.on_attach,
+      }, config)
+      lspconfig[lsp].setup(config)
+    end
+  end,
 }

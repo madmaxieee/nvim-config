@@ -6,8 +6,9 @@ function M.multi_grep(opts)
   opts = opts or {}
   opts.cwd = opts.cwd and vim.fn.expand(opts.cwd) or vim.uv.cwd()
   opts.shortcuts = opts.shortcuts or {
-    ["l"] = "*.lua",
     ["c"] = "*.{c,cc,cpp}",
+    ["l"] = "*.lua",
+    ["n"] = "*.nix",
   }
   opts.pattern = opts.pattern or "%s"
   opts.delimiter = opts.delimiter or "  "
@@ -46,7 +47,14 @@ function M.multi_grep(opts)
 
       return utils.flatten {
         args,
-        { "--color=never", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
+        {
+          "--color=never",
+          "--no-heading",
+          "--with-filename",
+          "--line-number",
+          "--column",
+          "--smart-case",
+        },
       }
     end,
     entry_maker = make_entry.gen_from_vimgrep(opts),

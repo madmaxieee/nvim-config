@@ -35,6 +35,7 @@ function M.on_load(name, fn)
     fn(name)
   else
     vim.api.nvim_create_autocmd("User", {
+      once = true,
       pattern = "LazyLoad",
       callback = function(event)
         if event.data == name then

@@ -56,6 +56,19 @@ return {
         vim.g.started_with_stdin = true
       end,
     })
+
+    -- close all buffers with ft="lazy"
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "PersistenceLoadPre",
+      group = persistence_group,
+      callback = function()
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.bo[buf].ft == "lazy" then
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end
+      end,
+    })
   end,
   opts = {
     dir = vim.fn.expand(state_dir) .. "/sessions/",

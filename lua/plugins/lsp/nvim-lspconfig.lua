@@ -59,6 +59,15 @@ local server_configs = {
       ["textDocument/publishDiagnostics"] = make_diagnostics_filter { code = { "16" } },
     },
   },
+  lua_ls = {
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = { "vim" },
+        },
+      },
+    },
+  },
   tailwindcss = function()
     local original_ft = require("lspconfig.configs.tailwindcss").default_config.filetypes
     return {

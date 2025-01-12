@@ -3,26 +3,27 @@ local lsp_config = require "plugins.lsp.config"
 local utils = require "utils"
 
 local servers = {
-  "lua_ls",
-  "html",
-  "cssls",
+  "bashls",
   "clangd",
-  "ruff",
-  "pyright",
-  "ts_ls",
-  "tailwindcss",
   "cmake",
+  "cssls",
   "dockerls",
   "eslint",
-  "yamlls",
+  "gopls",
+  "html",
+  "jdtls",
+  "lua_ls",
+  "nil_ls",
+  "pyright",
+  "ruff",
+  "rust_analyzer",
+  "tailwindcss",
+  "taplo", -- toml
+  "ts_ls",
   "typos_lsp",
   "typst_lsp",
-  "bashls",
-  "taplo", -- toml
+  "yamlls",
   "zls",
-  "gopls",
-  "jdtls",
-  "nil_ls",
 }
 
 ---@class DiagFilterOpts
@@ -52,9 +53,6 @@ end
 local function make_capabilities()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
-  capabilities = vim.tbl_deep_extend("force", capabilities, {
-    offsetEncoding = { "utf-16" },
-  })
   return capabilities
 end
 
@@ -127,10 +125,8 @@ return {
     local capabilities = make_capabilities()
     for _, lsp in ipairs(servers) do
       local config = configs[lsp] or {}
-      config = vim.tbl_deep_extend("force", {
-        capabilities = capabilities,
-        on_attach = lsp_config.on_attach,
-      }, config)
+      config.capabilities = capabilities
+      config.on_attach = lsp_config.on_attach
       lspconfig[lsp].setup(config)
     end
   end,

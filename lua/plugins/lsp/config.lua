@@ -91,17 +91,15 @@ local function set_keymaps(bufnr)
   vim.b[bufnr].lsp_keymaps_set = true
 end
 
-local lsp_formatting_group = vim.api.nvim_create_augroup("LspFormatting", {})
-
 function M.on_attach(client, bufnr)
   set_keymaps(bufnr)
 
   if client.server_capabilities.inlayHintProvider then
-    vim.lsp.buf.inlay_hint(bufnr, true)
+    vim.lsp.inlay_hint.enable(true)
   end
 
-  if vim.g.FormatOnSave ~= 0 and (client.supports_method "textDocument/formatting" or client.name == "jdtls") then
-    vim.api.nvim_clear_autocmds { group = lsp_formatting_group, buffer = bufnr }
+  if client.supports_method "textDocument/formatting" or client.name == "jdtls" then
+    local lsp_formatting_group = vim.api.nvim_create_augroup("LspFormatting", { clear = true })
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = lsp_formatting_group,
       buffer = bufnr,
@@ -158,7 +156,6 @@ function M.create_usercmds()
 end
 
 local disable_lsp_group = vim.api.nvim_create_augroup("DisableLsp", { clear = true })
-local disable_semantic_token_group = vim.api.nvim_create_augroup("DisableSemanticToken", { clear = true })
 
 function M.create_autocmds()
   local no_lsp_filetype = {
@@ -194,18 +191,6 @@ function M.create_autocmds()
           detach_client(client_id, bufnr)
           return
         end
-      end
-    end,
-  })
-
-  local allow_server_syntax_highlighting = {}
-
-  vim.api.nvim_create_autocmd("LspAttach", {
-    group = disable_semantic_token_group,
-    callback = function(args)
-      local client = vim.lsp.get_client_by_id(args.data.client_id)
-      if client and not allow_server_syntax_highlighting[client.name] then
-        client.server_capabilities.semanticTokensProvider = nil
       end
     end,
   })

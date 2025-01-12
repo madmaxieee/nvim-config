@@ -18,17 +18,17 @@ local ensure_installed = {
   "pyright",
   "ruff",
   "rust-analyzer",
-  "shellcheck",
-  "shfmt",
+  "shellcheck", -- for bash-language-server
+  "shfmt", -- for bash-language-server
   "stylua",
   "svelte-language-server",
-  "taplo",
   "tailwindcss-language-server",
+  "taplo",
   "typescript-language-server",
   "typos-lsp",
   "typst-lsp",
-  "yaml-language-server",
   "xmlformatter",
+  "yaml-language-server",
   "zls",
 }
 

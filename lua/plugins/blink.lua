@@ -53,7 +53,7 @@ return {
             fallbacks = {},
           },
           buffer = {
-            score_offset = -3,
+            score_offset = -10,
             fallbacks = {},
           },
         },

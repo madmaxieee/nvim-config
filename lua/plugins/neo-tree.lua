@@ -8,7 +8,7 @@ return {
   cmd = "Neotree",
   keys = {
     {
-      "<C-n>",
+      "<leader>n",
       mode = "n",
       "<cmd> Neotree toggle <CR>",
       desc = "open NeoTree",

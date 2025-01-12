@@ -37,6 +37,11 @@ local function set_keymaps(bufnr)
     trouble_open { mode = "lsp_definitions" }
   end, { buffer = bufnr, desc = "Go to definition" })
 
+  map("n", "gv", function()
+    vim.cmd.vsplit()
+    trouble_open { mode = "lsp_definitions" }
+  end, { buffer = bufnr, desc = "Go to definition in vsplit" })
+
   map("n", "gD", function()
     -- vim.lsp.buf.type_definition()
     trouble_open { mode = "lsp_type_definitions" }
@@ -91,6 +96,8 @@ local function set_keymaps(bufnr)
   vim.b[bufnr].lsp_keymaps_set = true
 end
 
+local lsp_formatting_group = vim.api.nvim_create_augroup("LspFormatting", { clear = true })
+
 function M.on_attach(client, bufnr)
   set_keymaps(bufnr)
 
@@ -99,7 +106,7 @@ function M.on_attach(client, bufnr)
   end
 
   if client.supports_method "textDocument/formatting" or client.name == "jdtls" then
-    local lsp_formatting_group = vim.api.nvim_create_augroup("LspFormatting", { clear = true })
+    vim.api.nvim_clear_autocmds { group = lsp_formatting_group, buffer = bufnr }
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = lsp_formatting_group,
       buffer = bufnr,

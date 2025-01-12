@@ -46,9 +46,9 @@ function M.on_load(name, fn)
   end
 end
 
--- @param height_ratio number (0.0 - 1.0)
--- @param width_ratio number (0.0 - 1.0)
--- @param opts table
+---@param height_ratio number (0.0 - 1.0)
+---@param width_ratio number (0.0 - 1.0)
+---@param opts table
 function M.float_window_config(height_ratio, width_ratio, opts)
   local screen_w = vim.opt.columns:get()
   local screen_h = vim.opt.lines:get()

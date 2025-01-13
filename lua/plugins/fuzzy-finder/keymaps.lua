@@ -71,6 +71,14 @@ function M.set_fuzzy_finder(fuzzy_finder)
 end
 
 function M.setup()
+  vim.api.nvim_create_autocmd("SessionLoadPost", {
+    group = vim.api.nvim_create_augroup("FuzzyFinder", { clear = true }),
+    desc = "set active fuzzy finder keymaps after session load",
+    callback = function()
+      M.set_active_keymaps()
+    end,
+  })
+
   vim.api.nvim_create_user_command("FuzzyFinderToggle", function()
     local new_fuzzy_finder
     if vim.g.FuzzyFinder == M.FuzzyFinder.telescope then

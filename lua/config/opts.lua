@@ -41,6 +41,9 @@ vim.opt.whichwrap:append "<>[]hl"
 -- make undo persistent
 vim.opt.undofile = true
 
+-- HACK: :Inspect for some reason references vim.hl instead of vim.highlight
+vim.hl = vim.highlight
+
 vim.g.mapleader = " "
 
 vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })

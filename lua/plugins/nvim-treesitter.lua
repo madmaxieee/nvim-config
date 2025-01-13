@@ -6,6 +6,8 @@ return {
   opts = {
     ensure_installed = {
       "lua",
+      "luadoc",
+      "luap",
       "python",
       "bash",
       "fish",

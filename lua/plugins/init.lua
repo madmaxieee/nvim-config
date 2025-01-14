@@ -5,8 +5,7 @@ return {
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
-    opts = {},
-    init = function()
+    config = function()
       if vim.fn.has "mac" == 1 then
         vim.cmd.colorscheme "tokyonight-moon"
       else
@@ -134,29 +133,6 @@ return {
     config = true,
   },
   {
-    "mcauley-penney/visual-whitespace.nvim",
-    event = require("utils.events").VisualEnter,
-    config = function()
-      local visual_bg = vim.api.nvim_get_hl(0, { name = "Visual" }).bg
-      local comment_fg = vim.api.nvim_get_hl(0, { name = "Comment" }).fg
-      vim.api.nvim_set_hl(0, "VisualDimmed", {
-        fg = comment_fg,
-        bg = visual_bg,
-      })
-      require("visual-whitespace").setup { highlight = { link = "VisualDimmed" } }
-    end,
-  },
-  {
-    "aaron-p1/match-visual.nvim",
-    event = require("utils.events").VisualEnter,
-    config = function()
-      local color_utils = require "utils.colors"
-      local bg = color_utils.blend_bg(vim.api.nvim_get_hl(0, { name = "Visual" }).bg, 0.6)
-      vim.api.nvim_set_hl(0, "VisualMatch", { bg = bg })
-      require("match-visual").setup {}
-    end,
-  },
-  {
     "Wansmer/treesj",
     keys = {
       {
@@ -168,7 +144,7 @@ return {
         desc = "Toggle split join",
       },
     },
-    dependencies = { "nvim-treesitter/nvim-treesitter" }, -- if you install parsers with `nvim-treesitter`
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function()
       require("treesj").setup {
         use_default_keymaps = false,

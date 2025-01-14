@@ -83,7 +83,6 @@ return {
 
     init = function()
       vim.api.nvim_create_autocmd("ColorScheme", {
-        pattern = "*",
         group = vim.api.nvim_create_augroup("define DAP icon color", { clear = true }),
         desc = "prevent colorscheme clears self-defined DAP icon colors.",
         callback = function()

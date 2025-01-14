@@ -94,6 +94,13 @@ local server_configs = {
       diagnosticSeverity = "Warning",
     },
   },
+  zls = {
+    settings = {
+      zls = {
+        enable_build_on_save = true,
+      },
+    },
+  },
 }
 
 local external_servers = {

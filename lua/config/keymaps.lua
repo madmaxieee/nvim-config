@@ -1,21 +1,20 @@
 local map = require("utils").safe_keymap_set
 
-local success, ts_repeat_move = pcall(require, "nvim-treesitter.textobjects.repeatable_move")
-if success then
-  map({ "n", "x", "o" }, ";", function()
-    ts_repeat_move.repeat_last_move()
-    vim.cmd.normal { "zz", bang = true }
-  end)
-  map({ "n", "x", "o" }, ",", function()
-    ts_repeat_move.repeat_last_move_opposite()
-    vim.cmd.normal { "zz", bang = true }
-  end)
-end
+local repeatable = require "repeatable"
 
-map({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
-map({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })
-map({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
-map({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
+map({ "n", "x", "o" }, ";", function()
+  repeatable.repeat_last_move()
+  vim.cmd.normal { "zz", bang = true }
+end)
+map({ "n", "x", "o" }, ",", function()
+  repeatable.repeat_last_move_opposite()
+  vim.cmd.normal { "zz", bang = true }
+end)
+
+map({ "n", "x", "o" }, "f", repeatable.builtin_f_expr, { expr = true })
+map({ "n", "x", "o" }, "F", repeatable.builtin_F_expr, { expr = true })
+map({ "n", "x", "o" }, "t", repeatable.builtin_t_expr, { expr = true })
+map({ "n", "x", "o" }, "T", repeatable.builtin_T_expr, { expr = true })
 
 map("i", "<C-h>", "<Left>", { desc = "Move left" })
 map("i", "<C-j>", "<Down>", { desc = "Move down" })

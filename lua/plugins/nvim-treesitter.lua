@@ -23,6 +23,7 @@ return {
       "rust",
       "go",
       "java",
+      "zig",
 
       "typst",
       "markdown",

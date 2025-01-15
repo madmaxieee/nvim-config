@@ -73,14 +73,7 @@ return {
   opts = {
     options = {
       disabled_filetypes = {
-        statusline = {
-          "dapui_scopes",
-          "dapui_breakpoints",
-          "dapui_stacks",
-          "dapui_watches",
-          "dapui_console",
-          "dap-repl",
-        },
+        statusline = {}, -- extended
       },
       globalstatus = false,
       section_separators = "",
@@ -127,4 +120,5 @@ return {
       lualine_z = {},
     },
   },
+  opts_extend = { "options.disabled_filetypes.statusline" },
 }

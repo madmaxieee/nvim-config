@@ -113,4 +113,22 @@ return {
       end
     end,
   },
+
+  {
+    "nvim-lualine/lualine.nvim",
+    opts = {
+      options = {
+        disabled_filetypes = {
+          statusline = {
+            "dapui_scopes",
+            "dapui_breakpoints",
+            "dapui_stacks",
+            "dapui_watches",
+            "dapui_console",
+            "dap-repl",
+          },
+        },
+      },
+    },
+  },
 }

@@ -1,34 +1,32 @@
-local data = assert(vim.fn.stdpath "data") --[[@as string]]
-
 return {
   {
     "nvim-telescope/telescope.nvim",
-    event = "VeryLazy", -- for neoclip to work
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-      "nvim-telescope/telescope-smart-history.nvim",
+      "natecraddock/telescope-zf-native.nvim",
       "debugloop/telescope-undo.nvim",
       "AckslD/nvim-neoclip.lua",
+      "danielfalk/smart-open.nvim",
     },
     cmd = "Telescope",
     init = function()
       vim.cmd.cabbrev("T", "Telescope")
       require("plugins.fuzzy-finder.telescope.keymaps").set_keymaps()
     end,
+
     config = function()
       local actions = require "telescope.actions"
       require("telescope").setup {
         defaults = {
           vimgrep_arguments = {
             "rg",
-            "-L",
             "--color=never",
             "--no-heading",
             "--with-filename",
             "--line-number",
             "--column",
             "--smart-case",
+            "--follow",
           },
           prompt_prefix = "   ",
           sorting_strategy = "ascending",
@@ -72,11 +70,6 @@ return {
           },
         },
         extensions = {
-          fzf = {},
-          history = {
-            path = vim.fs.joinpath(data, "telescope_history.sqlite3"),
-            limit = 100,
-          },
           undo = {
             mappings = {
               n = { ["<cr>"] = require("telescope-undo.actions").restore },
@@ -84,16 +77,18 @@ return {
           },
         },
       }
+      require("telescope").load_extension "zf-native"
       require("telescope").load_extension "undo"
-      require("telescope").load_extension "fzf"
       require("telescope").load_extension "neoclip"
       require("telescope").load_extension "macroscope"
+      require("telescope").load_extension "smart_open"
     end,
   },
 
   {
     "AckslD/nvim-neoclip.lua",
     dependencies = { "kkharji/sqlite.lua" },
+    event = "VeryLazy", -- start recording registers
     config = function()
       require("neoclip").setup {
         enable_persistent_history = true,
@@ -129,6 +124,14 @@ return {
         },
       }
     end,
+  },
+
+  {
+    "danielfalk/smart-open.nvim",
+    branch = "0.2.x",
+    dependencies = {
+      "kkharji/sqlite.lua",
+    },
   },
 
   {

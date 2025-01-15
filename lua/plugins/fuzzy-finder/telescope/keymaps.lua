@@ -4,17 +4,19 @@ local M = {}
 ---@param lhs string
 ---@param rhs string|function
 ---@param opts vim.keymap.set.Opts?
-local function map(mode, lhs, rhs, opts)
+function M.map(mode, lhs, rhs, opts)
   local ff = require "plugins.fuzzy-finder.keymaps"
   ff.map(ff.FuzzyFinder.telescope, mode, lhs, rhs, opts)
 end
 
 function M.set_keymaps()
+  local map = M.map
+
   -- builtin
   map( --
     "n",
     "<leader>ff",
-    "<cmd> Telescope find_files <CR>",
+    "<cmd> Telescope smart_open <CR>",
     { desc = "Find files" }
   )
 

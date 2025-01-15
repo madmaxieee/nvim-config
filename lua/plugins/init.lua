@@ -37,16 +37,15 @@ return {
     },
   },
   {
-    -- the original repo is broken, use my mirror
     -- "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     "madmaxieee/lsp_lines.nvim",
     event = "LspAttach",
     init = function()
       vim.diagnostic.config { virtual_text = false }
     end,
-    config = function()
-      require("lsp_lines").setup()
-    end,
+    opts = {
+      disabled_filetypes = { "lazy" },
+    },
   },
   {
     "NvChad/nvim-colorizer.lua",

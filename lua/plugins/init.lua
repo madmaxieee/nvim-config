@@ -20,14 +20,13 @@ return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    config = true,
+    opts = {},
   },
   {
     "windwp/nvim-ts-autotag",
     event = "InsertEnter",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-    },
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {},
   },
   {
     "stevearc/dressing.nvim",

@@ -75,5 +75,4 @@ return {
     need = 1,
     branch = true,
   },
-  config = true,
 }

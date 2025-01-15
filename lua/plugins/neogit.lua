@@ -15,5 +15,4 @@ return {
     integrations = { telescope = true, diffview = true },
     graph_style = "unicode",
   },
-  config = true,
 }

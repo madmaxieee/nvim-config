@@ -25,6 +25,8 @@ return {
       "java",
       "zig",
 
+      "nix",
+
       "typst",
       "markdown",
       "markdown_inline",
@@ -40,13 +42,13 @@ return {
 
       "make",
       "cmake",
+      "just",
       "dockerfile",
+      "gn",
+      "kconfig",
 
       "regex",
-      "nix",
-
       "d2",
-      "just",
     },
 
     highlight = {

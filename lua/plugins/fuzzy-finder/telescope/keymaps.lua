@@ -47,9 +47,23 @@ function M.set_keymaps()
 
   map( --
     "n",
+    "<leader>fa",
+    "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>",
+    { desc = "Find all files" }
+  )
+
+  map( --
+    "n",
     "<leader>fb",
     "<cmd> Telescope buffers <CR>",
     { desc = "Find buffers" }
+  )
+
+  map( --
+    "n",
+    "<leader>fj",
+    "<cmd> Telescope jumplist <CR>",
+    { desc = "Find jump" }
   )
 
   map( --

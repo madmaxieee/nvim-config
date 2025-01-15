@@ -21,6 +21,12 @@ return {
           ["ctrl-g"] = false,
         },
       },
+      files = {
+        actions = {
+          ["ctrl-f"] = { actions.toggle_ignore },
+          ["ctrl-g"] = false,
+        },
+      },
     }
   end,
 }

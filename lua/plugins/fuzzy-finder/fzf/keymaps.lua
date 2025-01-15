@@ -41,9 +41,23 @@ function M.set_keymaps()
 
   map( --
     "n",
+    "<leader>fa",
+    "<cmd> FzfLua files fd_opts=--no-ignore <CR>",
+    { desc = "Find all files" }
+  )
+
+  map( --
+    "n",
     "<leader>fb",
     "<cmd> FzfLua buffers <CR>",
     { desc = "Find buffers" }
+  )
+
+  map( --
+    "n",
+    "<leader>fj",
+    "<cmd> FzfLua jumps <CR>",
+    { desc = "Find jump" }
   )
 
   map( --

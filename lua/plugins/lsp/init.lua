@@ -1,6 +1,6 @@
 local config = require "plugins.lsp.config"
 if config.cond() then
-  config.init()
+  config.setup()
 end
 
 return {

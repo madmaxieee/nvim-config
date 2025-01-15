@@ -42,7 +42,6 @@ return {
         { desc = "select " .. query }
       )
     end
-
     local map_repeatable_pair = utils.map_repeatable_pair
     local move = require "nvim-treesitter.textobjects.move"
     local move_keymaps = {
@@ -52,8 +51,8 @@ return {
         query = "@function.outer",
       },
       {
-        next_key = "]]",
-        prev_key = "[[",
+        next_key = "]C",
+        prev_key = "[C",
         query = "@class.outer",
       },
       {

@@ -1,6 +1,7 @@
 local M = {}
 
-local map = require("utils").safe_keymap_set
+local utils = require "utils"
+local map = utils.safe_keymap_set
 
 local no_format = {
   ["eslint"] = true, -- don't auto fix eslint errors
@@ -61,19 +62,18 @@ local function set_keymaps(bufnr)
     vim.lsp.buf.signature_help()
   end, { buffer = bufnr, desc = "Signature help" })
 
-  local map_repeatable_pair = require("utils").map_repeatable_pair
-  map_repeatable_pair("n", {
+  utils.map_repeatable_pair("n", {
     next = {
       "]d",
       function()
-        vim.diagnostic.goto_next()
+        vim.diagnostic.goto_next { float = false }
       end,
       { buffer = bufnr, desc = "Go to next diagnostic" },
     },
     prev = {
       "[d",
       function()
-        vim.diagnostic.goto_prev()
+        vim.diagnostic.goto_next { float = false }
       end,
       { buffer = bufnr, desc = "Go to previous diagnostic" },
     },
@@ -203,7 +203,7 @@ function M.create_autocmds()
   })
 end
 
-function M.init()
+function M.setup()
   M.create_usercmds()
   M.create_autocmds()
 end

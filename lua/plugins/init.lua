@@ -33,9 +33,8 @@ return {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
     opts = {
-      input = {
-        insert_only = false,
-      },
+      input = { enabled = false },
+      select = { enabled = true },
     },
   },
   {
@@ -49,19 +48,6 @@ return {
     config = function()
       require("lsp_lines").setup()
     end,
-  },
-  {
-    "folke/zen-mode.nvim",
-    cmd = "ZenMode",
-    keys = {
-      {
-        "<leader>z",
-        mode = "n",
-        "<cmd>ZenMode<CR>",
-        { desc = "Toggle zen mode" },
-      },
-    },
-    opts = {},
   },
   {
     "NvChad/nvim-colorizer.lua",
@@ -84,22 +70,6 @@ return {
     },
   },
   {
-    "RRethy/vim-illuminate",
-    event = "VeryLazy",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-    },
-    config = function()
-      require("illuminate").configure {
-        providers = {
-          "lsp",
-          "treesitter",
-          "regex",
-        },
-      }
-    end,
-  },
-  {
     "max397574/better-escape.nvim",
     event = "InsertEnter",
     config = function()
@@ -112,25 +82,6 @@ return {
         },
       }
     end,
-  },
-  {
-    "LunarVim/bigfile.nvim",
-    event = "BufReadPre",
-    opts = {
-      filesize = 2, -- size of the file in MiB, the plugin round file sizes to the closest MiB
-      pattern = { "*" }, -- autocmd pattern or function see <### Overriding the detection of big files>
-      features = { -- features to disable
-        "indent_blankline",
-        "illuminate",
-        "lsp",
-        "treesitter",
-        "syntax",
-        "matchparen",
-        "vimopts",
-        "filetype",
-      },
-    },
-    config = true,
   },
   {
     "Wansmer/treesj",
@@ -149,25 +100,6 @@ return {
       require("treesj").setup {
         use_default_keymaps = false,
       }
-    end,
-  },
-  {
-    "famiu/bufdelete.nvim",
-    cmd = "Bd",
-    keys = {
-      {
-        "<leader>x",
-        mode = { "n" },
-        function()
-          require("bufdelete").bufdelete(0)
-        end,
-        desc = "delete buffer without disrupting window layout",
-      },
-    },
-    config = function()
-      vim.api.nvim_create_user_command("Bd", function()
-        require("bufdelete").bufdelete(0)
-      end, { desc = "delete buffer without disrupting window layout" })
     end,
   },
 }

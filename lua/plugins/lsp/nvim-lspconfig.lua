@@ -51,7 +51,12 @@ local servers = {
 
 local server_configs = {
   clangd = {
-    cmd = { "clangd", "--clang-tidy" },
+    cmd = {
+      "clangd",
+      "--clang-tidy",
+      -- neovim does not support multiple offset encoding
+      "--offset-encoding=utf-16",
+    },
   },
   jdtls = {
     handlers = {

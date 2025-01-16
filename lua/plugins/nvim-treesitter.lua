@@ -32,6 +32,7 @@ return {
       "markdown_inline",
       "json",
       "yaml",
+      "toml",
       "kdl",
       "graphql",
 

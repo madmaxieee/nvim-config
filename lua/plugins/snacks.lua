@@ -69,6 +69,18 @@ return {
       },
     },
   },
+
+  init = function()
+    vim.api.nvim_create_autocmd("BufRead", {
+      group = vim.api.nvim_create_augroup("NoSnacksIndent", { clear = true }),
+      callback = function(args)
+        if vim.bo[args.buf].filetype == "markdown" then
+          vim.b[args.buf].snacks_indent = false
+        end
+      end,
+    })
+  end,
+
   config = function(_, opts)
     require("snacks").setup(opts)
     local snacks_indent_hl = vim.api.nvim_get_hl(0, { name = "SnacksIndent" })

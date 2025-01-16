@@ -69,4 +69,11 @@ return {
       },
     },
   },
+  config = function(_, opts)
+    require("snacks").setup(opts)
+    local snacks_indent_hl = vim.api.nvim_get_hl(0, { name = "SnacksIndent" })
+    vim.api.nvim_set_hl(0, "SnacksIndent", { fg = snacks_indent_hl.fg })
+    local snacks_scope_hl = vim.api.nvim_get_hl(0, { name = "SnacksIndentScope" })
+    vim.api.nvim_set_hl(0, "SnacksIndentScope", { fg = snacks_scope_hl.fg })
+  end,
 }

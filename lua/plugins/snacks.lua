@@ -43,10 +43,12 @@ return {
       enabled = true,
       indent = {
         char = "▎",
+        hl = "MySnacksIndent",
       },
       scope = {
         char = "▎",
         underline = true,
+        hl = "MySnacksIndentScope",
       },
       animate = {
         duration = {
@@ -79,13 +81,7 @@ return {
         end
       end,
     })
-  end,
-
-  config = function(_, opts)
-    require("snacks").setup(opts)
-    local snacks_indent_hl = vim.api.nvim_get_hl(0, { name = "SnacksIndent" })
-    vim.api.nvim_set_hl(0, "SnacksIndent", { fg = snacks_indent_hl.fg })
-    local snacks_scope_hl = vim.api.nvim_get_hl(0, { name = "SnacksIndentScope" })
-    vim.api.nvim_set_hl(0, "SnacksIndentScope", { fg = snacks_scope_hl.fg })
+    vim.api.nvim_set_hl(0, "MySnacksIndent", { link = "LineNr" })
+    vim.api.nvim_set_hl(0, "MySnacksIndentScope", { link = "Special" })
   end,
 }

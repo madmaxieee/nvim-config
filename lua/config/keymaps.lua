@@ -67,3 +67,21 @@ map({ "n", "x", "o" }, "gh", "^", { desc = "Move to start of line", silent = tru
 
 map("n", "X", ":.lua<CR>")
 map("v", "X", ":lua<CR>")
+
+map("c", "<C-f>", function()
+  vim.g.requested_cmdwin = true
+  return "<C-f>"
+end, { expr = true })
+
+vim.api.nvim_create_autocmd("CmdWinEnter", {
+  group = vim.api.nvim_create_augroup("QuitCmdWin", { clear = true }),
+  callback = function()
+    if not vim.g.requested_cmdwin then
+      vim.cmd "q"
+      vim.api.nvim_input(vim.fn.getcmdwintype() .. "q")
+    end
+    vim.g.requested_cmdwin = nil
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+  end,
+})

@@ -28,7 +28,7 @@ return {
     }
 
     -- disable persistence for certain directories
-    vim.api.nvim_create_autocmd({ "VimEnter" }, {
+    vim.api.nvim_create_autocmd("VimEnter", {
       group = persistence_group,
       callback = function()
         local cwd = vim.fn.getcwd()
@@ -50,20 +50,31 @@ return {
     })
 
     -- disable persistence if nvim started with stdin
-    vim.api.nvim_create_autocmd({ "StdinReadPre" }, {
+    vim.api.nvim_create_autocmd("StdinReadPre", {
       group = persistence_group,
       callback = function()
         vim.g.started_with_stdin = true
       end,
     })
 
-    -- close all buffers with ft="lazy"
     vim.api.nvim_create_autocmd("User", {
       pattern = "PersistenceLoadPre",
       group = persistence_group,
       callback = function()
         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          -- close all buffers with ft="lazy"
           if vim.bo[buf].ft == "lazy" then
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("SessionLoadPost", {
+      group = persistence_group,
+      callback = function()
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.bo[buf].buftype == "" and vim.fn.filereadable(vim.api.nvim_buf_get_name(buf)) == 0 then
             vim.api.nvim_buf_delete(buf, { force = true })
           end
         end

@@ -47,16 +47,25 @@ return {
     local move = require "nvim-treesitter.textobjects.move"
     local move_keymaps = {
       {
+        position = "start",
         next_key = "]f",
         prev_key = "[f",
         query = "@function.outer",
       },
       {
+        position = "end",
+        next_key = "]F",
+        prev_key = "[F",
+        query = "@function.inner",
+      },
+      {
+        position = "start",
         next_key = "]C",
         prev_key = "[C",
         query = "@class.outer",
       },
       {
+        position = "start",
         next_key = "]z",
         prev_key = "[z",
         query = "@fold",
@@ -65,18 +74,26 @@ return {
     }
     for _, keymap in ipairs(move_keymaps) do
       keymap.query_group = keymap.query_group or "textobjects"
+      local next_fn, prev_fn
+      if keymap.position == "start" then
+        next_fn = move.goto_next_start
+        prev_fn = move.goto_previous_start
+      else
+        next_fn = move.goto_next_end
+        prev_fn = move.goto_previous_end
+      end
       map_repeatable_pair({ "n", "x", "o" }, {
         next = {
           keymap.next_key,
           function()
-            move.goto_next_start(keymap.query, keymap.query_group)
+            next_fn(keymap.query, keymap.query_group)
           end,
           { desc = "next " .. keymap.query },
         },
         prev = {
           keymap.prev_key,
           function()
-            move.goto_previous_start(keymap.query, keymap.query_group)
+            prev_fn(keymap.query, keymap.query_group)
           end,
           { desc = "prev " .. keymap.query },
         },

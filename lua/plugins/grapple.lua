@@ -18,7 +18,25 @@ return {
     { "<A-d>", "<cmd>Grapple select index=2<cr>", desc = "Select second tag" },
     { "<A-s>", "<cmd>Grapple select index=3<cr>", desc = "Select third tag" },
     { "<A-a>", "<cmd>Grapple select index=4<cr>", desc = "Select fourth tag" },
-    { "<S-Tab>", "<cmd>Grapple cycle_tags prev<cr>", desc = "Go to previous tag" },
-    { "<Tab>", "<cmd>Grapple cycle_tags next<cr>", desc = "Go to next tag" },
+    {
+      "<S-Tab>",
+      function()
+        local wintype = vim.fn.win_gettype()
+        if wintype ~= "popup" then
+          require("grapple").cycle_tags "prev"
+        end
+      end,
+      desc = "Go to previous tag",
+    },
+    {
+      "<Tab>",
+      function()
+        local wintype = vim.fn.win_gettype()
+        if wintype ~= "popup" then
+          require("grapple").cycle_tags "next"
+        end
+      end,
+      desc = "Go to next tag",
+    },
   },
 }

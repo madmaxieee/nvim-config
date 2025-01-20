@@ -9,7 +9,10 @@ local next_ref_repeat, prev_ref_repeat = repeatable.make_repeatable_move_pair( -
 )
 
 return {
-  "folke/snacks.nvim",
+  -- using my fixed branch before folke merge my pr
+  "madmaxieee/snacks.nvim",
+  branch = "fix",
+  -- "folke/snacks.nvim",
   priority = 1000,
   lazy = false,
   keys = {
@@ -31,6 +34,20 @@ return {
       prev_ref_repeat,
       desc = "Prev Reference",
       mode = { "n", "t" },
+    },
+    {
+      "<leader>.",
+      function()
+        Snacks.scratch()
+      end,
+      desc = "Toggle Scratch Buffer",
+    },
+    {
+      "<leader>S",
+      function()
+        Snacks.scratch.select()
+      end,
+      desc = "Select Scratch Buffer",
     },
   },
 

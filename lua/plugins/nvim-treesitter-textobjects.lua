@@ -25,21 +25,26 @@ return {
     local map = utils.safe_keymap_set
     local select = require "nvim-treesitter.textobjects.select"
     local select_keymaps = {
-      ["aa"] = "@parameter.outer",
-      ["ia"] = "@parameter.inner",
-      ["af"] = "@function.outer",
-      ["if"] = "@function.inner",
-      ["ac"] = "@class.outer",
-      ["ic"] = "@class.inner",
+      ["aa"] = { query = "@parameter.outer" },
+      ["ia"] = { query = "@parameter.inner" },
+      ["af"] = { query = "@function.outer" },
+      ["if"] = { query = "@function.inner" },
+      ["ac"] = { query = "@class.outer" },
+      ["ic"] = { query = "@class.inner" },
+      ["as"] = {
+        query = "@local.scope",
+        query_group = "locals",
+      },
     }
     for keymap, query in pairs(select_keymaps) do
+      query.query_group = query.query_group or "textobjects"
       map( --
         { "x", "o" },
         keymap,
         function()
-          select.select_textobject(query, "textobjects", "v")
+          select.select_textobject(query.query, query.query_group, "v")
         end,
-        { desc = "select " .. query }
+        { desc = "select " .. query.query }
       )
     end
 
@@ -47,7 +52,6 @@ return {
     local move = require "nvim-treesitter.textobjects.move"
     local move_keymaps = {
       {
-        position = "start",
         next_key = "]f",
         prev_key = "[f",
         query = "@function.outer",
@@ -56,16 +60,14 @@ return {
         position = "end",
         next_key = "]F",
         prev_key = "[F",
-        query = "@function.inner",
+        query = "@function.outer",
       },
       {
-        position = "start",
         next_key = "]C",
         prev_key = "[C",
         query = "@class.outer",
       },
       {
-        position = "start",
         next_key = "]z",
         prev_key = "[z",
         query = "@fold",
@@ -75,12 +77,12 @@ return {
     for _, keymap in ipairs(move_keymaps) do
       keymap.query_group = keymap.query_group or "textobjects"
       local next_fn, prev_fn
-      if keymap.position == "start" then
-        next_fn = move.goto_next_start
-        prev_fn = move.goto_previous_start
-      else
+      if keymap.position == "end" then
         next_fn = move.goto_next_end
         prev_fn = move.goto_previous_end
+      else
+        next_fn = move.goto_next_start
+        prev_fn = move.goto_previous_start
       end
       map_repeatable_pair({ "n", "x", "o" }, {
         next = {

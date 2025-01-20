@@ -56,24 +56,7 @@ return {
   opts = {
     bigfile = { enabled = true },
     dashboard = { enabled = false },
-    indent = {
-      enabled = true,
-      indent = {
-        char = "▎",
-        hl = "MySnacksIndent",
-      },
-      scope = {
-        char = "▎",
-        underline = true,
-        hl = "MySnacksIndentScope",
-      },
-      animate = {
-        duration = {
-          step = 10, -- ms per step
-          total = 500, -- maximum duration
-        },
-      },
-    },
+    indent = { enabled = false },
     input = { enabled = true },
     notifier = { enabled = false },
     quickfile = { enabled = true },
@@ -88,17 +71,4 @@ return {
       },
     },
   },
-
-  init = function()
-    vim.api.nvim_create_autocmd("BufRead", {
-      group = vim.api.nvim_create_augroup("NoSnacksIndent", { clear = true }),
-      callback = function(args)
-        if vim.bo[args.buf].filetype == "markdown" then
-          vim.b[args.buf].snacks_indent = false
-        end
-      end,
-    })
-    vim.api.nvim_set_hl(0, "MySnacksIndent", { link = "LineNr" })
-    vim.api.nvim_set_hl(0, "MySnacksIndentScope", { link = "Special" })
-  end,
 }

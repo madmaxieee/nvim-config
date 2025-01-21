@@ -9,10 +9,7 @@ local next_ref_repeat, prev_ref_repeat = repeatable.make_repeatable_move_pair( -
 )
 
 return {
-  -- using my fixed branch before folke merge my pr
-  "madmaxieee/snacks.nvim",
-  branch = "fix",
-  -- "folke/snacks.nvim",
+  "folke/snacks.nvim",
   priority = 1000,
   lazy = false,
   keys = {

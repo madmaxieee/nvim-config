@@ -68,6 +68,13 @@ return {
           find_files = {
             hidden = true,
           },
+          buffers = {
+            mappings = {
+              n = {
+                ["x"] = actions.delete_buffer,
+              },
+            },
+          },
         },
         extensions = {
           undo = {

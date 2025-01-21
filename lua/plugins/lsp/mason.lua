@@ -9,7 +9,7 @@ return {
     require("mason").setup(opts)
     for _, name in ipairs(ensure_installed) do
       local ok, pkg = pcall(registry.get_package, name)
-      if ok then
+      if ok and pkg and not pkg:is_installed() then
         pkg:install {}
       end
     end

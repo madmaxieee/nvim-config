@@ -124,19 +124,9 @@ function M.on_attach(client, bufnr)
 end
 
 function M.create_usercmds()
-  vim.api.nvim_create_user_command("EnableLsp", function()
-    vim.g.EnableLsp = 1
-    vim.notify "reload nvim for this configuration to take effect"
-  end, {})
-
-  vim.api.nvim_create_user_command("DisableLsp", function()
-    vim.g.EnableLsp = 0
-    vim.notify "reload nvim for this configuration to take effect"
-  end, {})
-
   if M.cond() then
     vim.api.nvim_create_user_command("EnableFormatOnSave", function()
-      vim.g.FormatOnSave = 1
+      vim.g.FormatOnSave = nil
     end, {})
 
     vim.api.nvim_create_user_command("DisableFormatOnSave", function()

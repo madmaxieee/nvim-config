@@ -16,6 +16,7 @@ local diagnostics = helpers.diagnostics.from_pattern(
 )
 
 return {
+  name = "cpplint",
   method = require("null-ls").methods.DIAGNOSTICS,
   filetypes = { "cpp", "c" },
   generator = helpers.generator_factory {

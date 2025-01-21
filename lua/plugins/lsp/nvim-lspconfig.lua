@@ -114,7 +114,7 @@ return {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
-        -- required by bashls
+        -- needed for bashls
         "shellcheck",
         "shfmt",
       },

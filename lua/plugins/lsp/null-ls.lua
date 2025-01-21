@@ -45,7 +45,6 @@ return {
         formatting.nixfmt,
         lint.fish,
         -- custom
-        custom.cpplint,
         custom.trailing_ws,
       }
 
@@ -53,6 +52,32 @@ return {
         sources = sources,
         on_attach = lsp_config.on_attach,
       }
+
+      vim.api.nvim_create_autocmd("SessionLoadPost", {
+        group = vim.api.nvim_create_augroup("Cpplint", { clear = true }),
+        desc = "setup cpplint",
+        callback = function()
+          if vim.g.Cpplint == 1 and not null_ls.is_registered "cpplint" then
+            null_ls.register(custom.cpplint)
+          end
+        end,
+      })
+
+      vim.api.nvim_create_user_command("Cpplint", function()
+        vim.g.Cpplint = 1
+        if null_ls.is_registered "cpplint" then
+          null_ls.enable "cpplint"
+        else
+          null_ls.register(custom.cpplint)
+        end
+      end, {})
+
+      vim.api.nvim_create_user_command("CpplintDisable", function()
+        vim.g.Cpplint = nil
+        if null_ls.is_registered "cpplint" then
+          null_ls.disable "cpplint"
+        end
+      end, {})
     end,
   },
 }

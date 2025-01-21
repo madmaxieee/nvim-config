@@ -1,4 +1,5 @@
 return {
+  name = "trailing-ws",
   method = require("null-ls").methods.DIAGNOSTICS,
   filetypes = {},
   generator = {
@@ -11,7 +12,7 @@ return {
             row = i,
             col = col,
             end_col = end_col + 1,
-            source = "no-trailing-space",
+            source = "trailing-ws",
             message = "no trailing whitespace!",
             severity = vim.diagnostic.severity.WARN,
           })

@@ -54,6 +54,7 @@ local server_configs = {
     cmd = {
       "clangd",
       "--clang-tidy",
+      "--fallback-style=google",
       -- neovim does not support multiple offset encoding
       "--offset-encoding=utf-16",
     },
@@ -108,19 +109,22 @@ local server_configs = {
   },
 }
 
-local external_servers = {
-  nil_ls = true,
-}
-
 return {
+  {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        -- required by bashls
+        "shellcheck",
+        "shfmt",
+      },
+    },
+  },
+
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
-    opts = {
-      ensure_installed = utils.filter_list(servers, function(item)
-        return not external_servers[item]
-      end),
-    },
+    opts = { ensure_installed = servers },
   },
 
   {

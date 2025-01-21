@@ -4,11 +4,7 @@ if config.cond() then
 end
 
 return {
-  {
-    "williamboman/mason.nvim",
-    opts = {},
-  },
-
+  require "plugins.lsp.mason",
   require "plugins.lsp.null-ls",
   require "plugins.lsp.nvim-lspconfig",
 }

@@ -1,5 +1,5 @@
 -- load gitsigns only when a git file is opened
-vim.api.nvim_create_autocmd({ "BufRead" }, {
+vim.api.nvim_create_autocmd("BufRead", {
   group = vim.api.nvim_create_augroup("GitSignsLazyLoad", { clear = true }),
   callback = function()
     if vim.g.loaded_gitsigns then
@@ -17,6 +17,16 @@ vim.api.nvim_create_autocmd({ "BufRead" }, {
     end
     vim.api.nvim_create_user_command("GitBlame", "Gitsigns blame", {})
     vim.g.loaded_gitsigns = true
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("GitSignsFileType", { clear = true }),
+  callback = function(opts)
+    local ft = opts.match
+    if ft == "gitsigns-blame" then
+      vim.wo.winbar = " "
+    end
   end,
 })
 

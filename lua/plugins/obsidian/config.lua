@@ -98,7 +98,7 @@ function M.setup_auto_commit(opts)
 
   if git "rev-parse --is-inside-work-tree" == "true\n" then
     local auto_save_group = vim.api.nvim_create_augroup("SaveObsidian", { clear = true })
-    vim.api.nvim_create_autocmd({ "FocusGained" }, {
+    vim.api.nvim_create_autocmd("FocusGained", {
       group = auto_save_group,
       callback = function()
         if vim.fn.getcwd() ~= vault_folder then
@@ -109,7 +109,7 @@ function M.setup_auto_commit(opts)
         end
       end,
     })
-    vim.api.nvim_create_autocmd({ "FocusLost" }, {
+    vim.api.nvim_create_autocmd("FocusLost", {
       group = auto_save_group,
       callback = function()
         if vim.fn.getcwd() ~= vault_folder then
@@ -125,7 +125,7 @@ function M.setup_auto_commit(opts)
         end
       end,
     })
-    vim.api.nvim_create_autocmd({ "VimLeavePre" }, {
+    vim.api.nvim_create_autocmd("VimLeavePre", {
       group = auto_save_group,
       callback = function()
         if vim.fn.getcwd() ~= vault_folder then

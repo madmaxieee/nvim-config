@@ -43,6 +43,7 @@ return {
         formatting.fish_indent,
         formatting.just,
         formatting.nixfmt,
+        formatting.xmllint,
         lint.fish,
         -- custom
         custom.trailing_ws,

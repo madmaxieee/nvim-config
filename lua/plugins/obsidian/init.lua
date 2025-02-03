@@ -37,6 +37,12 @@ return {
           end,
           opts = { buffer = true },
         },
+        ["<leader>ch"] = {
+          action = function()
+            vim.cmd "ObsidianToggleCheckbox"
+          end,
+          opts = { buffer = true },
+        },
         ["<leader>fo"] = {
           action = function()
             vim.cmd "ObsidianSearch"

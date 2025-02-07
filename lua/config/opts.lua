@@ -41,6 +41,9 @@ vim.opt.whichwrap:append "<>[]hl"
 -- make undo persistent
 vim.opt.undofile = true
 
+vim.opt.diffopt:append "linematch:60"
+vim.opt.diffopt:append "algorithm:patience"
+
 -- HACK: :Inspect for some reason references vim.hl instead of vim.highlight
 vim.hl = vim.highlight
 

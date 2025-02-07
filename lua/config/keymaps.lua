@@ -38,14 +38,6 @@ map("n", "<C-j>", "<C-w>j", { desc = "Go to down window" })
 map("n", "<C-k>", "<C-w>k", { desc = "Go to up window" })
 map("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
 
--- misc
-map("n", "<C-u>", "<C-u>zz", { desc = "Go up half screen" })
-map("n", "<C-d>", "<C-d>zz", { desc = "Go down half screen" })
-
-map("n", "<Esc>", "<cmd> noh <CR>", { desc = "Clear highlights" })
-map("n", "U", "<C-r>", { desc = "Redo" })
-map("n", "<leader><space>", "<cmd> update <CR>", { desc = "Save file" })
-
 -- new tab and buffer
 map("n", "<leader>tn", "<cmd> tabnew <CR>", { desc = "New tab" })
 map("n", "<leader>tc", "<cmd> tabclose <CR>", { desc = "Close tab" })
@@ -62,12 +54,25 @@ map("v", "<leader>y", '"+y', { desc = "Copy to clipboard" })
 map("n", "<leader>/", "gcc", { desc = "Toggle comment line", remap = true })
 map("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
 
+-- misc
+map("n", "<C-u>", "<C-u>zz", { desc = "Go up half screen" })
+map("n", "<C-d>", "<C-d>zz", { desc = "Go down half screen" })
+
+map("n", "<Esc>", "<cmd> noh <CR>", { desc = "Clear highlights" })
+map("n", "U", "<C-r>", { desc = "Redo" })
+map("n", "<leader><space>", "<cmd> update <CR>", { desc = "Save file" })
+
 map({ "n", "x", "o" }, "gl", "$", { desc = "Move to end of line", silent = true })
 map({ "n", "x", "o" }, "gh", "^", { desc = "Move to start of line", silent = true })
 
-map("n", "X", ":.lua<CR>")
-map("v", "X", ":lua<CR>")
+map("n", "X", ":.lua<CR>", { desc = "Execute current line" })
+map("v", "X", ":lua<CR>", { desc = "Execute selected code" })
 
+map({ "n", "v" }, "<leader>rn", function()
+  vim.o.relativenumber = not vim.o.relativenumber
+end, { desc = "Toggle relative number" })
+
+-- avoid "q:" typo
 map("c", "<C-f>", function()
   vim.g.requested_cmdwin = true
   return "<C-f>"

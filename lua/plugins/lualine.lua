@@ -34,13 +34,21 @@ local function show_branch()
 end
 
 local function show_lsp_status()
+  local icon = "   "
+  if vim.g.loaded_copilot then
+    if vim.g.EnableCopilot == 1 then
+      icon = "   "
+    else
+      icon = "   "
+    end
+  end
   for _, client in ipairs(vim.lsp.get_clients()) do
     if
       client.attached_buffers[vim.api.nvim_get_current_buf()]
       and client.name ~= "null-ls"
       and client.name ~= "typos_lsp"
     then
-      return (vim.o.columns > 100 and "   LSP ~ " .. client.name) or "   LSP "
+      return (vim.o.columns > 100 and icon .. client.name) or icon
     end
   end
 end

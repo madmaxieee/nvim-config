@@ -15,12 +15,19 @@ local diagnostics = helpers.diagnostics.from_pattern(
   }
 )
 
+local command
+if vim.fn.executable "cpplint.py" then
+  command = "cpplint.py"
+else
+  command = "cpplint"
+end
+
 return {
   name = "cpplint",
   method = require("null-ls").methods.DIAGNOSTICS,
   filetypes = { "cpp", "c" },
   generator = helpers.generator_factory {
-    command = "cpplint",
+    command = command,
     args = {
       "$FILENAME",
     },

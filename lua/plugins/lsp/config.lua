@@ -125,11 +125,11 @@ end
 
 function M.create_usercmds()
   if M.cond() then
-    vim.api.nvim_create_user_command("EnableFormatOnSave", function()
+    vim.api.nvim_create_user_command("FormatOnSaveEnable", function()
       vim.g.FormatOnSave = nil
     end, {})
 
-    vim.api.nvim_create_user_command("DisableFormatOnSave", function()
+    vim.api.nvim_create_user_command("FormatOnSaveDisable", function()
       vim.g.FormatOnSave = 0
     end, {})
 

@@ -159,6 +159,7 @@ function M.create_autocmds()
     ["toggleterm"] = true,
     ["help"] = true,
     ["log"] = true,
+    ["bigfile"] = true,
   }
 
   local no_lsp_file_pattern = {

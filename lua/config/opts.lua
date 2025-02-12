@@ -53,7 +53,7 @@ vim.opt.diffopt:append {
 -- HACK: :Inspect for some reason references vim.hl instead of vim.highlight
 vim.hl = vim.highlight
 
-vim.g.mapleader = " "
+vim.g.mapleader = vim.keycode "<space>"
 
 vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })

@@ -4,11 +4,9 @@ local repeatable = require "repeatable"
 
 map({ "n", "x", "o" }, ";", function()
   repeatable.repeat_last_move()
-  vim.cmd.normal { "zz", bang = true }
 end)
 map({ "n", "x", "o" }, ",", function()
   repeatable.repeat_last_move_opposite()
-  vim.cmd.normal { "zz", bang = true }
 end)
 
 map({ "n", "x", "o" }, "f", repeatable.builtin_f_expr, { expr = true })

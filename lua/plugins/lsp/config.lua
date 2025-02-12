@@ -154,6 +154,13 @@ end
 
 local disable_lsp_group = vim.api.nvim_create_augroup("DisableLsp", { clear = true })
 
+local function detach_client(client_id, bufnr)
+  vim.schedule(function()
+    vim.lsp.buf_detach_client(bufnr, client_id)
+    vim.diagnostic.reset(nil, bufnr)
+  end)
+end
+
 function M.create_autocmds()
   local no_lsp_filetype = {
     ["toggleterm"] = true,
@@ -161,34 +168,15 @@ function M.create_autocmds()
     ["log"] = true,
     ["bigfile"] = true,
   }
-
-  local no_lsp_file_pattern = {
-    [[/?%.env]],
-  }
-
-  local function detach_client(client_id, bufnr)
-    vim.schedule(function()
-      vim.lsp.buf_detach_client(bufnr, client_id)
-      vim.diagnostic.reset(nil, bufnr)
-    end)
-  end
-
   -- disable lsp for certain filetypes and in diff mode
   vim.api.nvim_create_autocmd("LspAttach", {
     group = disable_lsp_group,
     callback = function(args)
       local bufnr = args.buf
       local client_id = args.data.client_id
-      if vim.g.DisableLsp == 1 or no_lsp_filetype[vim.bo[bufnr].filetype] or vim.wo.diff then
+      if no_lsp_filetype[vim.bo[bufnr].filetype] or vim.wo.diff then
         detach_client(client_id, bufnr)
         return
-      end
-      local filename = vim.api.nvim_buf_get_name(bufnr)
-      for _, pattern in ipairs(no_lsp_file_pattern) do
-        if filename:match(pattern) then
-          detach_client(client_id, bufnr)
-          return
-        end
       end
     end,
   })

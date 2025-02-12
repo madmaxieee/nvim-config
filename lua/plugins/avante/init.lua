@@ -158,9 +158,13 @@ return {
     opts = {
       options = {
         disabled_filetypes = {
-          statusline = { "Avante" },
+          statusline = {
+            "Avante",
+            "AvanteSelectedFiles",
+          },
         },
       },
     },
+    opts_extend = { "options.disabled_filetypes.statusline" },
   },
 }

@@ -81,9 +81,6 @@ return {
   },
   opts = {
     options = {
-      disabled_filetypes = {
-        statusline = {}, -- extended
-      },
       globalstatus = false,
       section_separators = "",
       refresh = {
@@ -129,5 +126,4 @@ return {
       lualine_z = {},
     },
   },
-  opts_extend = { "options.disabled_filetypes.statusline" },
 }

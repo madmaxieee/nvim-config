@@ -119,6 +119,7 @@ return {
         "shfmt",
       },
     },
+    opts_extend = { "ensure_installed" },
   },
 
   {

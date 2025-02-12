@@ -15,6 +15,7 @@ return {
         "cpplint",
       },
     },
+    opts_extend = { "ensure_installed" },
   },
 
   {

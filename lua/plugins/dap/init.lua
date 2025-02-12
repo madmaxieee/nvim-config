@@ -130,5 +130,6 @@ return {
         },
       },
     },
+    opts_extend = { "options.disabled_filetypes.statusline" },
   },
 }

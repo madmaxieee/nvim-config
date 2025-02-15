@@ -70,18 +70,6 @@ function M.float_window_config(height_ratio, width_ratio, opts)
   }
 end
 
----@param list any[]
----@param x any
----@return boolean
-function M.in_list(list, x)
-  for _, v in ipairs(list) do
-    if v == x then
-      return true
-    end
-  end
-  return false
-end
-
 ---remove an item from a list by value
 ---@param list any[]
 ---@param value_to_remove any

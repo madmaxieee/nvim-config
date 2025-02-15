@@ -31,6 +31,10 @@ return {
       ["if"] = { query = "@function.inner" },
       ["ac"] = { query = "@class.outer" },
       ["ic"] = { query = "@class.inner" },
+      ["is"] = {
+        query = "@local.scope",
+        query_group = "locals",
+      },
       ["as"] = {
         query = "@local.scope",
         query_group = "locals",

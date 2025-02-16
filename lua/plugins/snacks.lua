@@ -53,15 +53,20 @@ return {
   opts = {
     bigfile = { enabled = true },
     dashboard = { enabled = false },
+    explorer = { enabled = false },
+    image = { enabled = false },
     indent = { enabled = false },
     input = { enabled = true },
     notifier = { enabled = false },
+    picker = {
+      enabled = true,
+      ui_select = true,
+    },
     quickfile = { enabled = true },
     scroll = { enabled = false },
     statuscolumn = { enabled = true },
     words = { enabled = true },
     styles = {
-      ---@diagnostic disable-next-line: missing-fields
       input = {
         row = 1,
         relative = "cursor",

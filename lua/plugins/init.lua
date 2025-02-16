@@ -29,14 +29,6 @@ return {
     opts = {},
   },
   {
-    "stevearc/dressing.nvim",
-    event = "VeryLazy",
-    opts = {
-      input = { enabled = false },
-      select = { enabled = true },
-    },
-  },
-  {
     -- "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     "madmaxieee/lsp_lines.nvim",
     event = "LspAttach",

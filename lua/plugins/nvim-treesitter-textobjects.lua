@@ -29,8 +29,8 @@ return {
       ["ia"] = { query = "@parameter.inner" },
       ["af"] = { query = "@function.outer" },
       ["if"] = { query = "@function.inner" },
-      ["ac"] = { query = "@class.outer" },
-      ["ic"] = { query = "@class.inner" },
+      ["ao"] = { query = "@class.outer" },
+      ["io"] = { query = "@class.inner" },
       ["is"] = {
         query = "@local.scope",
         query_group = "locals",

@@ -88,3 +88,21 @@ vim.api.nvim_create_autocmd("CmdWinEnter", {
     vim.opt_local.relativenumber = false
   end,
 })
+
+map( --
+  "o",
+  "ic",
+  function()
+    require("vim._comment").textobject()
+  end,
+  { desc = "Select commented lines" }
+)
+map( --
+  "x",
+  "ic",
+  function()
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, true, true), "nx", false)
+    require("vim._comment").textobject()
+  end,
+  { desc = "Select commented lines" }
+)

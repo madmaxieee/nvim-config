@@ -38,11 +38,6 @@ local function set_keymaps(bufnr)
     trouble_open { mode = "lsp_definitions" }
   end, { buffer = bufnr, desc = "Go to definition" })
 
-  map("n", "gv", function()
-    vim.cmd.vsplit()
-    trouble_open { mode = "lsp_definitions" }
-  end, { buffer = bufnr, desc = "Go to definition in vsplit" })
-
   map("n", "gD", function()
     -- vim.lsp.buf.type_definition()
     trouble_open { mode = "lsp_type_definitions" }

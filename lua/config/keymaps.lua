@@ -51,6 +51,12 @@ map("v", "<leader>y", '"+y', { desc = "Copy to clipboard" })
 -- comment
 map("n", "<leader>/", "gcc", { desc = "Toggle comment line", remap = true })
 map("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
+map("n", "gC", "gcic", { desc = "Uncomment commented lines", remap = true })
+map("o", "ic", require("vim._comment").textobject, { desc = "Select commented lines" })
+map("x", "ic", function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, true, true), "nx", false)
+  require("vim._comment").textobject()
+end, { desc = "Select commented lines" })
 
 -- misc
 map("n", "<C-u>", "<C-u>zz", { desc = "Go up half screen" })
@@ -88,21 +94,3 @@ vim.api.nvim_create_autocmd("CmdWinEnter", {
     vim.opt_local.relativenumber = false
   end,
 })
-
-map( --
-  "o",
-  "ic",
-  function()
-    require("vim._comment").textobject()
-  end,
-  { desc = "Select commented lines" }
-)
-map( --
-  "x",
-  "ic",
-  function()
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, true, true), "nx", false)
-    require("vim._comment").textobject()
-  end,
-  { desc = "Select commented lines" }
-)

@@ -8,8 +8,8 @@ return {
       textobjects = {
         select = {
           enable = true,
-          lookahead = false,
-          include_surrounding_whitespace = false,
+          lookahead = true,
+          include_surrounding_whitespace = true,
         },
         move = {
           enable = true,

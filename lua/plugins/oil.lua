@@ -1,5 +1,3 @@
-local oil_show_all = false
-
 -- helper function to parse output
 local function parse_output(proc)
   local result = proc:wait()
@@ -48,21 +46,14 @@ return {
       "<leader>o",
       mode = "n",
       function()
-        -- respect gitignore and show dotfiles
-        oil_show_all = false
-        require("oil").toggle_float()
+        local oil = require "oil"
+        if vim.w.is_oil_win then
+          oil.close()
+        else
+          oil.open_float(nil, { preview = { vertical = true } })
+        end
       end,
-      desc = "Open Oil",
-    },
-    {
-      "<leader>O",
-      mode = "n",
-      function()
-        -- show all files
-        oil_show_all = true
-        require("oil").toggle_float()
-      end,
-      desc = "Open Oil (all files)",
+      desc = "Toggle oil",
     },
   },
   dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -78,9 +69,6 @@ return {
     require("oil").setup {
       view_options = {
         is_hidden_file = function(name, bufnr)
-          if oil_show_all then
-            return false
-          end
           local dir = require("oil").get_current_dir(bufnr)
           if not dir then
             return false
@@ -90,7 +78,7 @@ return {
       },
       -- Configuration for the floating window in oil.open_float
       float = {
-        max_width = 0.4,
+        max_width = 0.6,
         max_height = 0.7,
       },
       preview_win = {

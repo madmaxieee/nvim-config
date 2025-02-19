@@ -2,7 +2,7 @@ local map_repeatable_pair = require("utils").map_repeatable_pair
 local map = require("utils").safe_keymap_set
 
 -- load gitsigns only when a git file is opened
-vim.api.nvim_create_autocmd("BufRead", {
+vim.api.nvim_create_autocmd({ "BufRead", "DirChanged" }, {
   group = vim.api.nvim_create_augroup("GitSignsLazyLoad", { clear = true }),
   callback = function()
     if vim.g.loaded_gitsigns then
@@ -12,8 +12,8 @@ vim.api.nvim_create_autocmd("BufRead", {
     if vim.v.shell_error == 0 then
       vim.api.nvim_del_augroup_by_name "GitSignsLazyLoad"
       require("lazy").load { plugins = { "gitsigns.nvim" } }
+      vim.api.nvim_create_user_command("GitBlame", "Gitsigns blame", {})
     end
-    vim.api.nvim_create_user_command("GitBlame", "Gitsigns blame", {})
     vim.g.loaded_gitsigns = true
   end,
 })

@@ -2,15 +2,15 @@
 vim.api.nvim_create_user_command("DiffClipboard", function()
   local ftype = vim.bo.filetype -- original filetype
 
-  vim.cmd "tabnew %" -- Open current file in a new tab
+  vim.cmd [[tabnew %]]
 
   vim.cmd.vnew()
   vim.bo.buftype = "nofile"
   vim.bo.bufhidden = "hide"
   vim.bo.swapfile = false
-  vim.cmd.normal { "P", bang = true }
+  vim.cmd [[norm! "+P]]
 
-  vim.cmd "windo diffthis" -- Start diffing
+  vim.cmd [[windo diffthis]]
 
   vim.opt_local.filetype = ftype
 end, { nargs = 0 })

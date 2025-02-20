@@ -9,7 +9,7 @@ return {
         select = {
           enable = true,
           lookahead = true,
-          include_surrounding_whitespace = true,
+          include_surrounding_whitespace = false,
         },
         move = {
           enable = true,

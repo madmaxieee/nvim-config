@@ -109,7 +109,8 @@ return {
         })
 
         map("n", "<leader>gb", gs.blame_line, { desc = "blame line", buffer = bufnr })
-        map("n", "<leader>gd", gs.preview_hunk_inline, { desc = "toggle deleted", buffer = bufnr })
+        ---@diagnostic disable-next-line: deprecated
+        map("n", "<leader>gd", gs.toggle_deleted, { desc = "toggle deleted", buffer = bufnr })
         map("n", "<leader>ga", gs.stage_buffer, { desc = "stage buffer", buffer = bufnr })
         map("n", "<leader>gu", gs.stage_buffer, { desc = "undo stage buffer", buffer = bufnr })
         map("n", "<leader>hr", gs.reset_hunk, { desc = "reset hunk", buffer = bufnr })

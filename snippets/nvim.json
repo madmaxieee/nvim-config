@@ -1,0 +1,35 @@
+{
+  "lazy.nvim spec keys": {
+    "prefix": "lzk",
+    "body": [
+      "{",
+      "  \"${1:<key>}\",",
+      "  mode = \"${2:n}\",",
+      "  function()",
+      "    ${4}",
+      "  end,",
+      "  desc = \"${3:description}\",",
+      "},"
+    ]
+  },
+  "autocmd": {
+    "prefix": ["ncac", "autocmd"],
+    "body": [
+      "vim.api.nvim_create_autocmd(\"${1}\", {",
+      "  group = vim.api.nvim_create_augroup(\"${2}\", { clear = true }),",
+      "  desc = \"${4:description}\",",
+      "  callback = function(args)",
+      "    ${3}",
+      "  end,",
+      "})"
+    ]
+  },
+  "user command": {
+    "prefix": ["ncuc", "usercommand"],
+    "body": [
+      "vim.api.nvim_create_user_command(\"${1:Command}\", function(${2:opts})",
+      "  ${3}",
+      "end, {})"
+    ]
+  }
+}

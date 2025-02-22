@@ -8,6 +8,16 @@ local next_ref_repeat, prev_ref_repeat = repeatable.make_repeatable_move_pair( -
   end
 )
 
+local function snacks_debug()
+  _G.dd = function(...)
+    Snacks.debug.inspect(...)
+  end
+  _G.bt = function()
+    Snacks.debug.backtrace()
+  end
+  vim.print = _G.dd
+end
+
 return {
   "folke/snacks.nvim",
   priority = 1000,
@@ -48,6 +58,16 @@ return {
     },
   },
 
+  init = function()
+    vim.api.nvim_create_autocmd("BufRead", {
+      group = vim.api.nvim_create_augroup("SnacksDebug", { clear = true }),
+      desc = "Setup snacks debug",
+      pattern = (vim.fn.expand "~/.local/share/nvim/lazy/") .. "*",
+      once = true,
+      callback = snacks_debug,
+    })
+  end,
+
   ---@module 'snacks'
   ---@type snacks.Config
   opts = {
@@ -73,4 +93,8 @@ return {
       },
     },
   },
+  config = function(_, opts)
+    require("snacks").setup(opts)
+    vim.api.nvim_create_user_command("SnacksDebug", snacks_debug, {})
+  end,
 }

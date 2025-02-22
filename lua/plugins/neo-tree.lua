@@ -45,6 +45,7 @@ return {
       position = "float",
       mappings = {
         ["s"] = "",
+        ["<space>"] = "",
       },
     },
   },

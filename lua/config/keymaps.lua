@@ -46,6 +46,7 @@ map("t", "<C-x>", vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true
 
 -- move the content in register to the system clipboard
 map("n", "<leader>y", '"+y', { desc = "Copy to clipboard" })
+map("n", "<leader>Y", '"+Y', { desc = "Copy to clipboard" })
 map("v", "<leader>y", '"+y', { desc = "Copy to clipboard" })
 
 -- comment

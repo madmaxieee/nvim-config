@@ -16,7 +16,7 @@ local diagnostics = helpers.diagnostics.from_pattern(
 )
 
 local command
-if vim.fn.executable "cpplint.py" then
+if vim.fn.executable "cpplint.py" == 1 then
   command = "cpplint.py"
 else
   command = "cpplint"

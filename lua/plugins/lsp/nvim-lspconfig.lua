@@ -69,7 +69,7 @@ local server_configs = {
     settings = {
       Lua = {
         diagnostics = {
-          globals = { "vim" },
+          globals = { "vim", "require" },
         },
       },
     },

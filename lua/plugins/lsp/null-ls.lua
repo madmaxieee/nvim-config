@@ -6,9 +6,10 @@ return {
     opts = {
       ensure_installed = {
         -- formatting
+        "isort",
         "prettierd",
         "stylua",
-        "isort",
+        "typstyle",
         -- linting
         "checkstyle",
         -- custom
@@ -36,6 +37,7 @@ return {
         formatting.isort,
         formatting.prettierd,
         formatting.stylua,
+        formatting.typstyle,
         lint.checkstyle.with {
           extra_args = { "-c", (vim.fn.stdpath "config") .. "/misc/google_checks.xml" },
         },

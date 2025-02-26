@@ -74,7 +74,20 @@ return {
     bigfile = { enabled = true },
     dashboard = { enabled = false },
     explorer = { enabled = false },
-    image = { enabled = true },
+    image = {
+      enabled = true,
+      math = {
+        typst = {
+          -- change font size
+          tpl = [[
+        #set page(width: auto, height: auto, margin: (x: 2pt, y: 2pt))
+        #show math.equation.where(block: false): set text(top-edge: "bounds", bottom-edge: "bounds")
+        #set text(size: 18pt, fill: rgb("${color}"))
+        ${header}
+        ${content}]],
+        },
+      },
+    },
     indent = { enabled = false },
     input = { enabled = true },
     notifier = { enabled = false },
@@ -96,5 +109,6 @@ return {
   config = function(_, opts)
     require("snacks").setup(opts)
     vim.api.nvim_create_user_command("SnacksDebug", snacks_debug, {})
+    vim.api.nvim_set_hl(0, "SnacksImageMath", { link = "Normal" })
   end,
 }

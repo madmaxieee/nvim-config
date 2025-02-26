@@ -1,6 +1,12 @@
 return {
   "williamboman/mason.nvim",
-  opts = { ensure_installed = {} },
+  opts = {
+    ensure_installed = {},
+    registries = {
+      "github:mason-org/mason-registry",
+      "github:madmaxieee/mason-registry",
+    },
+  },
   opts_extend = { "ensure_installed" },
   config = function(_, opts)
     local registry = require "mason-registry"

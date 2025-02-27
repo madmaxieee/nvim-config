@@ -59,6 +59,11 @@ return {
         },
       },
       signature = { enabled = true },
+      cmdline = {
+        completion = {
+          menu = { auto_show = true },
+        },
+      },
     },
     opts_extend = { "sources.default" },
   },

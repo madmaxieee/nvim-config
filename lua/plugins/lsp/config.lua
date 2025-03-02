@@ -109,10 +109,7 @@ function M.on_attach(client, bufnr)
         if vim.g.FormatOnSave == 0 then
           return
         end
-        vim.lsp.buf.format {
-          async = false,
-          filter = M.formatter_filter,
-        }
+        vim.lsp.buf.format { filter = M.formatter_filter }
       end,
     })
   end
@@ -129,10 +126,7 @@ function M.create_usercmds()
     end, {})
 
     vim.api.nvim_create_user_command("FormatBuffer", function()
-      vim.lsp.buf.format {
-        async = true,
-        filter = M.formatter_filter,
-      }
+      vim.lsp.buf.format { filter = M.formatter_filter }
     end, {})
   end
 

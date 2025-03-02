@@ -49,6 +49,14 @@ local servers = {
   "zls",
 }
 
+local external_servers = { nil_ls = true }
+local ensure_installed = {}
+for _, server in ipairs(servers) do
+  if not external_servers[server] then
+    table.insert(ensure_installed, server)
+  end
+end
+
 local server_configs = {
   clangd = {
     cmd = {

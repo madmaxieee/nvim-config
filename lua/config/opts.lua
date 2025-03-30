@@ -1,7 +1,6 @@
 vim.opt.scrolloff = 8
 vim.opt.numberwidth = 2
 vim.opt.number = true
-vim.opt.relativenumber = true
 vim.opt.ruler = false
 vim.opt.signcolumn = "yes"
 

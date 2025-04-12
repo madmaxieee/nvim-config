@@ -61,14 +61,14 @@ local function set_keymaps(bufnr)
     next = {
       "]d",
       function()
-        vim.diagnostic.goto_next { float = false }
+        vim.diagnostic.jump { count = 1 }
       end,
       { buffer = bufnr, desc = "Go to next diagnostic" },
     },
     prev = {
       "[d",
       function()
-        vim.diagnostic.goto_next { float = false }
+        vim.diagnostic.jump { count = -1 }
       end,
       { buffer = bufnr, desc = "Go to previous diagnostic" },
     },

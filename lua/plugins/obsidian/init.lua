@@ -2,7 +2,7 @@ local vault_folder = vim.fn.resolve(vim.fn.expand "~/obsidian")
 
 return {
   {
-    "epwalsh/obsidian.nvim",
+    "obsidian-nvim/obsidian.nvim",
     version = "*",
     event = {
       "BufReadPre " .. vault_folder .. "/**.md",
@@ -20,8 +20,7 @@ return {
         },
       },
       completion = {
-        -- register sources manually in helper
-        nvim_cmp = false,
+        blink = true,
         min_chars = 2,
       },
       mappings = {
@@ -78,7 +77,6 @@ return {
         auto_save_interval = 10 * 60,
         commit_interval = 60 * 60,
       }
-      config.register_sources()
 
       vim.wo.conceallevel = 1
     end,

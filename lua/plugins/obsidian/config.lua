@@ -46,14 +46,6 @@ function M.create_obsidian_command()
   vim.cmd.cabbrev("O", "Obsidian")
 end
 
--- register cmp sources for blink.compat
-function M.register_sources()
-  local cmp = require "cmp"
-  cmp.register_source("obsidian", require("cmp_obsidian").new())
-  cmp.register_source("obsidian_new", require("cmp_obsidian_new").new())
-  cmp.register_source("obsidian_tags", require("cmp_obsidian_tags").new())
-end
-
 local auto_save_timer = assert(vim.uv.new_timer(), "Failed to create timer")
 
 ---@class AutoCommitOptions

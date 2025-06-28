@@ -78,6 +78,9 @@ return {
             vim.api.nvim_buf_delete(buf, { force = true })
           end
         end
+        vim.schedule(function()
+          vim.cmd [[filetype detect]]
+        end)
       end,
     })
   end,

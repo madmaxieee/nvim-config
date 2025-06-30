@@ -101,14 +101,33 @@ return {
     words = { enabled = true },
     styles = {
       input = {
-        row = 1,
         relative = "cursor",
+        row = 1,
+      },
+      zen = {
+        relative = "editor",
+        backdrop = { transparent = false },
       },
     },
   },
   config = function(_, opts)
     require("snacks").setup(opts)
+
     vim.api.nvim_create_user_command("SnacksDebug", snacks_debug, {})
+    vim.api.nvim_create_user_command("Zen", function()
+      Snacks.zen()
+    end, {})
+
+    local map = require("utils").safe_keymap_set
+    map( --
+      { "n" },
+      "<leader>z",
+      function()
+        Snacks.zen()
+      end,
+      { desc = "Toggle Zen Mode" }
+    )
+
     vim.api.nvim_set_hl(0, "SnacksImageMath", { link = "Normal" })
   end,
 }

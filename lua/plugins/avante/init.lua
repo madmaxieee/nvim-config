@@ -1,12 +1,14 @@
-local password_store_path = "openai/avante"
+local password_store_path = "gemini/avante"
 
 local function setup_avante(api_key)
   local api_key_cmd = { "echo", api_key }
   local opts = {
-    provider = "openai",
-    openai = {
-      model = "gpt-4o",
-      api_key_name = api_key_cmd,
+    provider = "gemini",
+    providers = {
+      gemini = {
+        model = "gemini-2.5-pro",
+        api_key_name = api_key_cmd,
+      },
     },
     behaviour = {
       auto_suggestions = false,
@@ -148,6 +150,10 @@ return {
         :wait()
       if check_key_output.code == 0 then
         setup_avante(check_key_output.stdout)
+      else
+        prompt_and_setup_avante(function()
+          require("avante.api").ask()
+        end)
       end
     end,
   },

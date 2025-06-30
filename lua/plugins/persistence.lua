@@ -79,7 +79,7 @@ return {
           end
         end
         vim.schedule(function()
-          vim.cmd [[filetype detect]]
+          vim.cmd [[windo filetype detect]]
         end)
       end,
     })

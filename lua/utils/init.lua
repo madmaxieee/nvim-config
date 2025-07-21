@@ -99,6 +99,17 @@ function M.flatten(tbl)
   return vim.iter(tbl):flatten():totable()
 end
 
+function M.set_jumplist_wrap(fn)
+  return function(...)
+    vim.cmd "normal! m'"
+    return fn(...)
+  end
+end
+
+function M.set_jumplist()
+  vim.cmd "normal! m'"
+end
+
 ---@alias KeymapSpec [string,function,vim.keymap.set.Opts?]
 ---@class RepeatablePairSpec
 ---@field next KeymapSpec
@@ -106,9 +117,18 @@ end
 
 ---@param modes string|string[]
 ---@param specs RepeatablePairSpec
-function M.map_repeatable_pair(modes, specs)
+---@param opts? {set_jumplist:boolean?}
+function M.map_repeatable_pair(modes, specs, opts)
+  opts = opts or {}
+  if opts.set_jumplist == nil then
+    opts.set_jumplist = true
+  end
   local repeatable = require "repeatable"
   local next_repeat, prev_repeat = repeatable.make_repeatable_move_pair(specs.next[2], specs.prev[2])
+  if opts.set_jumplist then
+    next_repeat = M.set_jumplist_wrap(next_repeat)
+    prev_repeat = M.set_jumplist_wrap(prev_repeat)
+  end
   M.safe_keymap_set(modes, specs.next[1], next_repeat, specs.next[3])
   M.safe_keymap_set(modes, specs.prev[1], prev_repeat, specs.prev[3])
 end

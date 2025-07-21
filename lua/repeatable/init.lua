@@ -16,22 +16,16 @@ end
 -- indicating whether to move forward (true) or backward (false)
 function M.set_last_move(move_fn, opts, ...)
   if type(move_fn) ~= "function" then
-    vim.notify(
-      "nvim-treesitter-textobjects: move_fn has to be a function but got " .. vim.inspect(move_fn),
-      vim.log.levels.ERROR
-    )
+    vim.notify("repeatable: move_fn has to be a function but got " .. vim.inspect(move_fn), vim.log.levels.ERROR)
     return false
   end
 
   if type(opts) ~= "table" then
-    vim.notify(
-      "nvim-treesitter-textobjects: opts has to be a table but got " .. vim.inspect(opts),
-      vim.log.levels.ERROR
-    )
+    vim.notify("repeatable: opts has to be a table but got " .. vim.inspect(opts), vim.log.levels.ERROR)
     return false
   elseif opts.forward == nil then
     vim.notify(
-      "nvim-treesitter-textobjects: opts has to include a `forward` boolean but got " .. vim.inspect(opts),
+      "repeatable: opts has to include a `forward` boolean but got " .. vim.inspect(opts),
       vim.log.levels.ERROR
     )
     return false

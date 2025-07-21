@@ -1,9 +1,13 @@
 local repeatable = require "repeatable"
+local utils = require "utils"
+
 local next_ref_repeat, prev_ref_repeat = repeatable.make_repeatable_move_pair( --
   function()
+    utils.set_jumplist()
     Snacks.words.jump(vim.v.count1, true)
   end,
   function()
+    utils.set_jumplist()
     Snacks.words.jump(-vim.v.count1, true)
   end
 )

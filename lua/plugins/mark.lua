@@ -18,6 +18,7 @@ return {
     }
 
     map("n", "dm", function()
+      ---@diagnostic disable-next-line: param-type-mismatch
       local input = vim.fn.nr2char(vim.fn.getchar())
       if input == "-" then
         marks.delete_line()

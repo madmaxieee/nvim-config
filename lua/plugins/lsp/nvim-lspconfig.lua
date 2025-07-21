@@ -8,7 +8,7 @@ local lsp_config = require "plugins.lsp.config"
 local function make_diagnostics_filter(to_filter)
   to_filter.code = to_filter.code or {}
   to_filter.message = to_filter.message or {}
-  return function(_, params, ctx, config)
+  return function(_, params, ctx)
     if params.diagnostics ~= nil then
       local idx = 1
       while idx <= #params.diagnostics do
@@ -21,7 +21,7 @@ local function make_diagnostics_filter(to_filter)
         end
       end
     end
-    vim.lsp.diagnostic.on_publish_diagnostics(_, params, ctx, config)
+    vim.lsp.diagnostic.on_publish_diagnostics(_, params, ctx)
   end
 end
 

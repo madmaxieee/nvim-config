@@ -1,4 +1,6 @@
 return {
+  -- disabled in favor of marx.nvim
+  cond = false,
   "LintaoAmons/bookmarks.nvim",
   event = "BufReadPre",
   dependencies = {

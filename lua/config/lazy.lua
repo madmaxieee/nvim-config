@@ -41,6 +41,11 @@ require("lazy").setup {
     },
   },
   rocks = { enabled = false },
+  dev = {
+    path = "~/plugins",
+    patterns = { "madmaxieee" },
+    fallback = true,
+  },
 }
 
 vim.cmd.cabbrev("L", "Lazy")

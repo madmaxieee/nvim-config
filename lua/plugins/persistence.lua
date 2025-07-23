@@ -36,6 +36,14 @@ return {
           require("persistence").stop()
           return
         end
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          -- stop persistence if diffview buffer is open before vimenter
+          -- when invoked with `nvim +DiffviewOpen`
+          if vim.bo[buf].filetype == "DiffviewFiles" then
+            require("persistence").stop()
+            return
+          end
+        end
         local argv = vim.fn.argv()
         local argc = vim.fn.argc()
         if argc == 0 then

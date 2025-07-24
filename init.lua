@@ -7,6 +7,7 @@ package.path = package.path
 require "config.opts"
 require "config.autocmd"
 require "config.minimal_mode"
+require "config.difftool_mode"
 
 require "config.lazy"
 

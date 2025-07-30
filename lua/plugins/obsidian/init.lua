@@ -38,13 +38,13 @@ return {
         },
         ["<leader>ch"] = {
           action = function()
-            vim.cmd "ObsidianToggleCheckbox"
+            vim.cmd "Obsidian toggle_checkbox"
           end,
           opts = { buffer = true },
         },
         ["<leader>fo"] = {
           action = function()
-            vim.cmd "ObsidianSearch"
+            vim.cmd "Obsidian search"
           end,
           opts = { buffer = false },
         },
@@ -69,9 +69,10 @@ return {
     config = function(_, opts)
       require("obsidian").setup(opts)
 
+      vim.cmd.cabbrev("O", "Obsidian")
+
       local config = require "plugins.obsidian.config"
 
-      config.create_obsidian_command()
       config.setup_auto_commit {
         vault_folder = vault_folder,
         auto_save_interval = 10 * 60,

@@ -3,6 +3,7 @@ local lsp_config = require "plugins.lsp.config"
 local make_diagnostics_filter = require("plugins.lsp.utils").make_diagnostics_filter
 
 local servers = {
+  "bacon_ls",
   "bashls",
   "clangd",
   "cmake",

@@ -50,6 +50,7 @@ return {
         lint.fish,
         -- custom
         custom.trailing_ws,
+        custom.trailing_ws_action,
       }
 
       null_ls.setup {

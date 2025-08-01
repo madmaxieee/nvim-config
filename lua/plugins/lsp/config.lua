@@ -3,25 +3,6 @@ local M = {}
 local utils = require "utils"
 local map = utils.safe_keymap_set
 
-local no_format = {
-  ["eslint"] = true, -- don't auto fix eslint errors
-  ["cmake"] = true,
-}
-
-function M.formatter_filter(client)
-  if no_format[client.name] then
-    return false
-  end
-  local null_ls = require "null-ls"
-  if client.name == "ts_ls" and null_ls.is_registered "prettierd" then
-    return false
-  end
-  if client.name == "lua_ls" and null_ls.is_registered "stylua" then
-    return false
-  end
-  return true
-end
-
 local function set_keymaps(bufnr)
   if vim.b[bufnr].lsp_keymaps_set then
     return
@@ -91,7 +72,23 @@ local function set_keymaps(bufnr)
   vim.b[bufnr].lsp_keymaps_set = true
 end
 
-local lsp_formatting_group = vim.api.nvim_create_augroup("LspFormatting", { clear = true })
+local no_format = {
+  ["eslint"] = true, -- don't auto fix eslint errors
+  ["cmake"] = true,
+}
+function M.formatter_filter(client)
+  if no_format[client.name] then
+    return false
+  end
+  local null_ls = require "null-ls"
+  if client.name == "ts_ls" and null_ls.is_registered "prettierd" then
+    return false
+  end
+  if client.name == "lua_ls" and null_ls.is_registered "stylua" then
+    return false
+  end
+  return true
+end
 
 function M.on_attach(client, bufnr)
   set_keymaps(bufnr)
@@ -100,35 +97,30 @@ function M.on_attach(client, bufnr)
     vim.lsp.inlay_hint.enable(true)
   end
 
-  if client.supports_method "textDocument/formatting" or client.name == "jdtls" then
-    vim.api.nvim_clear_autocmds { group = lsp_formatting_group, buffer = bufnr }
+  if (client.supports_method "textDocument/formatting" and M.formatter_filter(client)) or client.name == "jdtls" then
     vim.api.nvim_create_autocmd("BufWritePre", {
-      group = lsp_formatting_group,
+      group = vim.api.nvim_create_augroup("LspFormatting", {}),
       buffer = bufnr,
       callback = function()
         if vim.g.FormatOnSave == 0 then
           return
         end
-        vim.lsp.buf.format { filter = M.formatter_filter }
+        vim.lsp.buf.format { id = client.id }
       end,
     })
   end
 end
 
-function M.create_usercmds()
-  if M.cond() then
-    vim.api.nvim_create_user_command("FormatOnSaveEnable", function()
-      vim.g.FormatOnSave = nil
-    end, {})
-
-    vim.api.nvim_create_user_command("FormatOnSaveDisable", function()
-      vim.g.FormatOnSave = 0
-    end, {})
-
-    vim.api.nvim_create_user_command("FormatBuffer", function()
-      vim.lsp.buf.format { filter = M.formatter_filter }
-    end, {})
-  end
+function M.setup()
+  vim.api.nvim_create_user_command("FormatOnSaveEnable", function()
+    vim.g.FormatOnSave = nil
+  end, {})
+  vim.api.nvim_create_user_command("FormatOnSaveDisable", function()
+    vim.g.FormatOnSave = 0
+  end, {})
+  vim.api.nvim_create_user_command("FormatBuffer", function()
+    vim.lsp.buf.format { filter = M.formatter_filter }
+  end, {})
 
   vim.api.nvim_create_user_command("DetachLsp", function()
     vim.diagnostic.reset(nil, 0)
@@ -139,18 +131,7 @@ function M.create_usercmds()
       end
     end)
   end, {})
-end
 
-local disable_lsp_group = vim.api.nvim_create_augroup("DisableLsp", { clear = true })
-
-local function detach_client(client_id, bufnr)
-  vim.schedule(function()
-    vim.lsp.buf_detach_client(bufnr, client_id)
-    vim.diagnostic.reset(nil, bufnr)
-  end)
-end
-
-function M.create_autocmds()
   local no_lsp_filetype = {
     ["toggleterm"] = true,
     ["help"] = true,
@@ -159,21 +140,28 @@ function M.create_autocmds()
   }
   -- disable lsp for certain filetypes and in diff mode
   vim.api.nvim_create_autocmd("LspAttach", {
-    group = disable_lsp_group,
+    group = vim.api.nvim_create_augroup("DisableLsp", { clear = true }),
     callback = function(args)
       local bufnr = args.buf
       local client_id = args.data.client_id
       if no_lsp_filetype[vim.bo[bufnr].filetype] or vim.wo.diff then
-        detach_client(client_id, bufnr)
+        vim.schedule(function()
+          vim.lsp.buf_detach_client(bufnr, client_id)
+          vim.diagnostic.reset(nil, bufnr)
+        end)
         return
       end
     end,
   })
-end
 
-function M.setup()
-  M.create_usercmds()
-  M.create_autocmds()
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("LspOnAttach", { clear = true }),
+    callback = function(args)
+      local bufnr = args.buf
+      local client_id = args.data.client_id
+      M.on_attach(vim.lsp.get_client_by_id(client_id), bufnr)
+    end,
+  })
 end
 
 function M.cond()

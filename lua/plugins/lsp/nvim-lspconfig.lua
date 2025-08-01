@@ -133,13 +133,9 @@ return {
       "williamboman/mason-lspconfig.nvim",
     },
     config = function()
-      vim.lsp.enable(servers)
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
-      vim.lsp.config("*", {
-        capabilities = capabilities,
-        on_attach = lsp_config.on_attach,
-      })
+      vim.lsp.config("*", { capabilities = capabilities })
       for lsp, config in pairs(server_configs) do
         if type(config) == "function" then
           ---@diagnostic disable-next-line: cast-local-type
@@ -147,6 +143,7 @@ return {
         end
         vim.lsp.config(lsp, config)
       end
+      vim.lsp.enable(servers)
     end,
   },
 }

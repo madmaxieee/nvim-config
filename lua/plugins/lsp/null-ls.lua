@@ -20,7 +20,7 @@ return {
   },
 
   {
-    cond = lsp_config.cond(),
+    cond = not vim.g.minimal_mode,
     "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "williamboman/mason.nvim" },

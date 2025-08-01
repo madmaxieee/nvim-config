@@ -1,29 +1,6 @@
 local utils = require "utils"
 local lsp_config = require "plugins.lsp.config"
-
----@class DiagFilterOpts
----@field code (number|string)[]?
----@field message string[]?
----@param to_filter DiagFilterOpts
-local function make_diagnostics_filter(to_filter)
-  to_filter.code = to_filter.code or {}
-  to_filter.message = to_filter.message or {}
-  return function(_, params, ctx)
-    if params.diagnostics ~= nil then
-      local idx = 1
-      while idx <= #params.diagnostics do
-        local code = params.diagnostics[idx].code
-        local message = params.diagnostics[idx].message
-        if vim.list_contains(to_filter.code, code) or vim.list_contains(to_filter.message, message) then
-          table.remove(params.diagnostics, idx)
-        else
-          idx = idx + 1
-        end
-      end
-    end
-    vim.lsp.diagnostic.on_publish_diagnostics(_, params, ctx)
-  end
-end
+local make_diagnostics_filter = require("plugins.lsp.utils").make_diagnostics_filter
 
 local servers = {
   "bashls",
@@ -48,14 +25,6 @@ local servers = {
   "yamlls",
   "zls",
 }
-
-local external_servers = { nil_ls = true }
-local ensure_installed = {}
-for _, server in ipairs(servers) do
-  if not external_servers[server] then
-    table.insert(ensure_installed, server)
-  end
-end
 
 local server_configs = {
   clangd = {
@@ -94,11 +63,11 @@ local server_configs = {
         },
       }
     else
-      return nil
+      return {}
     end
   end,
   tailwindcss = function()
-    local original_ft = require("lspconfig.configs.tailwindcss").default_config.filetypes
+    local original_ft = vim.lsp.config["tailwindcss"].filetypes or {}
     return {
       filetypes = utils.filter_list(original_ft, function(item)
         return item ~= "markdown"
@@ -163,18 +132,19 @@ return {
       "williamboman/mason-lspconfig.nvim",
     },
     config = function()
-      local lspconfig = require "lspconfig"
+      vim.lsp.enable(servers)
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
-      for _, lsp in ipairs(servers) do
-        local config = server_configs[lsp]
+      vim.lsp.config("*", {
+        capabilities = capabilities,
+        on_attach = lsp_config.on_attach,
+      })
+      for lsp, config in pairs(server_configs) do
         if type(config) == "function" then
+          ---@diagnostic disable-next-line: cast-local-type
           config = config()
         end
-        config = config or {}
-        config.capabilities = capabilities
-        config.on_attach = lsp_config.on_attach
-        lspconfig[lsp].setup(config)
+        vim.lsp.config(lsp, config)
       end
     end,
   },

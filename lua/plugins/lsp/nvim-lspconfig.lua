@@ -82,6 +82,21 @@ local server_configs = {
       },
     },
   },
+  rust_analyzer = function()
+    if vim.env.ANDROID_BUILD_TOP then
+      return {
+        cmd = { ("%s/prebuilts/rust/linux-x86/stable/rust-analyzer"):format(vim.env.ANDROID_BUILD_TOP) },
+        rustfmt = {
+          extraArgs = {
+            "--config-path",
+            ("%s/build/soong/scripts/rustfmt.toml"):format(vim.env.ANDROID_BUILD_TOP),
+          },
+        },
+      }
+    else
+      return nil
+    end
+  end,
   tailwindcss = function()
     local original_ft = require("lspconfig.configs.tailwindcss").default_config.filetypes
     return {

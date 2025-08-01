@@ -1,16 +1,16 @@
 {
-  "avante.nvim": { "branch": "main", "commit": "e2d160aa835d981b6eb833db42cda6dd375501c2" },
+  "avante.nvim": { "branch": "main", "commit": "6c2a785ebb296ca7ce7db622c12338a6c4b80310" },
   "better-escape.nvim": { "branch": "master", "commit": "19a38aab94961016430905ebec30d272a01e9742" },
-  "blink.cmp": { "branch": "main", "commit": "9bcb14b43852a6f2bfd5ac9ef29cb5cf09b1b39b" },
+  "blink.cmp": { "branch": "main", "commit": "bae4bae0eedd1fa55f34b685862e94a222d5c6f8" },
   "blink.compat": { "branch": "main", "commit": "2ed6d9a28b07fa6f3bface818470605f8896408c" },
   "bookmarks.nvim": { "branch": "main", "commit": "2e15f917803e7714483ca8c26b623f8f27340984" },
-  "copilot.lua": { "branch": "master", "commit": "30321e33b03cb924fdcd6a806a0dc6fa0b0eafb9" },
+  "copilot.lua": { "branch": "master", "commit": "b6fe6bb76db51a97980a6fafd19a8655781ddc15" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "dropbar.nvim": { "branch": "master", "commit": "f7ecb0c3600ca1dc467c361e9af40f97289d7aad" },
   "easypick.nvim": { "branch": "main", "commit": "a8772f39519574df1ed49110b4fe02456a240530" },
   "flash.nvim": { "branch": "main", "commit": "3c942666f115e2811e959eabbdd361a025db8b63" },
   "friendly-snippets": { "branch": "main", "commit": "572f5660cf05f8cd8834e096d7b4c921ba18e175" },
-  "fzf-lua": { "branch": "main", "commit": "f8ccd73a7a3a0c9adae935441f85e83d5a989efd" },
+  "fzf-lua": { "branch": "main", "commit": "e40e2337611fa426b8bcb6989fc310035c6ec4aa" },
   "git-conflict.nvim": { "branch": "main", "commit": "a1badcd070d176172940eb55d9d59029dad1c5a6" },
   "gitsigns.nvim": { "branch": "main", "commit": "8b00147519d6f8353867d5d0b55f587306b0cfb6" },
   "grapple.nvim": { "branch": "main", "commit": "b41ddfc1c39f87f3d1799b99c2f0f1daa524c5f7" },
@@ -64,6 +64,6 @@
   "trouble.nvim": { "branch": "main", "commit": "46cf952fc115f4c2b98d4e208ed1e2dce08c9bf6" },
   "ts-comments.nvim": { "branch": "main", "commit": "872dcfa0418f4a33b7437fb4d9f4e89f2f000d74" },
   "vim-sleuth": { "branch": "master", "commit": "be69bff86754b1aa5adcbb527d7fcd1635a84080" },
-  "visual-whitespace.nvim": { "branch": "main", "commit": "03b3c509e9378aeb29aeff3d3d053fd533cd4af4" },
+  "visual-whitespace.nvim": { "branch": "main", "commit": "77bd21fb442cf2b97d7224f8269c053e9def9cb9" },
   "which-key.nvim": { "branch": "main", "commit": "8badb359f7ab8711e2575ef75dfe6fbbd87e4821" }
 }

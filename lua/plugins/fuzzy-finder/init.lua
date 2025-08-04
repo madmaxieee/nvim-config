@@ -4,9 +4,7 @@ return {
   require "plugins.fuzzy-finder.telescope",
   require "plugins.fuzzy-finder.fzf",
   {
-    "madmaxieee/fff.nvim",
-    branch = "manage-openssl-with-cargo",
-    -- "dmtrKovalenko/fff.nvim",
+    "dmtrKovalenko/fff.nvim",
     build = "cargo build --release",
     keys = {
       {

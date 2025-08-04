@@ -8,6 +8,7 @@
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "dropbar.nvim": { "branch": "master", "commit": "f7ecb0c3600ca1dc467c361e9af40f97289d7aad" },
   "easypick.nvim": { "branch": "main", "commit": "a8772f39519574df1ed49110b4fe02456a240530" },
+  "fff.nvim": { "branch": "manage-openssl-with-cargo", "commit": "5f107bea0254b553c135bb2df90583526d403f83" },
   "flash.nvim": { "branch": "main", "commit": "3c942666f115e2811e959eabbdd361a025db8b63" },
   "friendly-snippets": { "branch": "main", "commit": "572f5660cf05f8cd8834e096d7b4c921ba18e175" },
   "fzf-lua": { "branch": "main", "commit": "e40e2337611fa426b8bcb6989fc310035c6ec4aa" },

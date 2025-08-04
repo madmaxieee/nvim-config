@@ -51,6 +51,7 @@ return {
         -- custom
         custom.trailing_ws,
         custom.trailing_ws_action,
+        custom.bpfmt,
       }
 
       null_ls.setup {

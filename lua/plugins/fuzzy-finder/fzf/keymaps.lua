@@ -11,12 +11,12 @@ end
 
 function M.set_keymaps()
   -- builtin
-  map( --
-    "n",
-    "<leader>ff",
-    "<cmd> FzfLua files <CR>",
-    { desc = "Find files" }
-  )
+  -- map( --
+  --   "n",
+  --   "<leader>ff",
+  --   "<cmd> FzfLua files <CR>",
+  --   { desc = "Find files" }
+  -- )
 
   map( --
     "n",

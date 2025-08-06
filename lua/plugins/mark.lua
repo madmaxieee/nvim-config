@@ -30,8 +30,8 @@ return {
     end, { desc = "delete mark" })
 
     utils.map_repeatable_pair("n", {
-      next = { "]m", marks.next, { desc = "next mark" } },
-      prev = { "[m", marks.prev, { desc = "previous mark" } },
+      next = { "]M", marks.next, { desc = "next mark" } },
+      prev = { "[M", marks.prev, { desc = "previous mark" } },
     })
   end,
 }

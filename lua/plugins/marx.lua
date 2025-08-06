@@ -25,14 +25,14 @@ return {
     local utils = require "utils"
     utils.map_repeatable_pair("n", {
       next = {
-        "]M",
+        "]m",
         function()
           require("marx").next_mark { wrap = true }
         end,
         { desc = "next bookmark" },
       },
       prev = {
-        "[M",
+        "[m",
         function()
           require("marx").prev_mark { wrap = true }
         end,

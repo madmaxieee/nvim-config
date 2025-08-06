@@ -1,3 +1,10 @@
+---@class Modes
+---@field minimal_mode? boolean
+---@field difftool_mode? boolean
+
+---@type Modes
+local M = {}
+
 local function is_minimal_mode()
   -- when nvim used by tmux scrollback buffer
   if vim.env.TMUX_SCROLLBACK then
@@ -34,4 +41,26 @@ local function is_minimal_mode()
   return false
 end
 
-vim.g.minimal_mode = is_minimal_mode()
+local function is_difftool_mode()
+  for _, arg in ipairs(vim.v.argv) do
+    if arg:match [[^%+DiffviewOpen]] then
+      return true
+    end
+  end
+  return false
+end
+
+return setmetatable(M, {
+  __index = function(t, k)
+    if k == "minimal_mode" then
+      local minimal_mode = is_minimal_mode()
+      rawset(t, k, minimal_mode)
+      return minimal_mode
+    end
+    if k == "difftool_mode" then
+      local difftool_mode = is_difftool_mode()
+      rawset(t, k, difftool_mode)
+      return difftool_mode
+    end
+  end,
+})

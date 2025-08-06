@@ -165,7 +165,7 @@ function M.setup()
 end
 
 function M.cond()
-  return not vim.g.minimal_mode
+  return not require("modes").minimal_mode
 end
 
 return M

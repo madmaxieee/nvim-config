@@ -1,5 +1,5 @@
 return {
-  cond = not vim.g.minimal_mode,
+  cond = not require("modes").minimal_mode,
   "Bekaboo/dropbar.nvim",
   lazy = false,
   init = function()

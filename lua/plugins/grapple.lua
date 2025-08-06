@@ -1,5 +1,5 @@
 return {
-  cond = not vim.g.minimal_mode,
+  cond = not require("modes").minimal_mode,
   "cbochs/grapple.nvim",
   dependencies = { "nvim-tree/nvim-web-devicons" },
   cmd = "Grapple",

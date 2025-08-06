@@ -20,7 +20,7 @@ return {
   },
 
   {
-    cond = not vim.g.minimal_mode,
+    cond = not require("modes").minimal_mode,
     "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "williamboman/mason.nvim" },

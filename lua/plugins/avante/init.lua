@@ -99,7 +99,7 @@ end
 
 return {
   {
-    cond = not vim.g.minimal_mode,
+    cond = not require("modes").minimal_mode,
     "yetone/avante.nvim",
     build = "make",
     cmd = { "Avante" },

@@ -4,7 +4,7 @@ if type(state_dir) == "table" then
 end
 
 return {
-  cond = not vim.g.minimal_mode and not vim.g.difftool_mode,
+  cond = not require("modes").minimal_mode and not require("modes").difftool_mode,
   "folke/persistence.nvim",
   event = "BufReadPre",
   init = function()

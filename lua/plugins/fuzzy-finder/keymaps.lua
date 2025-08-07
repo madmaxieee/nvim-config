@@ -1,5 +1,7 @@
 local M = {}
 
+local map = require("utils").safe_keymap_set
+
 ---@enum FuzzyFinder
 M.FuzzyFinder = {
   telescope = "telescope",
@@ -49,18 +51,14 @@ function M.map(namespace, mode, lhs, rhs, opts)
   }
 
   if namespace == vim.g.FuzzyFinder then
-    for _, m in ipairs(mode) do
-      vim.keymap.set(m, lhs, rhs, opts)
-    end
+    map(mode, lhs, rhs, opts)
   end
 end
 
 function M.set_active_keymaps()
   local keymaps = keymaps_table[vim.g.FuzzyFinder]
   for _, keymap in pairs(keymaps) do
-    for _, m in ipairs(keymap.mode) do
-      vim.keymap.set(m, keymap.lhs, keymap.rhs, keymap.opts)
-    end
+    map(keymap.mode, keymap.lhs, keymap.rhs, keymap.opts)
   end
 end
 

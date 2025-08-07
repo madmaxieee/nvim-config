@@ -1,6 +1,6 @@
 return {
   "ibhagwan/fzf-lua",
-  event = "VeryLazy",
+  cmd = "FzfLua",
   dependencies = { "nvim-tree/nvim-web-devicons" },
   init = function()
     vim.cmd.cabbrev("F", "FzfLua")

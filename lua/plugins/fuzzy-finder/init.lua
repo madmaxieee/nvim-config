@@ -4,7 +4,7 @@ return {
   require "plugins.fuzzy-finder.telescope",
   require "plugins.fuzzy-finder.fzf",
   {
-    "madmaxieee/fff.nvim",
+    "dmtrKovalenko/fff.nvim",
     build = "cargo build --release",
     keys = {
       {

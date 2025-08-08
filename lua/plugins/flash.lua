@@ -16,6 +16,7 @@ return {
       mode = { "n", "x", "o" },
       function()
         require("flash").jump()
+        require("keymap-benchmark").record(vim.api.nvim_get_mode().mode, "s")
       end,
       desc = "Flash",
     },

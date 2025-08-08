@@ -52,6 +52,7 @@ return {
         else
           oil.open_float(nil, { preview = { vertical = true } })
         end
+        require("keymap-benchmark").record("n", "<leader>o")
       end,
       desc = "Toggle oil",
     },

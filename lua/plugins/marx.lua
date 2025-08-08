@@ -7,6 +7,7 @@ return {
       mode = "n",
       function()
         require("marx").set_bookmark()
+        require("keymap-benchmark").record("n", "mm")
       end,
       desc = "set bookmark",
     },
@@ -15,6 +16,7 @@ return {
       mode = "n",
       function()
         require("marx").pick_mark()
+        require("keymap-benchmark").record("n", "<leader>fm")
       end,
       desc = "Pick bookmark",
     },

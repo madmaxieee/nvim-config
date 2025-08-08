@@ -31,6 +31,7 @@ return {
       "<leader>x",
       function()
         Snacks.bufdelete()
+        require("keymap-benchmark").record("n", "<leader>x")
       end,
       desc = "Delete Buffer",
     },

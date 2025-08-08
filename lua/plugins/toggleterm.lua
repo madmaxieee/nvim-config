@@ -56,6 +56,7 @@ return {
         else
           lazygit = create_lazygit()
         end
+        require("keymap-benchmark").record("n", "<A-g>")
       end,
       desc = "Toggle lazygit",
     },
@@ -68,6 +69,7 @@ return {
         else
           terminal = create_terminal()
         end
+        require("keymap-benchmark").record("n", "<A-e>")
       end,
       desc = "Toggle terminal",
     },

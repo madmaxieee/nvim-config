@@ -23,6 +23,7 @@ function M.safe_keymap_set(mode, lhs, rhs, opts)
   if #modes > 0 then
     opts = opts or {}
     opts.silent = opts.silent ~= false
+    rhs = require("keymap-benchmark").wrap_rhs(lhs, rhs)
     vim.keymap.set(modes, lhs, rhs, opts)
   end
 end

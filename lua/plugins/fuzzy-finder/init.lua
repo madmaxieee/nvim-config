@@ -11,6 +11,7 @@ return {
         "<leader>ff",
         function()
           require("fff").find_files()
+          require("keymap-benchmark").record("n", "<leader>ff")
         end,
         desc = "Open file picker",
       },

@@ -4,6 +4,8 @@ package.path = package.path
   .. (vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;")
   .. (vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;")
 
+require "keymap-benchmark"
+
 require "config.opts"
 require "config.autocmd"
 

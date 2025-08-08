@@ -3,6 +3,11 @@ return {
     "echasnovski/mini.pairs",
     event = "InsertEnter",
     opts = { modes = { insert = true, command = true, terminal = false } },
+    config = function(_, opts)
+      require("mini.pairs").setup(opts)
+      vim.keymap.set({ "i", "c" }, "<BS>", MiniPairs.bs, { expr = true, replace_keycodes = false })
+      vim.keymap.set({ "i", "c" }, "<CR>", MiniPairs.cr, { expr = true, replace_keycodes = false })
+    end,
   },
 
   {

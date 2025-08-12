@@ -10,7 +10,6 @@ local function map(mode, lhs, rhs, opts)
 end
 
 function M.set_keymaps()
-  -- builtin
   -- map( --
   --   "n",
   --   "<leader>ff",

@@ -84,4 +84,22 @@ return {
       }
     end,
   },
+  {
+    "mtrajano/tssorter.nvim",
+    event = "VeryLazy",
+    ---@module "tssorter"
+    ---@type TssorterOpts
+    opts = {},
+  },
+  {
+    "madmaxieee/camelsnek.nvim",
+    cmd = {
+      "Snek",
+      "Screm",
+      "Camel",
+      "Pascal",
+      "Kebab",
+    },
+    opts = {},
+  },
 }

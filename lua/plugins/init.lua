@@ -1,6 +1,8 @@
 return {
   { "nvim-lua/plenary.nvim" },
+
   { "nvim-tree/nvim-web-devicons" },
+
   {
     "folke/tokyonight.nvim",
     lazy = false,
@@ -13,21 +15,25 @@ return {
       end
     end,
   },
+
   {
     "tpope/vim-sleuth",
     event = { "BufReadPre", "BufNewFile" },
   },
+
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts = {},
   },
+
   {
     "windwp/nvim-ts-autotag",
     event = "InsertEnter",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {},
   },
+
   {
     "NvChad/nvim-colorizer.lua",
     cmd = "ColorizerToggle",
@@ -49,6 +55,7 @@ return {
       },
     },
   },
+
   {
     "max397574/better-escape.nvim",
     event = { "InsertEnter", require("utils.events").VisualEnter },
@@ -65,6 +72,7 @@ return {
       }
     end,
   },
+
   {
     "Wansmer/treesj",
     keys = {
@@ -84,13 +92,15 @@ return {
       }
     end,
   },
+
   {
     "mtrajano/tssorter.nvim",
-    event = "VeryLazy",
+    cmd = "TSSort",
     ---@module "tssorter"
     ---@type TssorterOpts
     opts = {},
   },
+
   {
     "madmaxieee/camelsnek.nvim",
     cmd = {

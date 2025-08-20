@@ -6,10 +6,11 @@ local map = require("utils").safe_keymap_set
 M.FuzzyFinder = {
   telescope = "telescope",
   fzf = "fzf",
+  snacks_picker = "snacks_picker",
 }
 
 if not vim.g.FuzzyFinder or not M.FuzzyFinder[vim.g.FuzzyFinder] then
-  vim.g.FuzzyFinder = M.FuzzyFinder.telescope
+  vim.g.FuzzyFinder = M.FuzzyFinder.snacks_picker
 end
 
 ---@class FuzzyFinderKeymapSpec
@@ -23,6 +24,7 @@ end
 local keymaps_table = {
   [M.FuzzyFinder.telescope] = {},
   [M.FuzzyFinder.fzf] = {},
+  [M.FuzzyFinder.snacks_picker] = {},
 }
 M.keymaps_table = keymaps_table
 
@@ -77,24 +79,17 @@ function M.setup()
     end,
   })
 
-  vim.api.nvim_create_user_command("FuzzyFinderToggle", function()
-    local new_fuzzy_finder
-    if vim.g.FuzzyFinder == M.FuzzyFinder.telescope then
-      new_fuzzy_finder = M.FuzzyFinder.fzf
-    else
-      new_fuzzy_finder = M.FuzzyFinder.telescope
-    end
-    M.set_fuzzy_finder(new_fuzzy_finder)
-    vim.notify("Fuzzy finder set to " .. new_fuzzy_finder)
-  end, {})
-
   vim.api.nvim_create_user_command("FuzzyFinderSetTelescope", function()
     M.set_fuzzy_finder(M.FuzzyFinder.telescope)
-  end, {})
+  end, { desc = "Set fuzzy finder to Telescope" })
 
   vim.api.nvim_create_user_command("FuzzyFinderSetFzf", function()
     M.set_fuzzy_finder(M.FuzzyFinder.fzf)
-  end, {})
+  end, { desc = "Set fuzzy finder to Fzf" })
+
+  vim.api.nvim_create_user_command("FuzzyFinderSetSnacksPicker", function()
+    M.set_fuzzy_finder(M.FuzzyFinder.snacks_picker)
+  end, { desc = "Set fuzzy finder to Snacks Picker" })
 end
 
 return M

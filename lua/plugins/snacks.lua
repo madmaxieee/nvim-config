@@ -4,20 +4,20 @@ local utils = require "utils"
 local next_ref_repeat, prev_ref_repeat = repeatable.make_repeatable_move_pair( --
   function()
     utils.set_jumplist()
-    Snacks.words.jump(vim.v.count1, true)
+    require("snacks").words.jump(vim.v.count1, true)
   end,
   function()
     utils.set_jumplist()
-    Snacks.words.jump(-vim.v.count1, true)
+    require("snacks").words.jump(-vim.v.count1, true)
   end
 )
 
 local function snacks_debug()
   _G.dd = function(...)
-    Snacks.debug.inspect(...)
+    require("snacks").debug.inspect(...)
   end
   _G.bt = function()
-    Snacks.debug.backtrace()
+    require("snacks").debug.backtrace()
   end
   vim.print = _G.dd
 end
@@ -30,7 +30,7 @@ return {
     {
       "<leader>x",
       function()
-        Snacks.bufdelete()
+        require("snacks").bufdelete()
       end,
       desc = "Delete Buffer",
     },
@@ -49,14 +49,14 @@ return {
     {
       "<leader>.",
       function()
-        Snacks.scratch()
+        require("snacks").scratch()
       end,
       desc = "Toggle Scratch Buffer",
     },
     {
       "<leader>S",
       function()
-        Snacks.scratch.select()
+        require("snacks").scratch.select()
       end,
       desc = "Select Scratch Buffer",
     },
@@ -119,7 +119,7 @@ return {
 
     vim.api.nvim_create_user_command("SnacksDebug", snacks_debug, {})
     vim.api.nvim_create_user_command("Zen", function()
-      Snacks.zen()
+      require("snacks").zen()
     end, {})
 
     local map = require("utils").safe_keymap_set
@@ -127,10 +127,12 @@ return {
       { "n" },
       "<leader>z",
       function()
-        Snacks.zen()
+        require("snacks").zen()
       end,
       { desc = "Toggle Zen Mode" }
     )
+
+    require("plugins.fuzzy-finder.snacks-picker.keymaps").set_keymaps()
 
     vim.api.nvim_set_hl(0, "SnacksImageMath", { link = "Normal" })
   end,

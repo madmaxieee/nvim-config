@@ -6,14 +6,16 @@ local M = {}
 ---@param opts vim.keymap.set.Opts?
 local function map(mode, lhs, rhs, opts)
   local ff = require "plugins.fuzzy-finder.keymaps"
-  ff.map(ff.FuzzyFinder.telescope, mode, lhs, rhs, opts)
+  ff.map(ff.FuzzyFinder.snacks_picker, mode, lhs, rhs, opts)
 end
 
 function M.set_keymaps()
   -- map( --
   --   "n",
   --   "<leader>ff",
-  --   "<cmd> Telescope smart_open <CR>",
+  --   function()
+  --     require("snacks").picker.smart()
+  --   end,
   --   { desc = "Find files" }
   -- )
 
@@ -21,7 +23,7 @@ function M.set_keymaps()
     "n",
     "<leader>fw",
     function()
-      require("plugins.fuzzy-finder.telescope.multi-grep").multi_grep()
+      require("snacks").picker.grep()
     end,
     { desc = "Live grep" }
   )
@@ -30,7 +32,7 @@ function M.set_keymaps()
     "v",
     "<leader>fw",
     function()
-      require("telescope.builtin").grep_string { path_display = { "shorten" } }
+      require("snacks").picker.grep_word()
     end,
     { desc = "Grep string" }
   )
@@ -38,99 +40,129 @@ function M.set_keymaps()
   map( --
     "n",
     "<leader>fg",
-    "<cmd> Telescope git_status <CR>",
+    require("snacks").picker.git_status,
     { desc = "Git status" }
   )
 
   map( --
     "n",
     "<leader>fa",
-    "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>",
+    function()
+      require("snacks").picker.files {
+        cmd = "fd",
+        args = {
+          "--color=never",
+          "--hidden",
+          "--type",
+          "f",
+          "--type",
+          "l",
+          "--no-ignore",
+          "--exclude",
+          ".git",
+        },
+      }
+    end,
     { desc = "Find all files" }
   )
 
   map( --
     "n",
     "<leader>fb",
-    "<cmd> Telescope buffers <CR>",
+    function()
+      require("snacks").picker.buffers()
+    end,
     { desc = "Find buffers" }
   )
 
   map( --
     "n",
     "<leader>fj",
-    "<cmd> Telescope jumplist <CR>",
+    function()
+      require("snacks").picker.jumps()
+    end,
     { desc = "Find jump" }
   )
 
   map( --
     "n",
     "<leader>fh",
-    "<cmd> Telescope help_tags <CR>",
-    { desc = "Help page" }
+    function()
+      require("snacks").picker.help()
+    end,
+    { desc = "Find help tags" }
   )
 
   map( --
     "n",
     "<leader>fz",
-    "<cmd> Telescope current_buffer_fuzzy_find <CR>",
+    function()
+      require("snacks").picker.lines { layout = "default" }
+    end,
     { desc = "Find in current buffer" }
   )
 
   map( --
     "n",
     "<leader>fr",
-    "<cmd> Telescope resume <CR>",
+    function()
+      require("snacks").picker.resume()
+    end,
     { desc = "Resume finding" }
   )
 
   map( --
     "n",
     "<leader>cm",
-    "<cmd> Telescope git_commits <CR>",
+    function()
+      require("snacks").picker.git_log()
+    end,
     { desc = "Git commits" }
   )
 
   map( --
     "n",
     "<leader>gg",
-    "<cmd> Telescope git_files <CR>",
+    function()
+      require("snacks").picker.git_files()
+    end,
     { desc = "Find git files" }
   )
 
   map( --
     "n",
     "<leader>fd",
-    "<cmd> Telescope diagnostics <CR>",
-    { desc = "Find diagnostic" }
+    function()
+      require("snacks").picker.diagnostics()
+    end,
+    { desc = "Find diagnostics" }
   )
 
   map( --
     "n",
     "<leader>fs",
-    "<cmd> Telescope lsp_document_symbols <CR>",
+    function()
+      require("snacks").picker.lsp_symbols()
+    end,
     { desc = "Search document symbols" }
   )
 
   map( --
     "n",
     "<leader>ws",
-    "<cmd> Telescope lsp_dynamic_workspace_symbols <CR>",
+    function()
+      require("snacks").picker.lsp_workspace_symbols()
+    end,
     { desc = "Search workspace symbols" }
   )
 
   map( --
     "n",
     "<leader>fu",
-    "<cmd>Telescope undo<cr>",
-    { desc = "undo history" }
-  )
-
-  map( --
-    "n",
-    "<leader>p",
-    "<cmd>Telescope neoclip<cr>",
-    { desc = "neoclip" }
+    function()
+      require("snacks").picker.undo()
+    end,
+    { desc = "Search undo history" }
   )
 end
 

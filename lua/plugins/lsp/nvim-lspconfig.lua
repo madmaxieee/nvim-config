@@ -31,6 +31,7 @@ local server_configs = {
   clangd = {
     cmd = {
       "clangd",
+      "--background-index",
       "--clang-tidy",
       "--fallback-style=google",
       -- neovim does not support multiple offset encoding

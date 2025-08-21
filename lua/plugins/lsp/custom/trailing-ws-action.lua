@@ -10,7 +10,7 @@ return {
       if col and end_col then
         return {
           {
-            title = "remove trailing whitespace!",
+            title = "remove trailing whitespace on this line!",
             action = function()
               local replacement = line:gsub("%s+$", "")
               vim.api.nvim_buf_set_lines(
@@ -20,6 +20,16 @@ return {
                 false,
                 { replacement }
               )
+            end,
+          },
+          {
+            title = "remove trailing whitespace in this file!",
+            action = function()
+              local replacement = {}
+              for i, _line in ipairs(vim.api.nvim_buf_get_lines(params.bufnr, 0, -1, false)) do
+                replacement[i] = _line:gsub("%s+$", "")
+              end
+              vim.api.nvim_buf_set_lines(params.bufnr, 0, -1, false, replacement)
             end,
           },
         }

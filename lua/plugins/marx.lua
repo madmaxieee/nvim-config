@@ -14,6 +14,7 @@ return {
       "<leader>fm",
       mode = "n",
       function()
+        -- TODO: make this support snacks picker
         require("marx").pick_mark()
       end,
       desc = "Pick bookmark",

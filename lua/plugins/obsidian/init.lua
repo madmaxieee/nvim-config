@@ -42,12 +42,6 @@ return {
           end,
           opts = { buffer = true },
         },
-        ["<leader>fo"] = {
-          action = function()
-            vim.cmd "Obsidian search"
-          end,
-          opts = { buffer = false },
-        },
       },
       ---@param title string|?
       ---@return string
@@ -80,6 +74,10 @@ return {
       }
 
       vim.wo.conceallevel = 1
+
+      local map = require("utils").safe_keymap_set
+      -- TODO: this still uses telescope
+      map("n", "<leader>fo", "<cmd>Obsidian search<cr>", {})
     end,
   },
 

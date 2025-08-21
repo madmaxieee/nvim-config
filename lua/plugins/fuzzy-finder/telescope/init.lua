@@ -93,6 +93,7 @@ return {
   },
 
   {
+    -- TODO: add simpilar stuff to snacks
     "AckslD/nvim-neoclip.lua",
     dependencies = { "kkharji/sqlite.lua" },
     event = "VeryLazy", -- start recording registers

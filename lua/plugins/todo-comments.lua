@@ -2,7 +2,7 @@ return {
   "folke/todo-comments.nvim",
   dependencies = { "nvim-lua/plenary.nvim" },
   event = { "BufReadPre", "BufNewFile" },
-  cmd = { "TodoQuickFix", "TodoLocList", "TodoTrouble", "TodoTelescope" },
+  cmd = { "TodoQuickFix", "TodoLocList", "TodoTrouble" },
   keys = {
     {
       "<leader>td",
@@ -13,7 +13,10 @@ return {
     {
       "<leader>ft",
       mode = "n",
-      "<cmd>TodoTelescope<cr>",
+      function()
+        ---@diagnostic disable-next-line: undefined-field
+        require("snacks").picker.todo_comments()
+      end,
       desc = "Search for todos in telescope",
     },
   },

@@ -121,9 +121,16 @@ function M.set_keymaps()
 
   map( --
     "n",
+    "<leader>fc",
+    "<cmd> Telescope command_history <CR>",
+    { desc = "Search command history" }
+  )
+
+  map( --
+    "n",
     "<leader>fu",
-    "<cmd>Telescope undo<cr>",
-    { desc = "undo history" }
+    "<cmd> Telescope undo <CR>",
+    { desc = "Search undo history" }
   )
 
   map( --

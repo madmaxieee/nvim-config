@@ -1,4 +1,3 @@
-local utils = require "utils"
 local lsp_config = require "plugins.lsp.config"
 local make_diagnostics_filter = require("plugins.lsp.utils").make_diagnostics_filter
 
@@ -71,9 +70,9 @@ local server_configs = {
   tailwindcss = function()
     local original_ft = vim.lsp.config["tailwindcss"].filetypes or {}
     return {
-      filetypes = utils.filter_list(original_ft, function(item)
+      filetypes = vim.tbl_filter(function(item)
         return item ~= "markdown"
-      end),
+      end, original_ft),
     }
   end,
   taplo = {

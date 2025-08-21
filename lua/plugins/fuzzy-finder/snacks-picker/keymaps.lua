@@ -158,6 +158,15 @@ function M.set_keymaps()
 
   map( --
     "n",
+    "<leader>fc",
+    function()
+      require("snacks").picker.command_history()
+    end,
+    { desc = "Search command history" }
+  )
+
+  map( --
+    "n",
     "<leader>fu",
     function()
       require("snacks").picker.undo()

@@ -22,6 +22,31 @@ local function snacks_debug()
   vim.print = _G.dd
 end
 
+local function create_picker_command()
+  local subcommands = vim.tbl_keys(require("snacks").picker.sources)
+  vim.api.nvim_create_user_command("Pick", function(opts)
+    local source = opts.fargs[1]
+    if source then
+      if require("snacks").picker[source] then
+        require("snacks").picker[source]()
+      else
+        vim.notify("unknown snacks picker source: " .. source, vim.log.levels.ERROR)
+      end
+    else
+      require("snacks").picker()
+    end
+  end, {
+    nargs = "?",
+    complete = function(_, line)
+      local l = vim.split(line, "%s+")
+      return vim.tbl_filter(function(val)
+        return vim.startswith(val, l[#l])
+      end, subcommands)
+    end,
+  })
+  vim.cmd.cabbrev("P", "Pick")
+end
+
 return {
   "folke/snacks.nvim",
   priority = 1000,
@@ -132,6 +157,7 @@ return {
       { desc = "Toggle Zen Mode" }
     )
 
+    create_picker_command()
     require("plugins.fuzzy-finder.snacks-picker.keymaps").set_keymaps()
 
     vim.api.nvim_set_hl(0, "SnacksImageMath", { link = "Normal" })

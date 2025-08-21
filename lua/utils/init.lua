@@ -81,20 +81,6 @@ function M.remove_by_value(list, value_to_remove)
   end
 end
 
----filters a list
----@param list any[]
----@param condition fun(item: any): boolean
----@return any[]
-function M.filter_list(list, condition)
-  local new_list = {}
-  for _, v in ipairs(list) do
-    if condition(v) then
-      table.insert(new_list, v)
-    end
-  end
-  return new_list
-end
-
 function M.flatten(tbl)
   return vim.iter(tbl):flatten():totable()
 end

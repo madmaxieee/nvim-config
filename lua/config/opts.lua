@@ -49,9 +49,6 @@ vim.opt.diffopt:append {
   "algorithm:patience",
 }
 
--- HACK: :Inspect for some reason references vim.hl instead of vim.highlight
-vim.hl = vim.highlight
-
 vim.g.mapleader = vim.keycode "<space>"
 vim.g.maplocalleader = "\\"
 

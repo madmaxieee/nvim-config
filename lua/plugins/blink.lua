@@ -67,4 +67,20 @@ return {
     },
     opts_extend = { "sources.default" },
   },
+
+  {
+    "madmaxieee/blink.pairs",
+    -- "saghen/blink.cmp",
+    event = { "InsertEnter", "CmdlineEnter" },
+    build = "cargo build --release",
+    --- @module 'blink.pairs'
+    --- @type blink.pairs.Config
+    opts = {
+      mappings = {
+        enabled = true,
+        cmdline = true,
+      },
+      highlights = { enabled = false },
+    },
+  },
 }

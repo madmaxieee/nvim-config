@@ -72,6 +72,7 @@ return {
     "lewis6991/gitsigns.nvim",
     ft = { "gitcommit", "diff" },
     opts = {
+      current_line_blame = true,
       signs = {
         add = { text = "│" },
         change = { text = "│" },
@@ -90,6 +91,7 @@ return {
               if vim.wo.diff then
                 vim.cmd.normal { "]c", bang = true }
               else
+                ---@diagnostic disable-next-line: param-type-mismatch
                 gs.nav_hunk "next"
               end
             end,
@@ -101,6 +103,7 @@ return {
               if vim.wo.diff then
                 vim.cmd.normal { "[c", bang = true }
               else
+                ---@diagnostic disable-next-line: param-type-mismatch
                 gs.nav_hunk "prev"
               end
             end,
@@ -108,7 +111,7 @@ return {
           },
         })
 
-        map("n", "<leader>gb", gs.blame_line, { desc = "blame line", buffer = bufnr })
+        map("n", "<leader>gb", gs.toggle_current_line_blame, { desc = "toggle line blame", buffer = bufnr })
         ---@diagnostic disable-next-line: deprecated
         map("n", "<leader>gd", gs.toggle_deleted, { desc = "toggle deleted", buffer = bufnr })
         map("n", "<leader>ga", gs.stage_buffer, { desc = "stage buffer", buffer = bufnr })

@@ -14,6 +14,12 @@ return {
         desc = "Open file picker",
       },
     },
-    opts = { prompt = "" },
+    opts = {
+      prompt = "",
+      keymaps = {
+        move_up = { "<Up>", "<C-p>", "<C-k>" },
+        move_down = { "<Down>", "<C-n>", "<C-j>" },
+      },
+    },
   },
 }

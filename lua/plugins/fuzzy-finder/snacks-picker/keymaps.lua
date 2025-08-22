@@ -173,6 +173,13 @@ function M.set_keymaps()
     end,
     { desc = "Search undo history" }
   )
+
+  map( --
+    "n",
+    "<leader>p",
+    "<cmd>Telescope neoclip<cr>",
+    { desc = "neoclip" }
+  )
 end
 
 return M

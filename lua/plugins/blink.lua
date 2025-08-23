@@ -70,7 +70,7 @@ return {
 
   {
     "madmaxieee/blink.pairs",
-    -- "saghen/blink.cmp",
+    -- "saghen/blink.pairs",
     event = { "InsertEnter", "CmdlineEnter" },
     build = "cargo build --release",
     --- @module 'blink.pairs'

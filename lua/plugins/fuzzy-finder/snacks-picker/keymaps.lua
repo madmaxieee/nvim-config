@@ -23,7 +23,7 @@ function M.set_keymaps()
     "n",
     "<leader>fw",
     function()
-      require("snacks").picker.grep()
+      require("plugins.fuzzy-finder.snacks-picker.multi-grep").multi_grep()
     end,
     { desc = "Live grep" }
   )

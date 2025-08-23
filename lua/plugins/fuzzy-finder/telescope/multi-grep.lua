@@ -6,7 +6,7 @@ function M.multi_grep(opts)
   opts = opts or {}
   opts.cwd = opts.cwd and vim.fn.expand(opts.cwd) or vim.uv.cwd()
   opts.shortcuts = opts.shortcuts or {
-    ["c"] = "*.{c,cc,cpp}",
+    ["c"] = "*.{h,hpp,c,cc,cpp}",
     ["l"] = "*.lua",
     ["n"] = "*.nix",
   }

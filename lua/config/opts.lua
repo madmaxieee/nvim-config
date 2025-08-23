@@ -25,12 +25,6 @@ vim.opt.termguicolors = true
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 250
 
--- fold managed with nvum-ufo
--- vim.opt.foldlevel = 20
--- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
--- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
--- vim.opt.foldmethod = "expr"
-
 vim.opt.linebreak = true
 
 -- disable nvim intro

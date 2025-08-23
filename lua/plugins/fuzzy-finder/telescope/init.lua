@@ -93,7 +93,6 @@ return {
   },
 
   {
-    -- TODO: add simpilar stuff to snacks
     "AckslD/nvim-neoclip.lua",
     dependencies = { "kkharji/sqlite.lua" },
     event = "VeryLazy", -- start recording registers
@@ -140,28 +139,5 @@ return {
     dependencies = {
       "kkharji/sqlite.lua",
     },
-  },
-
-  {
-    "axkirillov/easypick.nvim",
-    dependencies = { "nvim-telescope/telescope.nvim" },
-    cmd = "Easypick",
-    config = function()
-      local easypick = require "easypick"
-      easypick.setup {
-        pickers = {
-          {
-            name = "today",
-            command = "fd --type file --changed-within 1d",
-            previewer = easypick.previewers.default(),
-          },
-          {
-            name = "week",
-            command = "fd --type file --changed-within 1w",
-            previewer = easypick.previewers.default(),
-          },
-        },
-      }
-    end,
   },
 }

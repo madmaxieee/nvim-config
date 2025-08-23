@@ -41,12 +41,12 @@ require("lazy").setup {
     },
   },
   rocks = { enabled = false },
-  ---@diagnostic disable-next-line: assign-type-mismatch
-  dev = {
-    path = "~/plugins",
-    patterns = { "madmaxieee" },
-    fallback = true,
-  },
+  ------@diagnostic disable-next-line: assign-type-mismatch
+  ---dev = {
+  ---  path = "~/plugins",
+  ---  patterns = { "madmaxieee" },
+  ---  fallback = true,
+  ---},
 }
 
 vim.cmd.cabbrev("L", "Lazy")

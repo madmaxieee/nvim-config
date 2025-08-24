@@ -10,14 +10,14 @@ local function map(mode, lhs, rhs, opts)
 end
 
 function M.set_keymaps()
-  -- map( --
-  --   "n",
-  --   "<leader>ff",
-  --   function()
-  --     require("snacks").picker.smart()
-  --   end,
-  --   { desc = "Find files" }
-  -- )
+  map( --
+    "n",
+    "<leader>ff",
+    function()
+      require("plugins.fuzzy-finder.snacks-picker.fff").fff()
+    end,
+    { desc = "FFF" }
+  )
 
   map( --
     "n",

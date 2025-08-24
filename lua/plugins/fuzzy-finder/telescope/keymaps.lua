@@ -10,12 +10,12 @@ local function map(mode, lhs, rhs, opts)
 end
 
 function M.set_keymaps()
-  -- map( --
-  --   "n",
-  --   "<leader>ff",
-  --   "<cmd> Telescope smart_open <CR>",
-  --   { desc = "Find files" }
-  -- )
+  map( --
+    "n",
+    "<leader>ff",
+    "<cmd> FFFFind <CR>",
+    { desc = "Find files" }
+  )
 
   map( --
     "n",

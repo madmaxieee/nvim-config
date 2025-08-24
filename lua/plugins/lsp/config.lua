@@ -67,7 +67,11 @@ local function set_keymaps(bufnr)
     local new_value = not vim.lsp.inlay_hint.is_enabled()
     vim.lsp.inlay_hint.enable(new_value)
     vim.notify("Inlay hints " .. (new_value and "enabled" or "disabled"))
-  end, { buffer = bufnr, desc = "toggle inlay hint" })
+  end, { buffer = bufnr, desc = "Toggle inlay hint" })
+
+  map({ "n", "v" }, "<leader>F", function()
+    vim.lsp.buf.format()
+  end, { buffer = bufnr, desc = "Format buffer/range" })
 
   vim.b[bufnr].lsp_keymaps_set = true
 end
@@ -118,9 +122,15 @@ function M.setup()
   vim.api.nvim_create_user_command("FormatOnSaveDisable", function()
     vim.g.FormatOnSave = 0
   end, {})
-  vim.api.nvim_create_user_command("FormatBuffer", function()
-    vim.lsp.buf.format { filter = M.formatter_filter }
-  end, {})
+
+  vim.api.nvim_create_user_command("Format", function(opts)
+    if opts.range == 0 then
+      vim.lsp.buf.format { filter = M.formatter_filter }
+    else
+      vim.cmd "normal! gv"
+      vim.lsp.buf.format { filter = M.formatter_filter }
+    end
+  end, { range = true })
 
   vim.api.nvim_create_user_command("DetachLsp", function()
     vim.diagnostic.reset(nil, 0)

@@ -28,5 +28,8 @@ return {
         wrap = false,
       },
     },
+    win_options = {
+      number = false,
+    },
   },
 }

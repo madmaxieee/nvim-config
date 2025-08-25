@@ -26,6 +26,7 @@ local servers = {
   "zls",
 }
 
+---@type table<string, vim.lsp.Config | fun(): vim.lsp.Config>
 local server_configs = {
   clangd = {
     cmd = {
@@ -92,6 +93,16 @@ local server_configs = {
     init_options = {
       diagnosticSeverity = "Warning",
     },
+    on_attach = function(client, bufnr)
+      if vim.bo[bufnr].filetype == "oil" then
+        vim.schedule(function()
+          vim.lsp.buf_detach_client(bufnr, client.id)
+          if vim.tbl_isempty(client.attached_buffers) then
+            client:stop(true)
+          end
+        end)
+      end
+    end,
   },
   zls = {
     settings = {
@@ -138,7 +149,6 @@ return {
       vim.lsp.config("*", { capabilities = capabilities })
       for lsp, config in pairs(server_configs) do
         if type(config) == "function" then
-          ---@diagnostic disable-next-line: cast-local-type
           config = config()
         end
         vim.lsp.config(lsp, config)

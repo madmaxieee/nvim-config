@@ -1,20 +1,5 @@
 local M = {}
 
-function M.setup()
-  local file_picker = require "fff.file_picker"
-  local config = {
-    base_path = vim.fn.getcwd(),
-    max_results = 100,
-    frecency = {
-      enabled = true,
-      db_path = vim.fn.stdpath "cache" .. "/fff_nvim",
-    },
-  }
-  if not file_picker.setup(config) then
-    vim.notify("Failed to initialize file picker", vim.log.levels.ERROR)
-  end
-end
-
 local staged_status = {
   staged_new = true,
   staged_modified = true,
@@ -143,7 +128,10 @@ end
 function M.fff()
   local file_picker = require "fff.file_picker"
   if not file_picker.is_initialized() then
-    M.setup()
+    local setup_success = file_picker.setup()
+    if not setup_success then
+      vim.notify("Failed to initialize file picker", vim.log.levels.ERROR)
+    end
   end
   Snacks.picker {
     title = "FFFiles",

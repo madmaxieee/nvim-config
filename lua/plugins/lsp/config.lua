@@ -70,7 +70,7 @@ local function set_keymaps(bufnr)
   end, { buffer = bufnr, desc = "Toggle inlay hint" })
 
   map({ "n", "v" }, "<leader>F", function()
-    vim.lsp.buf.format()
+    vim.lsp.buf.format { filter = M.formatter_filter }
   end, { buffer = bufnr, desc = "Format buffer/range" })
 
   vim.b[bufnr].lsp_keymaps_set = true
@@ -91,6 +91,9 @@ function M.formatter_filter(client)
   if client.name == "lua_ls" and null_ls.is_registered "stylua" then
     return false
   end
+  if client.name == "jdtls" and null_ls.is_registered "google-java-format" then
+    return false
+  end
   return true
 end
 
@@ -101,7 +104,7 @@ function M.on_attach(client, bufnr)
     vim.lsp.inlay_hint.enable(true)
   end
 
-  if (client.supports_method "textDocument/formatting" and M.formatter_filter(client)) or client.name == "jdtls" then
+  if (client.supports_method "textDocument/formatting" or client.name == "jdtls") and M.formatter_filter(client) then
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
       desc = ("Format buffer with %s"):format(client.name),
@@ -109,7 +112,9 @@ function M.on_attach(client, bufnr)
         if vim.g.FormatOnSave == 0 then
           return
         end
-        vim.lsp.buf.format { id = client.id }
+        if M.formatter_filter(client) then
+          vim.lsp.buf.format { id = client.id }
+        end
       end,
     })
   end

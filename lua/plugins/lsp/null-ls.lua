@@ -49,9 +49,10 @@ return {
         formatting.xmllint,
         lint.fish,
         -- custom
+        custom.bpfmt,
+        custom.google_java_format,
         custom.trailing_ws,
         custom.trailing_ws_action,
-        custom.bpfmt,
       }
 
       null_ls.setup {

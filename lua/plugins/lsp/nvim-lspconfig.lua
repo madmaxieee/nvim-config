@@ -34,8 +34,7 @@ local server_configs = {
       "--background-index",
       "--clang-tidy",
       "--fallback-style=google",
-      -- neovim does not support multiple offset encoding
-      "--offset-encoding=utf-16",
+      "--header-insertion=iwyu",
     },
   },
   jdtls = {

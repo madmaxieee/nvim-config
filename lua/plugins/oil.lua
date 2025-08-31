@@ -15,10 +15,15 @@ return {
       end,
       desc = "Toggle oil",
     },
+    {
+      "-",
+      mode = "n",
+      "<cmd> Oil <cr>",
+      desc = "Open oil",
+    },
   },
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
-    -- Configuration for the floating window in oil.open_float
     float = {
       max_width = 0.6,
       max_height = 0.7,
@@ -27,9 +32,6 @@ return {
       win_options = {
         wrap = false,
       },
-    },
-    win_options = {
-      number = false,
     },
   },
 }

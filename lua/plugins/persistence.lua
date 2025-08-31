@@ -32,18 +32,28 @@ return {
       group = persistence_group,
       callback = function()
         local cwd = vim.fn.getcwd()
+        local persistence = require "persistence"
         if disabled_dirs[cwd] or vim.g.started_with_stdin then
-          require("persistence").stop()
+          persistence.stop()
           return
         end
         local argv = vim.fn.argv()
         local argc = vim.fn.argc()
         if argc == 0 then
-          require("persistence").load()
+          persistence.load()
         elseif argc > 0 and vim.fn.isdirectory(argv[1]) == 1 then
-          require("persistence").load()
+          persistence.stop()
+          vim.fn.chdir(argv[1])
+          local file = persistence.current { branch = false }
+          local file_branch = persistence.current { branch = true }
+          if vim.fn.filereadable(file_branch) == 0 and vim.fn.filereadable(file) == 0 then
+            require("oil").open(vim.fn.getcwd())
+          else
+            persistence.load()
+          end
+          persistence.start()
         else
-          require("persistence").stop()
+          persistence.stop()
         end
       end,
       nested = true,

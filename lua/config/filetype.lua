@@ -8,5 +8,6 @@ vim.filetype.add {
   },
   pattern = {
     [".*/%.env.*"] = "conf",
+    [".*/logcat%.?%d*"] = "log",
   },
 }

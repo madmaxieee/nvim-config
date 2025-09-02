@@ -15,6 +15,11 @@ return {
           git_status_hl = true,
         },
       },
+      previewers = {
+        file = {
+          max_size = 10 * 1024 * 1024, -- 10MB
+        },
+      },
       win = {
         preview = {
           wo = {

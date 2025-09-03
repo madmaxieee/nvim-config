@@ -33,5 +33,8 @@ return {
         wrap = false,
       },
     },
+    keymaps = {
+      ["<C-h>"] = {},
+    },
   },
 }

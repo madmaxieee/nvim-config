@@ -69,12 +69,16 @@ return {
       -- allow comments like these to work
       -- NOTE -
       -- NOTE:
+      -- TODO(b/123): test
       highlight = {
         multiline = true,
-        pattern = [[.*<(KEYWORDS)\s*[:-]{1}]], -- pattern or table of patterns, used for highlighting (vim regex)
+        -- pattern or table of patterns, used for highlighting (very magic vim regex)
+        -- pattern = [=[.*<(KEYWORDS)\s?[:-]]=],
+        pattern = [=[.*<(KEYWORDS)[ 0-9()b/]*[:-]]=],
       },
       search = {
-        pattern = [[\b(KEYWORDS)\s?[:-]{1}]],
+        -- pattern = [=[\b(KEYWORDS)\s?[:-]]=],
+        pattern = [=[\b(KEYWORDS)(\(b/\d+\))?\s?[:-]]=],
       },
     }
 

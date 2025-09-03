@@ -36,6 +36,7 @@ return {
           or vim.wo[win].winbar ~= ""
           or vim.bo[buf].ft == "help"
           or vim.bo[buf].ft == "noice"
+          or vim.bo[buf].ft == "DiffviewFiles"
         then
           return false
         end

@@ -93,7 +93,7 @@ local server_configs = {
       diagnosticSeverity = "Warning",
     },
     on_attach = function(client, bufnr)
-      if vim.bo[bufnr].filetype == "oil" then
+      if vim.o.readonly or vim.bo[bufnr].filetype == "oil" then
         vim.schedule(function()
           vim.lsp.buf_detach_client(bufnr, client.id)
           if vim.tbl_isempty(client.attached_buffers) then

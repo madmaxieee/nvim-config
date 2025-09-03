@@ -4,6 +4,9 @@ return {
   filetypes = {},
   generator = {
     fn = function(params)
+      if vim.o.readonly then
+        return
+      end
       ---@type string
       local line = vim.api.nvim_buf_get_lines(params.bufnr, params.range.row - 1, params.range.end_row, false)[1]
       local col, end_col = line:find "%s+$"

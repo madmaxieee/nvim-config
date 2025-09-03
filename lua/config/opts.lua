@@ -30,14 +30,15 @@ vim.opt.linebreak = true
 -- disable nvim intro
 vim.opt.shortmess:append "sI"
 
--- make h and l wrap lines
-vim.opt.whichwrap:append "<>[]hl"
+vim.opt.whichwrap = "bs<>[]"
 
 -- yank to system clipboard
 -- vim.opt.clipboard = "unnamedplus"
 
 -- make undo persistent
 vim.opt.undofile = true
+
+vim.opt.jumpoptions = { "stack", "view" }
 
 vim.opt.diffopt:append {
   "linematch:60",

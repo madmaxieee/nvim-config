@@ -8,7 +8,7 @@ return {
     quick_select = "1234567890",
   },
   keys = {
-    { "<leader>j", "<cmd>Grapple toggle_tags<cr>", desc = "Toggle tags menu" },
+    { "<leader>M", "<cmd>Grapple toggle_tags<cr>", desc = "Toggle tags menu" },
     { "<leader>m", "<cmd>Grapple toggle<cr>", desc = "Toggle tag" },
     { "<leader>1", "<cmd>Grapple select index=1<cr>", desc = "Select first tag" },
     { "<leader>2", "<cmd>Grapple select index=2<cr>", desc = "Select second tag" },
@@ -19,7 +19,7 @@ return {
     { "<A-s>", "<cmd>Grapple select index=3<cr>", desc = "Select third tag" },
     { "<A-a>", "<cmd>Grapple select index=4<cr>", desc = "Select fourth tag" },
     {
-      "<S-Tab>",
+      "H",
       function()
         local wintype = vim.fn.win_gettype()
         if wintype ~= "popup" then
@@ -29,7 +29,7 @@ return {
       desc = "Go to previous tag",
     },
     {
-      "<Tab>",
+      "L",
       function()
         local wintype = vim.fn.win_gettype()
         if wintype ~= "popup" then

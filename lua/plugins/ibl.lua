@@ -9,7 +9,7 @@ return {
   },
 
   {
-    "echasnovski/mini.indentscope",
+    "nvim-mini/mini.indentscope",
     event = "VeryLazy",
     init = function()
       vim.api.nvim_create_autocmd("ColorScheme", {

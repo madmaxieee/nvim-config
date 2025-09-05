@@ -48,7 +48,8 @@ local function create_picker_command()
 end
 
 return {
-  "folke/snacks.nvim",
+  -- "folke/snacks.nvim",
+  "jakubbortlik/snacks.nvim", -- use patched fork for https://github.com/folke/snacks.nvim/pull/2012
   priority = 1000,
   lazy = false,
   keys = {

@@ -4,19 +4,10 @@ return {
   require "plugins.fuzzy-finder.telescope",
   require "plugins.fuzzy-finder.snacks-picker",
   {
-    "dmtrKovalenko/fff.nvim",
+    -- "dmtrKovalenko/fff.nvim",
+    "madmaxieee/fff.nvim",
+    lazy = false, -- lazy loaded by design
     build = "cargo build --release",
-    -- scan for faster first load
-    event = "VeryLazy",
-    -- keys = {
-    --   {
-    --     "<leader>ff",
-    --     function()
-    --       require("fff").find_files()
-    --     end,
-    --     desc = "Open file picker",
-    --   },
-    -- },
     opts = {
       prompt = "",
       keymaps = {

@@ -13,9 +13,7 @@ function M.set_keymaps()
   map( --
     "n",
     "<leader>ff",
-    function()
-      require("plugins.fuzzy-finder.snacks-picker.fff").fff()
-    end,
+    "<cmd> FFFSnacks <cr>",
     { desc = "FFF" }
   )
 

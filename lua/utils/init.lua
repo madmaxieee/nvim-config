@@ -34,11 +34,13 @@ function M.on_load(name, fn)
   if Config.plugins[name] and Config.plugins[name]._.loaded then
     fn(name)
   else
+    local group_id = vim.api.nvim_create_augroup(("LazyLoad:%s"):format(name), {})
     vim.api.nvim_create_autocmd("User", {
-      once = true,
+      group = group_id,
       pattern = "LazyLoad",
       callback = function(event)
         if event.data == name then
+          vim.api.nvim_del_augroup_by_id(group_id)
           fn(name)
           return true
         end

@@ -1,29 +1,27 @@
 return {
   "nvim-treesitter/nvim-treesitter-textobjects",
+  branch = "main",
   event = "VeryLazy",
   dependencies = { "nvim-treesitter/nvim-treesitter" },
   config = function()
-    ---@diagnostic disable-next-line: missing-fields
-    require("nvim-treesitter.configs").setup {
-      textobjects = {
-        select = {
-          enable = true,
-          lookahead = true,
-          include_surrounding_whitespace = false,
-        },
-        move = {
-          enable = true,
-          set_jumps = true,
-        },
-        swap = { enable = false },
-        lsp_interop = { enable = false },
+    require("nvim-treesitter-textobjects").setup {
+      select = {
+        enable = true,
+        lookahead = true,
+        include_surrounding_whitespace = false,
       },
+      move = {
+        enable = true,
+        set_jumps = true,
+      },
+      swap = { enable = false },
+      lsp_interop = { enable = false },
     }
 
     local utils = require "utils"
 
     local map = utils.safe_keymap_set
-    local select = require "nvim-treesitter.textobjects.select"
+    local select = require "nvim-treesitter-textobjects.select"
     local select_keymaps = {
       ["aa"] = { query = "@parameter.outer" },
       ["ia"] = { query = "@parameter.inner" },
@@ -46,14 +44,14 @@ return {
         { "x", "o" },
         keymap,
         function()
-          select.select_textobject(query.query, query.query_group, "v")
+          select.select_textobject(query.query, query.query_group)
         end,
         { desc = "select " .. query.query }
       )
     end
 
     local map_repeatable_pair = utils.map_repeatable_pair
-    local move = require "nvim-treesitter.textobjects.move"
+    local move = require "nvim-treesitter-textobjects.move"
     local move_keymaps = {
       {
         next_key = "]f",

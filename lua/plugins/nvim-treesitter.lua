@@ -1,87 +1,147 @@
+local languages = {
+  "nix",
+
+  -- general purpose languages
+  "c",
+  "cpp",
+  "rust",
+  "go",
+  "java",
+  "zig",
+  "python",
+
+  -- scripting languages
+  "bash",
+  "fish",
+
+  -- lua
+  "lua",
+  "luadoc",
+  "luap",
+
+  -- web
+  "javascript",
+  "typescript",
+  "tsx",
+  "html",
+  "css",
+  "graphql",
+
+  -- document
+  "markdown",
+  "markdown_inline",
+  "typst",
+
+  -- data
+  "json",
+  "kdl",
+  "toml",
+  "yaml",
+
+  -- build system
+  "just",
+  "make",
+  "cmake",
+  "gn",
+  "kconfig",
+  "bp",
+  "dockerfile",
+
+  -- git
+  "git_config",
+  "git_rebase",
+  "gitattributes",
+  "gitcommit",
+  "gitignore",
+
+  -- vim
+  "vim",
+  "vimdoc",
+
+  -- misc
+  "regex",
+
+  -- custom
+  "d2",
+}
+
 return {
-  "nvim-treesitter/nvim-treesitter",
-  event = { "BufRead", "BufNewFile" },
-  cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
-  build = ":TSUpdate",
-  opts = {
-    ensure_installed = {
-      "lua",
-      "luadoc",
-      "luap",
-      "python",
-      "bash",
-      "fish",
+  {
+    "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
+    build = ":TSUpdate",
 
-      "javascript",
-      "typescript",
-      "tsx",
-      "html",
-      "css",
+    -- TODO: add incremental selection
+    init = function()
+      local group = vim.api.nvim_create_augroup("TreesitterConfig", { clear = true })
 
-      "c",
-      "cpp",
-      "rust",
-      "go",
-      "java",
-      "zig",
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "TSUpdate",
+        group = group,
+        callback = function()
+          local parsers = require "nvim-treesitter.parsers"
 
-      "nix",
+          parsers.d2 = {
+            tier = 0,
+            ---@diagnostic disable-next-line: missing-fields
+            install_info = {
+              url = "https://github.com/madmaxieee/tree-sitter-d2.git",
+              files = { "src/parser.c", "src/scanner.c" },
+              queries = "queries",
+            },
+          }
+        end,
+      })
 
-      "typst",
-      "markdown",
-      "markdown_inline",
-      "json",
-      "yaml",
-      "toml",
-      "kdl",
-      "graphql",
+      local syntax_on = {}
+      vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        callback = function(args)
+          local bufnr = args.buf
+          local filetype = args.match
 
-      "vim",
-      "vimdoc",
-      "gitattributes",
-      "gitignore",
+          local language = vim.treesitter.language.get_lang(filetype) or filetype
+          if not vim.treesitter.language.add(language) then
+            return
+          end
 
-      "make",
-      "cmake",
-      "just",
-      "dockerfile",
-      "gn",
-      "kconfig",
-      "bp",
+          vim.wo.foldmethod = "expr"
+          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
-      "regex",
-      "d2",
-    },
+          vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
-    highlight = {
-      enable = true,
-      use_languagetree = true,
-      additional_vim_regex_highlighting = false,
-    },
+          vim.treesitter.start(bufnr, language)
 
-    indent = { enable = true },
+          local ft = vim.bo[bufnr].filetype
+          if syntax_on[ft] then
+            vim.bo[bufnr].syntax = "on"
+          end
+        end,
+      })
 
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        node_incremental = "v",
-        node_decremental = "V",
+      vim.treesitter.language.register("markdown", "mdx")
+
+      require("nvim-treesitter").install(languages)
+    end,
+
+    config = true,
+  },
+
+  {
+    "MeanderingProgrammer/treesitter-modules.nvim",
+    event = "BufReadPre",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    ---@module 'treesitter-modules'
+    ---@type ts.mod.UserConfig
+    opts = {
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          node_incremental = "v",
+          node_decremental = "V",
+        },
       },
     },
   },
-
-  config = function(_, opts)
-    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-    ---@diagnostic disable-next-line: inject-field
-    parser_config.d2 = {
-      install_info = {
-        url = "https://codeberg.org/p8i/tree-sitter-d2.git",
-        revision = "main",
-        files = { "src/parser.c", "src/scanner.c" },
-      },
-      filetype = "d2",
-    }
-    vim.treesitter.language.register("markdown", "mdx")
-    require("nvim-treesitter.configs").setup(opts)
-  end,
 }

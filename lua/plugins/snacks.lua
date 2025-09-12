@@ -23,7 +23,6 @@ local function snacks_debug()
 end
 
 local function create_picker_command()
-  local subcommands = vim.tbl_keys(require("snacks").picker.sources)
   vim.api.nvim_create_user_command("Pick", function(opts)
     local source = opts.fargs[1]
     if source then
@@ -39,6 +38,7 @@ local function create_picker_command()
     nargs = "?",
     complete = function(_, line)
       local l = vim.split(line, "%s+")
+      local subcommands = vim.tbl_keys(require("snacks").picker.sources)
       return vim.tbl_filter(function(val)
         return vim.startswith(val, l[#l])
       end, subcommands)

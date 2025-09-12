@@ -73,7 +73,6 @@ return {
     lazy = false,
     build = ":TSUpdate",
 
-    -- TODO: add incremental selection
     init = function()
       local group = vim.api.nvim_create_augroup("TreesitterConfig", { clear = true })
 

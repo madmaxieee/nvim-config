@@ -63,6 +63,7 @@ local languages = {
 
   -- custom
   "d2",
+  "kitty",
 }
 
 return {
@@ -88,6 +89,16 @@ return {
             install_info = {
               url = "https://github.com/madmaxieee/tree-sitter-d2.git",
               files = { "src/parser.c", "src/scanner.c" },
+              queries = "queries",
+            },
+          }
+
+          parsers.kitty = {
+            tier = 0,
+            ---@diagnostic disable-next-line: missing-fields
+            install_info = {
+              url = "https://github.com/OXY2DEV/tree-sitter-kitty.git",
+              files = { "src/parser.c" },
               queries = "queries",
             },
           }

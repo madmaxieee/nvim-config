@@ -1,5 +1,6 @@
 return {
   "stevearc/oil.nvim",
+  dependencies = { "nvim-tree/nvim-web-devicons" },
   cmd = "Oil",
   keys = {
     {
@@ -22,7 +23,6 @@ return {
       desc = "Open oil",
     },
   },
-  dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     float = {
       max_width = 0.6,

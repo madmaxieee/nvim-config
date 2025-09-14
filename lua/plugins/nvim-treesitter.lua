@@ -134,14 +134,11 @@ return {
 
       require("nvim-treesitter").install(languages)
     end,
-
-    config = true,
   },
 
   {
     "MeanderingProgrammer/treesitter-modules.nvim",
     event = "BufReadPre",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
     ---@module 'treesitter-modules'
     ---@type ts.mod.UserConfig
     opts = {
@@ -153,5 +150,42 @@ return {
         },
       },
     },
+  },
+
+  {
+    "folke/ts-comments.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
+
+  {
+    "windwp/nvim-ts-autotag",
+    event = "InsertEnter",
+    opts = {},
+  },
+
+  {
+    "Wansmer/treesj",
+    keys = {
+      {
+        "<leader>s",
+        mode = { "n" },
+        function()
+          require("treesj").toggle()
+        end,
+        desc = "Toggle treesj split join",
+      },
+    },
+    opts = {
+      use_default_keymaps = false,
+    },
+  },
+
+  {
+    "mtrajano/tssorter.nvim",
+    cmd = "TSSort",
+    ---@module "tssorter"
+    ---@type TssorterOpts
+    opts = {},
   },
 }

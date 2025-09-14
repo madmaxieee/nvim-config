@@ -69,8 +69,8 @@ return {
   },
 
   {
-    "madmaxieee/blink.pairs",
     -- "saghen/blink.pairs",
+    "madmaxieee/blink.pairs", -- for my abbr expand patch
     event = { "InsertEnter", "CmdlineEnter" },
     build = "cargo build --release",
     --- @module 'blink.pairs'

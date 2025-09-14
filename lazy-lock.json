@@ -4,7 +4,7 @@
   "blink.cmp": { "branch": "main", "commit": "bae4bae0eedd1fa55f34b685862e94a222d5c6f8" },
   "blink.compat": { "branch": "main", "commit": "2ed6d9a28b07fa6f3bface818470605f8896408c" },
   "blink.pairs": { "branch": "main", "commit": "37ea60ee01d38165217def8bd820498674f90a71" },
-  "camelsnek.nvim": { "branch": "main", "commit": "48590a61287e7f1d01089228f95cec4fe2596416" },
+  "camelsnek.nvim": { "branch": "main", "commit": "d3d98e30a8a88bc670f202354903246065b57ddd" },
   "copilot.lua": { "branch": "master", "commit": "81d289a8ce5d4ee1dea9b1c8ee4ac376b2e27a5f" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "dropbar.nvim": { "branch": "master", "commit": "a0ad7e24e9dfde6f0b11f6a436f56aeceaf58e9b" },

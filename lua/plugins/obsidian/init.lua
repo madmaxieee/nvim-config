@@ -4,13 +4,10 @@ return {
   {
     "obsidian-nvim/obsidian.nvim",
     version = "*",
+    dependencies = { "nvim-lua/plenary.nvim" },
     event = {
       "BufReadPre " .. vault_folder .. "/**.md",
       "BufNewFile " .. vault_folder .. "/**.md",
-    },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
     },
     opts = {
       workspaces = {
@@ -42,6 +39,9 @@ return {
           end,
           opts = { buffer = true },
         },
+      },
+      picker = {
+        name = "snacks.pick",
       },
       ---@param title string|?
       ---@return string
@@ -76,7 +76,6 @@ return {
       vim.wo.conceallevel = 1
 
       local map = require("utils").safe_keymap_set
-      -- TODO: this still uses telescope
       map("n", "<leader>fo", "<cmd>Obsidian search<cr>", {})
     end,
   },

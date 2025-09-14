@@ -86,8 +86,8 @@ return {
             tier = 0,
             ---@diagnostic disable-next-line: missing-fields
             install_info = {
-              url = "https://github.com/madmaxieee/tree-sitter-d2.git",
-              files = { "src/parser.c", "src/scanner.c" },
+              url = "https://github.com/ravsii/tree-sitter-d2",
+              files = { "src/parser.c" },
               queries = "queries",
             },
           }

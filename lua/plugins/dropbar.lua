@@ -34,14 +34,13 @@ return {
           or not vim.api.nvim_win_is_valid(win)
           or vim.fn.win_gettype(win) ~= ""
           or vim.wo[win].winbar ~= ""
-          or vim.bo[buf].ft == "help"
+          or vim.bo[buf].ft == "snacks_picker_preview"
           or vim.bo[buf].ft == "noice"
+          or vim.bo[buf].ft == "help"
           or vim.bo[buf].ft == "DiffviewFiles"
+          -- from snacks bigfile
+          or vim.bo[buf].ft == "bigfile"
         then
-          return false
-        end
-        local stat = vim.uv.fs_stat(vim.api.nvim_buf_get_name(buf))
-        if stat and stat.size > 1024 * 1024 then
           return false
         end
         return true

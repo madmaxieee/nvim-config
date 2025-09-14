@@ -151,6 +151,7 @@ function M.setup()
     ["toggleterm"] = true,
     ["help"] = true,
     ["log"] = true,
+    -- from snacks bigfile
     ["bigfile"] = true,
   }
   -- disable lsp for certain filetypes and in diff mode

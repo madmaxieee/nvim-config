@@ -6,7 +6,7 @@ end
 return {
   cond = not require("modes").minimal_mode and not require("modes").difftool_mode,
   "folke/persistence.nvim",
-  event = "BufReadPre",
+  lazy = false,
   init = function()
     vim.opt.sessionoptions = {
       "buffers",

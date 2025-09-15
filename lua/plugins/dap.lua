@@ -26,10 +26,10 @@ return {
     keys = {
       {
         "<leader>br",
+        mode = { "n" },
         function()
           require("dap").toggle_breakpoint()
         end,
-        mode = { "n" },
         desc = "Toggle dap-ui",
       },
       {

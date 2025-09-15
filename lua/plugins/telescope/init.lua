@@ -11,8 +11,15 @@ return {
     cmd = "Telescope",
     init = function()
       vim.cmd.cabbrev("T", "Telescope")
-      require("plugins.fuzzy-finder.telescope.keymaps").set_keymaps()
     end,
+
+    keys = {
+      {
+        "<leader>p",
+        "<cmd>Telescope neoclip<cr>",
+        desc = "Clipboard history",
+      },
+    },
 
     config = function()
       local actions = require "telescope.actions"

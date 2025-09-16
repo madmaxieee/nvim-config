@@ -63,7 +63,6 @@ return {
             },
             n = {
               ["<c-t>"] = function(prompt_bufnr)
-                require "telescope.actions"
                 local trouble = require "trouble.providers.telescope"
                 trouble.open_with_trouble(prompt_bufnr)
               end,

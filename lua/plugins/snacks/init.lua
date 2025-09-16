@@ -48,6 +48,13 @@ return {
         desc = "Toggle zen mode",
       },
       {
+        "<leader>e",
+        function()
+          require("snacks").explorer()
+        end,
+        desc = "Toggle explorer",
+      },
+      {
         "]]",
         mode = { "n", "t" },
         next_ref_repeat,
@@ -66,7 +73,7 @@ return {
     opts = {
       bigfile = { enabled = true },
       dashboard = { enabled = false },
-      explorer = { enabled = false },
+      explorer = { enabled = true },
       image = {
         enabled = true,
         math = {

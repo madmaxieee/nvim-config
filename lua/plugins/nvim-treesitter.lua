@@ -4,6 +4,7 @@ local languages = {
   -- general purpose languages
   "c",
   "cpp",
+  "doxygen",
   "rust",
   "go",
   "java",

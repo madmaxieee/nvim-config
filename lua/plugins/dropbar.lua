@@ -19,11 +19,13 @@ return {
     sources = {
       path = {
         modified = function(sym)
-          return sym:merge {
-            icon = "● ",
-            name_hl = "DiffAdded",
-            icon_hl = "DiffAdded",
-          }
+          if sym then
+            return sym:merge {
+              icon = "● ",
+              name_hl = "DiffAdded",
+              icon_hl = "DiffAdded",
+            }
+          end
         end,
       },
     },

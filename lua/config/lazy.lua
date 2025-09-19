@@ -37,7 +37,9 @@ require("lazy").setup {
       },
     },
   },
-  rocks = { enabled = false },
+  rocks = {
+    enabled = true,
+  },
   ------@diagnostic disable-next-line: assign-type-mismatch
   ---dev = {
   ---  path = "~/plugins",

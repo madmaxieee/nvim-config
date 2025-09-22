@@ -79,6 +79,35 @@ return {
       mappings = {
         enabled = true,
         cmdline = true,
+        pairs = {
+          ["'"] = {
+            {
+              -- their is no single quote in nix, only two single quotes for multi-line strings
+              "''",
+              "''",
+              languages = { "nix" },
+              priority = 100,
+            },
+            -- default config
+            {
+              "'''",
+              when = function(ctx)
+                return ctx:text_before_cursor(2) == "''"
+              end,
+              languages = { "python" },
+            },
+            {
+              "'",
+              enter = false,
+              space = false,
+              when = function(ctx)
+                return ctx.ft ~= "plaintext"
+                  and not ctx.char_under_cursor:match "%w"
+                  and ctx.ts:blacklist("singlequote").matches
+              end,
+            },
+          },
+        },
       },
       highlights = { enabled = false },
     },

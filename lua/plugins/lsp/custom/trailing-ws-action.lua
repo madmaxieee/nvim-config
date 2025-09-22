@@ -4,7 +4,13 @@ return {
   filetypes = {},
   generator = {
     fn = function(params)
-      if vim.o.readonly then
+      if
+        vim.o.readonly
+        or params.ft == "diff"
+        or params.ft == "log"
+        -- from snacks bigfile
+        or params.ft == "bigfile"
+      then
         return
       end
       ---@type string

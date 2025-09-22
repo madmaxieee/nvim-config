@@ -34,16 +34,9 @@ vim.api.nvim_create_autocmd("VimResized", {
   command = "wincmd =",
 })
 
-local color_utils = require "utils.colors"
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("ColorUtils", { clear = true }),
-  callback = function()
-    local normal_highlight = vim.api.nvim_get_hl(0, { name = "Normal" })
-    color_utils.fg = normal_highlight.fg
-    color_utils.bg = normal_highlight.bg
-  end,
-})
-
+for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+  vim.api.nvim_set_hl(0, group, {})
+end
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("LspSemanticHL", { clear = true }),
   desc = "Disable LSP semantic highlight",

@@ -3,6 +3,7 @@
 local M = {}
 
 ---@alias RGB [number, number, number]
+
 ---@param c  string|number
 ---@return RGB
 function M.rgb(c)
@@ -23,30 +24,51 @@ function M.hex(color)
   return string.format("#%02x%02x%02x", color[1], color[2], color[3])
 end
 
----@param foreground string foreground color
----@param background string background color
----@param alpha number|string number between 0 and 1. 0 results in bg, 1 results in fg
-function M.blend(foreground, alpha, background)
-  alpha = type(alpha) == "string" and (tonumber(alpha, 16) / 0xff) or alpha
-  local bg = M.rgb(background)
-  local fg = M.rgb(foreground)
+---@param color1 string|number
+---@param color2 string|number
+---@param alpha number number between 0 and 1. 0 results in color1, 1 results in color2
+function M.blend(color1, alpha, color2)
+  local bg = M.rgb(color2)
+  local fg = M.rgb(color1)
 
-  local blendChannel = function(i)
+  local blend_channel = function(i)
     local ret = (alpha * fg[i] + ((1 - alpha) * bg[i]))
     return math.floor(math.min(math.max(0, ret), 255) + 0.5)
   end
 
-  return string.format("#%02x%02x%02x", blendChannel(1), blendChannel(2), blendChannel(3))
+  return string.format("#%02x%02x%02x", blend_channel(1), blend_channel(2), blend_channel(3))
 end
 
 function M.blend_bg(color, amount)
-  return M.blend(color, amount, M.bg)
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
+  local bg = normal.bg and normal.bg or "#000000"
+  return M.blend(color, amount, bg)
 end
 M.darken = M.blend_bg
 
 function M.blend_fg(color, amount)
-  return M.blend(color, amount, M.fg)
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
+  local fg = normal.fg and normal.fg or "#ffffff"
+  return M.blend(color, amount, fg)
 end
 M.lighten = M.blend_fg
+
+---@type fun()[]
+local colorscheme_callbacks = {}
+
+---@param cb fun() callback to run on color scheme change and VeryLazy
+function M.register_color_update(cb)
+  table.insert(colorscheme_callbacks, cb)
+  cb()
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  desc = "update colors",
+  callback = function()
+    for _, cb in ipairs(colorscheme_callbacks) do
+      cb()
+    end
+  end,
+})
 
 return M

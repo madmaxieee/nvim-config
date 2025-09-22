@@ -12,14 +12,12 @@ return {
     "nvim-mini/mini.indentscope",
     event = "VeryLazy",
     init = function()
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        desc = "Set mini.indentscope highlight",
-        callback = function()
-          local special_fg = vim.api.nvim_get_hl(0, { name = "Special" }).fg
-          local color_utils = require "utils.colors"
-          vim.api.nvim_set_hl(0, "SpecialDimmed", { fg = color_utils.blend_bg(special_fg, 0.4) })
-        end,
-      })
+      local color_utils = require "utils.colors"
+      color_utils.register_color_update(function()
+        local special_fg = vim.api.nvim_get_hl(0, { name = "Special" }).fg
+        local fg = color_utils.blend_bg(special_fg, 0.4)
+        vim.api.nvim_set_hl(0, "SpecialDimmed", { fg = fg })
+      end)
     end,
     config = function()
       require("mini.indentscope").setup {

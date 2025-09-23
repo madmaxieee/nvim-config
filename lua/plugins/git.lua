@@ -19,11 +19,24 @@ vim.api.nvim_create_autocmd("BufRead", {
 
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("GitSignsFileType", { clear = true }),
+  pattern = "gitsigns-blame",
   callback = function(opts)
-    local ft = opts.match
-    if ft == "gitsigns-blame" then
-      vim.wo.winbar = " "
-    end
+    -- set winbar to be empty
+    vim.wo.winbar = " "
+    -- disable virtual_lines when running git blame to avoid line misalignment
+    local curr_diagnostics_config = vim.diagnostic.config()
+    vim.diagnostic.config {
+      virtual_lines = false,
+      virtual_text = true,
+    }
+    -- restore to old diagnostic config
+    vim.api.nvim_create_autocmd("BufUnload", {
+      callback = function()
+        vim.diagnostic.config(curr_diagnostics_config)
+      end,
+      buffer = opts.buf,
+      once = true,
+    })
   end,
 })
 

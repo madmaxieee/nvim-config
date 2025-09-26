@@ -1,45 +1,6 @@
 local map_repeatable_pair = require("utils").map_repeatable_pair
 local map = require("utils").safe_keymap_set
 
--- load gitsigns only when a git file is opened
-vim.api.nvim_create_autocmd("BufRead", {
-  group = vim.api.nvim_create_augroup("GitSignsLazyLoad", { clear = true }),
-  callback = function()
-    if vim.g.loaded_gitsigns then
-      return
-    end
-    if vim.v.shell_error == 0 then
-      vim.api.nvim_del_augroup_by_name "GitSignsLazyLoad"
-      require("lazy").load { plugins = { "gitsigns.nvim" } }
-      vim.api.nvim_create_user_command("GitBlame", "Gitsigns blame", {})
-      vim.g.loaded_gitsigns = true
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("GitSignsFileType", { clear = true }),
-  pattern = "gitsigns-blame",
-  callback = function(opts)
-    -- set winbar to be empty
-    vim.wo.winbar = " "
-    -- disable virtual_lines when running git blame to avoid line misalignment
-    local curr_diagnostics_config = vim.diagnostic.config()
-    vim.diagnostic.config {
-      virtual_lines = false,
-      virtual_text = true,
-    }
-    -- restore to old diagnostic config
-    vim.api.nvim_create_autocmd("BufUnload", {
-      callback = function()
-        vim.diagnostic.config(curr_diagnostics_config)
-      end,
-      buffer = opts.buf,
-      once = true,
-    })
-  end,
-})
-
 return {
   {
     "akinsho/git-conflict.nvim",
@@ -134,5 +95,46 @@ return {
         map({ "o", "x" }, "ih", gs.select_hunk, { desc = "select hunk", buffer = bufnr })
       end,
     },
+
+    init = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("GitSignsFileType", { clear = true }),
+        pattern = "gitsigns-blame",
+        callback = function(opts)
+          -- set winbar to be empty
+          vim.wo.winbar = " "
+          -- disable virtual_lines when running git blame to avoid line misalignment
+          local curr_diagnostics_config = vim.diagnostic.config()
+          vim.diagnostic.config {
+            virtual_lines = false,
+            virtual_text = true,
+          }
+          -- restore to old diagnostic config
+          vim.api.nvim_create_autocmd("BufUnload", {
+            callback = function()
+              vim.diagnostic.config(curr_diagnostics_config)
+            end,
+            buffer = opts.buf,
+            once = true,
+          })
+        end,
+      })
+
+      -- load gitsigns only when a git file is opened
+      vim.api.nvim_create_autocmd("BufRead", {
+        group = vim.api.nvim_create_augroup("GitSignsLazyLoad", { clear = true }),
+        callback = function()
+          if vim.g.loaded_gitsigns then
+            return
+          end
+          if vim.v.shell_error == 0 then
+            vim.api.nvim_del_augroup_by_name "GitSignsLazyLoad"
+            require("lazy").load { plugins = { "gitsigns.nvim" } }
+            vim.api.nvim_create_user_command("GitBlame", "Gitsigns blame", {})
+            vim.g.loaded_gitsigns = true
+          end
+        end,
+      })
+    end,
   },
 }

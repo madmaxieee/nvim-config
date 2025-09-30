@@ -63,12 +63,6 @@ local function set_keymaps(bufnr)
     vim.lsp.buf.rename()
   end, { buffer = bufnr, desc = "LSP rename" })
 
-  map("n", "<leader>ih", function()
-    local new_value = not vim.lsp.inlay_hint.is_enabled()
-    vim.lsp.inlay_hint.enable(new_value)
-    vim.notify("Inlay hints " .. (new_value and "enabled" or "disabled"))
-  end, { buffer = bufnr, desc = "Toggle inlay hint" })
-
   map({ "n", "v" }, "<leader>F", function()
     vim.lsp.buf.format { filter = M.formatter_filter }
   end, { buffer = bufnr, desc = "Format buffer/range" })

@@ -12,6 +12,7 @@ local servers = {
   "gopls",
   "html",
   "jdtls",
+  "jsonls",
   "lua_ls",
   "nil_ls",
   "pyright",

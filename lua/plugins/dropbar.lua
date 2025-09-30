@@ -33,12 +33,14 @@ return {
           or not vim.api.nvim_win_is_valid(win)
           or vim.fn.win_gettype(win) ~= ""
           or vim.wo[win].winbar ~= ""
-          or vim.bo[buf].ft == "snacks_picker_preview"
-          or vim.bo[buf].ft == "noice"
           or vim.bo[buf].ft == "help"
+          -- sindrets/diffview.nvim
           or vim.bo[buf].ft == "DiffviewFiles"
-          -- from snacks bigfile
+          -- folke/snacks.nvim
           or vim.bo[buf].ft == "bigfile"
+          or vim.bo[buf].ft == "snacks_picker_preview"
+          -- folke/noice.nvim
+          or vim.bo[buf].ft == "noice"
         then
           return false
         end

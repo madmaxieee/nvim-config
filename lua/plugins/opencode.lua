@@ -19,7 +19,7 @@ return {
         },
       },
       on_opencode_not_found = function()
-        local ok = pcall(os.execute, "tmux split-window -h -p 30 'opencode'")
+        local ok = pcall(os.execute, "tmux split-window -h -d -p 30 'opencode'")
         if ok then
           return true
         end
@@ -32,6 +32,8 @@ return {
     {
       "<leader>aa",
       function()
+        -- create tmux split if opencode is not running
+        require("opencode").prompt ""
         require("opencode").ask "@cursor: "
       end,
       mode = "n",
@@ -40,6 +42,8 @@ return {
     {
       "<leader>aa",
       function()
+        -- create tmux split if opencode is not running
+        require("opencode").prompt ""
         require("opencode").ask "@selection: "
       end,
       mode = "v",

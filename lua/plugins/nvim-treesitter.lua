@@ -62,10 +62,11 @@ local languages = {
 
   -- misc
   "regex",
+  "kitty",
+  "ssh_config",
 
   -- custom
   "d2",
-  "kitty",
 }
 
 return {
@@ -89,16 +90,6 @@ return {
             ---@diagnostic disable-next-line: missing-fields
             install_info = {
               url = "https://github.com/ravsii/tree-sitter-d2",
-              files = { "src/parser.c" },
-              queries = "queries",
-            },
-          }
-
-          parsers.kitty = {
-            tier = 0,
-            ---@diagnostic disable-next-line: missing-fields
-            install_info = {
-              url = "https://github.com/OXY2DEV/tree-sitter-kitty.git",
               files = { "src/parser.c" },
               queries = "queries",
             },
@@ -136,22 +127,6 @@ return {
 
       require("nvim-treesitter").install(languages)
     end,
-  },
-
-  {
-    "MeanderingProgrammer/treesitter-modules.nvim",
-    event = "BufReadPre",
-    ---@module 'treesitter-modules'
-    ---@type ts.mod.UserConfig
-    opts = {
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          node_incremental = "v",
-          node_decremental = "V",
-        },
-      },
-    },
   },
 
   {

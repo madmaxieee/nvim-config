@@ -19,5 +19,18 @@ return {
       end,
       desc = "Flash",
     },
+    {
+      "v",
+      mode = { "v" },
+      function()
+        require("flash").treesitter {
+          actions = {
+            ["v"] = "next",
+            ["V"] = "prev",
+          },
+        }
+      end,
+      desc = "Treesitter incremental selection",
+    },
   },
 }

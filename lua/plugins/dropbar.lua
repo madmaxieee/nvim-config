@@ -41,6 +41,8 @@ return {
           or vim.bo[buf].ft == "snacks_picker_preview"
           -- folke/noice.nvim
           or vim.bo[buf].ft == "noice"
+          -- NickvanDyke/opencode.nvim
+          or vim.bo[buf].ft == "opencode_terminal"
         then
           return false
         end

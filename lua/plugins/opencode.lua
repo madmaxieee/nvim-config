@@ -46,7 +46,7 @@ return {
       desc = "Ask about selection",
     },
     {
-      "<leader>ab",
+      "<leader>ap",
       function()
         require("opencode").prompt("@buffer", { append = true })
       end,
@@ -54,7 +54,7 @@ return {
       desc = "Ask about buffer",
     },
     {
-      "<leader>a+",
+      "<leader>ap",
       function()
         require("opencode").prompt("@selection", { append = true })
       end,

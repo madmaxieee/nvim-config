@@ -16,6 +16,11 @@ local function is_minimal_mode()
     return true
   end
 
+  -- when nvim used by opencode to edit prompt
+  if vim.env.OPENCODE then
+    return true
+  end
+
   -- when nvim is used by fish to edit command line
   local argc = vim.fn.argc()
   local argv = vim.fn.argv()

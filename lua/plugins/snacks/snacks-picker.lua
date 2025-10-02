@@ -26,12 +26,6 @@ return {
 
   keys = {
     {
-      "<leader>ff",
-      "<cmd> FFFSnacks <cr>",
-      desc = "FFF",
-    },
-
-    {
       "<leader>fw",
       mode = "n",
       function()

@@ -4,7 +4,6 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",
     "sindrets/diffview.nvim",
-    "nvim-telescope/telescope.nvim",
   },
   init = function()
     vim.cmd.cabbrev("G", "Neogit")
@@ -12,7 +11,6 @@ return {
   opts = {
     mappings = { status = { ["<space>"] = "Stage" } },
     disable_hint = true,
-    integrations = { telescope = true, diffview = true },
     graph_style = "unicode",
   },
 }

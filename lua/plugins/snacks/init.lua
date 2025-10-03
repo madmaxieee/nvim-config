@@ -14,8 +14,7 @@ local next_ref_repeat, prev_ref_repeat = repeatable.make_repeatable_move_pair( -
 
 return {
   {
-    -- "folke/snacks.nvim",
-    "jakubbortlik/snacks.nvim", -- use patched fork for https://github.com/folke/snacks.nvim/pull/2012
+    "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
     keys = {

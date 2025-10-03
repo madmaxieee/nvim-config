@@ -7,7 +7,7 @@ return {
     {
       "<leader>td",
       mode = "n",
-      "<cmd>TodoTrouble<cr>",
+      "<cmd> TodoTrouble <cr>",
       desc = "Open todo list in trouble",
     },
     {
@@ -17,7 +17,7 @@ return {
         ---@diagnostic disable-next-line: undefined-field
         require("snacks").picker.todo_comments()
       end,
-      desc = "Search for todos in telescope",
+      desc = "Search for todos in snacks picker",
     },
   },
 

@@ -1,5 +1,6 @@
 return {
   "madmaxieee/marx.nvim",
+  dependencies = { "kkharji/sqlite.lua" },
   event = "BufReadPre",
   keys = {
     {

@@ -1,5 +1,5 @@
 local lsp_config = require "plugins.lsp.config"
-local make_diagnostics_filter = require("plugins.lsp.utils").make_diagnostics_filter
+local lsp_utils = require "plugins.lsp.utils"
 
 local servers = {
   "bacon_ls",
@@ -41,7 +41,7 @@ local server_configs = {
   jdtls = {
     handlers = {
       -- 16: file is not a project-file
-      ["textDocument/publishDiagnostics"] = make_diagnostics_filter { code = { "16" } },
+      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter { code = { "16" } },
     },
   },
   lua_ls = {
@@ -78,7 +78,7 @@ local server_configs = {
   end,
   taplo = {
     handlers = {
-      ["textDocument/publishDiagnostics"] = make_diagnostics_filter {
+      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter {
         message = { "this document has been excluded" },
       },
     },
@@ -86,23 +86,13 @@ local server_configs = {
   ts_ls = {
     handlers = {
       -- 71007: ignore client component props must be serializable error
-      ["textDocument/publishDiagnostics"] = make_diagnostics_filter { code = { 71007 } },
+      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter { code = { 71007 } },
     },
   },
   typos_lsp = {
     init_options = {
       diagnosticSeverity = "Warning",
     },
-    on_attach = function(client, bufnr)
-      if vim.o.readonly or vim.bo[bufnr].filetype == "oil" then
-        vim.schedule(function()
-          vim.lsp.buf_detach_client(bufnr, client.id)
-          if vim.tbl_isempty(client.attached_buffers) then
-            client:stop(true)
-          end
-        end)
-      end
-    end,
   },
   zls = {
     settings = {
@@ -143,6 +133,49 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
     },
+    init = function()
+      vim.api.nvim_create_user_command("LspEnable", function(opts)
+        if not vim.tbl_contains(servers, opts.args) then
+          vim.notify(("Unknown LSP server: %s"):format(opts.args), vim.log.levels.ERROR)
+          return
+        end
+        lsp_utils.set_lsp_enabled(opts.args, true)
+        vim.cmd("LspRestart " .. opts.args)
+        vim.diagnostic.reset(nil, 0)
+      end, {
+        nargs = 1,
+        complete = function()
+          return servers
+        end,
+      })
+
+      vim.api.nvim_create_user_command("LspDisable", function(opts)
+        if not vim.tbl_contains(servers, opts.args) then
+          vim.notify(("Unknown LSP server: %s"):format(opts.args), vim.log.levels.ERROR)
+          return
+        end
+        lsp_utils.set_lsp_enabled(opts.args, false)
+        vim.cmd("LspStop " .. opts.args)
+        vim.diagnostic.reset(nil, 0)
+      end, {
+        nargs = 1,
+        complete = function()
+          return servers
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("SessionLoadPost", {
+        group = vim.api.nvim_create_augroup("lspconfig.global_var_disable", { clear = true }),
+        callback = function()
+          for _, lsp in ipairs(servers) do
+            if not lsp_utils.get_lsp_enabled(lsp) then
+              vim.cmd("LspStop " .. lsp)
+            end
+          end
+          vim.diagnostic.reset(nil, 0)
+        end,
+      })
+    end,
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)

@@ -1,4 +1,5 @@
 local lsp_config = require "plugins.lsp.config"
+local lsp_utils = require "plugins.lsp.utils"
 
 return {
   {
@@ -53,38 +54,65 @@ return {
         custom.google_java_format,
         custom.trailing_ws,
         custom.trailing_ws_action,
+        custom.cpplint,
       }
+
+      local sources_map = {}
+      for _, source in ipairs(sources) do
+        if type(source) == "function" then
+          source = source()
+        end
+        if source then
+          sources_map[source.name] = source
+        end
+      end
 
       null_ls.setup {
         sources = sources,
         on_attach = lsp_config.on_attach,
       }
 
-      vim.api.nvim_create_autocmd("SessionLoadPost", {
-        group = vim.api.nvim_create_augroup("Cpplint", { clear = true }),
-        desc = "setup cpplint",
-        callback = function()
-          if vim.g.Cpplint == 1 and not null_ls.is_registered "cpplint" then
-            null_ls.register(custom.cpplint)
-          end
+      vim.api.nvim_create_user_command("NullLsEnable", function(opts)
+        lsp_config.set_lsp_enabled(opts.args, true)
+        local source = sources_map[opts.args]
+        if not source then
+          vim.notify("Unknown null-ls source: " .. opts.args, vim.log.levels.ERROR)
+          return
+        end
+        if null_ls.is_registered(opts.args) then
+          null_ls.enable(opts.args)
+        else
+          null_ls.register(source)
+        end
+      end, {
+        nargs = 1,
+        complete = function()
+          return vim.tbl_keys(sources_map)
         end,
       })
 
-      vim.api.nvim_create_user_command("Cpplint", function()
-        vim.g.Cpplint = 1
-        if null_ls.is_registered "cpplint" then
-          null_ls.enable "cpplint"
-        else
-          null_ls.register(custom.cpplint)
+      vim.api.nvim_create_user_command("NullLsDisable", function(opts)
+        lsp_config.set_lsp_enabled(opts.args, false)
+        if null_ls.is_registered(opts.args) then
+          null_ls.disable(opts.args)
         end
-      end, {})
+      end, {
+        nargs = 1,
+        complete = function()
+          return vim.tbl_keys(sources_map)
+        end,
+      })
 
-      vim.api.nvim_create_user_command("CpplintDisable", function()
-        vim.g.Cpplint = nil
-        if null_ls.is_registered "cpplint" then
-          null_ls.disable "cpplint"
-        end
-      end, {})
+      vim.api.nvim_create_autocmd("SessionLoadPost", {
+        group = vim.api.nvim_create_augroup("null-ls.global_var_disable", { clear = true }),
+        callback = function()
+          for name, _ in pairs(sources_map) do
+            if not lsp_utils.get_lsp_enabled(name) and null_ls.is_registered(name) then
+              null_ls.disable(name)
+            end
+          end
+        end,
+      })
     end,
   },
 }

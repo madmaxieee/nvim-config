@@ -1,6 +1,7 @@
 local M = {}
 
 local utils = require "utils"
+local lsp_utils = require "plugins.lsp.utils"
 local map = utils.safe_keymap_set
 
 local function set_keymaps(bufnr)
@@ -141,20 +142,45 @@ function M.setup()
     end)
   end, {})
 
-  local no_lsp_filetype = {
-    ["toggleterm"] = true,
-    ["help"] = true,
-    ["log"] = true,
-    -- from snacks bigfile
-    ["bigfile"] = true,
-  }
   -- disable lsp for certain filetypes and in diff mode
+  local function should_disable_lsp(client, bufnr)
+    if vim.wo.diff then
+      return true
+    end
+
+    local no_lsp_filetype = {
+      ["toggleterm"] = true,
+      ["help"] = true,
+      ["log"] = true,
+      -- from snacks bigfile
+      ["bigfile"] = true,
+    }
+
+    if no_lsp_filetype[vim.bo[bufnr].filetype] then
+      return true
+    end
+
+    if not lsp_utils.get_lsp_enabled(client.name) then
+      return true
+    end
+
+    -- lsp specific disable rules
+    if client.name == "typos_lsp" then
+      if vim.o.readonly or vim.bo[bufnr].filetype == "oil" then
+        return true
+      end
+    end
+
+    return false
+  end
+
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("DisableLsp", { clear = true }),
     callback = function(args)
       local bufnr = args.buf
       local client_id = args.data.client_id
-      if no_lsp_filetype[vim.bo[bufnr].filetype] or vim.wo.diff then
+      local client = vim.lsp.get_client_by_id(client_id)
+      if should_disable_lsp(client, bufnr) then
         vim.schedule(function()
           vim.lsp.buf_detach_client(bufnr, client_id)
           vim.diagnostic.reset(nil, bufnr)

@@ -24,4 +24,28 @@ function M.make_diagnostics_filter(to_filter)
   end
 end
 
+local function get_lsp_global_var(client_name)
+  return "LspEnabled_" .. client_name
+end
+
+function M.get_lsp_enabled(client_name)
+  if client_name == nil or client_name == "" then
+    return false
+  end
+  local var_name = get_lsp_global_var(client_name)
+  return vim.g[var_name] ~= 0
+end
+
+function M.set_lsp_enabled(client_name, enabled)
+  if client_name == nil or client_name == "" then
+    return
+  end
+  local var_name = get_lsp_global_var(client_name)
+  if enabled then
+    vim.g[var_name] = nil
+  else
+    vim.g[var_name] = 0
+  end
+end
+
 return M

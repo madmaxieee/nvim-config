@@ -74,7 +74,7 @@ return {
 
       vim.api.nvim_create_user_command("NullLsEnable", function(opts)
         local source_name = opts.args
-        lsp_config.set_lsp_enabled(source_name, true)
+        lsp_utils.set_lsp_enabled(source_name, true)
         local source = sources_map[source_name]
         if not source then
           vim.notify(("Unknown null-ls source: %s"):format(source_name), vim.log.levels.ERROR)
@@ -94,7 +94,7 @@ return {
 
       vim.api.nvim_create_user_command("NullLsDisable", function(opts)
         local source_name = opts.args
-        lsp_config.set_lsp_enabled(source_name, false)
+        lsp_utils.set_lsp_enabled(source_name, false)
         local source = sources_map[source_name]
         if not source then
           vim.notify(("Unknown null-ls source: %s"):format(source_name), vim.log.levels.ERROR)

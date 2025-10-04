@@ -1,7 +1,9 @@
 return {
   {
-    "dmtrKovalenko/fff.nvim",
-    build = "cargo build --release",
+    "madmaxieee/fff.nvim",
+    build = function()
+      require("fff.download").download_or_build_binary()
+    end,
     lazy = false, -- make fff initialize on startup
   },
 

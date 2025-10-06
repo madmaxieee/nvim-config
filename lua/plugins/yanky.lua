@@ -1,5 +1,6 @@
 return {
   "gbprod/yanky.nvim",
+  event = "VeryLazy",
   opts = {
     highlight = {
       on_put = true,

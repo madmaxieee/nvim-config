@@ -35,12 +35,10 @@ end
 
 local function show_lsp_status()
   local icon = "   "
-  if vim.g.loaded_copilot then
-    if vim.g.EnableCopilot == 1 then
-      icon = "   "
-    else
-      icon = "   "
-    end
+  if require("plugins.lsp.utils").get_lsp_enabled "copilot" then
+    icon = "   "
+  else
+    icon = "   "
   end
   for _, client in ipairs(vim.lsp.get_clients()) do
     if

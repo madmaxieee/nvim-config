@@ -99,7 +99,14 @@ function M.on_attach(client, bufnr)
     vim.lsp.inlay_hint.enable(true)
   end
 
-  if (client.supports_method "textDocument/formatting" or client.name == "jdtls") and M.formatter_filter(client) then
+  if client:supports_method "textDocument/inlineCompletion" then
+    vim.lsp.inline_completion.enable(true)
+    map("i", "<A-l>", function()
+      vim.lsp.inline_completion.get()
+    end, { buffer = bufnr, desc = "Accept inline completion" })
+  end
+
+  if (client:supports_method "textDocument/formatting" or client.name == "jdtls") and M.formatter_filter(client) then
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
       desc = ("Format buffer with %s"):format(client.name),

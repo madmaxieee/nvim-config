@@ -6,6 +6,7 @@ local servers = {
   "bashls",
   "clangd",
   "cmake",
+  "copilot",
   "cssls",
   "dockerls",
   "eslint",
@@ -175,6 +176,8 @@ return {
           vim.diagnostic.reset(nil, 0)
         end,
       })
+
+      require "plugins.lsp.copilot"
     end,
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()

@@ -33,16 +33,3 @@ vim.api.nvim_create_autocmd("VimResized", {
   desc = "Resize windows when vim is resized",
   command = "wincmd =",
 })
-
-for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
-  vim.api.nvim_set_hl(0, group, {})
-end
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("LspSemanticHL", { clear = true }),
-  desc = "Disable LSP semantic highlight",
-  callback = function()
-    for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
-      vim.api.nvim_set_hl(0, group, {})
-    end
-  end,
-})

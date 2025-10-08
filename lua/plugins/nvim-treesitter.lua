@@ -98,6 +98,7 @@ return {
       })
 
       local syntax_on = {}
+      local lsp_semantic_token_on = {}
       vim.api.nvim_create_autocmd("FileType", {
         group = group,
         callback = function(args)
@@ -119,6 +120,10 @@ return {
           local ft = vim.bo[bufnr].filetype
           if syntax_on[ft] then
             vim.bo[bufnr].syntax = "on"
+          end
+
+          if not lsp_semantic_token_on[ft] then
+            vim.lsp.semantic_tokens.enable(false, { bufnr = bufnr })
           end
         end,
       })

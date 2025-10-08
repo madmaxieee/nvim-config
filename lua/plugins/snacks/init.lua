@@ -55,15 +55,43 @@ return {
       },
       {
         "]]",
-        mode = { "n", "t" },
         next_ref_repeat,
         desc = "Next Reference",
       },
       {
         "[[",
-        mode = { "n", "t" },
         prev_ref_repeat,
         desc = "Prev Reference",
+      },
+      {
+        "<A-g>",
+        mode = { "n", "t" },
+        function()
+          require("snacks").lazygit.open()
+        end,
+        desc = "Toggle lazygit",
+      },
+      {
+        "<leader>lg",
+        function()
+          require("snacks").lazygit.log()
+        end,
+        desc = "Open lazygit log view",
+      },
+      {
+        "<leader>lf",
+        function()
+          require("snacks").lazygit.log_file()
+        end,
+        desc = "Open lazygit log view for current file",
+      },
+      {
+        "<A-e>",
+        mode = { "n", "t" },
+        function()
+          require("snacks").terminal.toggle()
+        end,
+        desc = "Toggle terminal",
       },
     },
 

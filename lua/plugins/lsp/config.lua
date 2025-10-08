@@ -61,7 +61,6 @@ function M.on_attach(client, bufnr)
   end
 
   if client:supports_method "textDocument/inlineCompletion" then
-    vim.notify(client.name .. ": inline_completion enable")
     vim.lsp.inline_completion.enable(true)
     map("i", "<A-l>", function()
       vim.lsp.inline_completion.get()
@@ -87,7 +86,6 @@ end
 function M.on_detach(client, bufnr)
   local clients = vim.lsp.get_clients { bufnr = bufnr }
   if client:supports_method "textDocument/inlineCompletion" then
-    vim.notify(client.name .. ": inline_completion disable")
     vim.lsp.inline_completion.enable(false, { bufnr = bufnr })
     for _, other_client in ipairs(clients) do
       if other_client.id ~= client.id and other_client:supports_method "textDocument/inlineCompletion" then

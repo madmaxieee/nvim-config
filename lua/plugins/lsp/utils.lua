@@ -25,8 +25,8 @@ function M.make_diagnostics_filter(to_filter)
 end
 
 local default_disabled_lsp = {
-  cpplint = true,
-  copilot = true,
+  ["cpplint"] = true,
+  ["copilot"] = true,
 }
 
 ---@param client_name string

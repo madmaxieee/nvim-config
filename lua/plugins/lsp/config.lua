@@ -1,81 +1,15 @@
 local M = {}
 
 local utils = require "utils"
-local lsp_utils = require "plugins.lsp.utils"
 local map = utils.safe_keymap_set
-
-local function set_keymaps(bufnr)
-  if vim.b[bufnr].lsp_keymaps_set then
-    return
-  end
-
-  local trouble_open = require("trouble").open
-
-  map("n", "K", function()
-    vim.lsp.buf.hover()
-  end, { buffer = bufnr, desc = "Hover" })
-
-  map("n", "gd", function()
-    -- vim.lsp.buf.definition()
-    trouble_open { mode = "lsp_definitions" }
-  end, { buffer = bufnr, desc = "Go to definition" })
-
-  map("n", "gD", function()
-    -- vim.lsp.buf.type_definition()
-    trouble_open { mode = "lsp_type_definitions" }
-  end, { buffer = bufnr, desc = "Go to type definition" })
-
-  map("n", "gr", function()
-    -- vim.lsp.buf.references()
-    trouble_open { mode = "lsp_references" }
-  end, { buffer = bufnr, desc = "LSP references" })
-
-  map("n", "gi", function()
-    -- vim.lsp.buf.implementation()
-    trouble_open { mode = "lsp_implementations" }
-  end, { buffer = bufnr, desc = "Go to implementation" })
-
-  map("n", "<leader>ls", function()
-    vim.lsp.buf.signature_help()
-  end, { buffer = bufnr, desc = "Signature help" })
-
-  utils.map_repeatable_pair("n", {
-    next = {
-      "]d",
-      function()
-        vim.diagnostic.jump { count = 1 }
-      end,
-      { buffer = bufnr, desc = "Go to next diagnostic" },
-    },
-    prev = {
-      "[d",
-      function()
-        vim.diagnostic.jump { count = -1 }
-      end,
-      { buffer = bufnr, desc = "Go to previous diagnostic" },
-    },
-  })
-
-  map("n", "<leader>ca", function()
-    vim.lsp.buf.code_action()
-  end, { buffer = bufnr, desc = "LSP code action" })
-
-  map("n", "<leader>ra", function()
-    vim.lsp.buf.rename()
-  end, { buffer = bufnr, desc = "LSP rename" })
-
-  map({ "n", "v" }, "<leader>F", function()
-    vim.lsp.buf.format { filter = M.formatter_filter }
-  end, { buffer = bufnr, desc = "Format buffer/range" })
-
-  vim.b[bufnr].lsp_keymaps_set = true
-end
+local lsp_utils = require "plugins.lsp.utils"
+local set_keymaps = require("plugins.lsp.keymaps").set_keymaps
 
 local no_format = {
   ["eslint"] = true, -- don't auto fix eslint errors
   ["cmake"] = true,
 }
-function M.formatter_filter(client)
+local function formatter_filter(client)
   if no_format[client.name] then
     return false
   end
@@ -92,21 +26,49 @@ function M.formatter_filter(client)
   return true
 end
 
+local no_lsp_filetype = {
+  ["toggleterm"] = true,
+  ["help"] = true,
+  ["log"] = true,
+  -- from snacks bigfile
+  ["bigfile"] = true,
+}
+-- disable lsp for certain filetypes and in diff mode
+local function should_disable_lsp(client, bufnr)
+  if vim.wo.diff then
+    return true
+  end
+  if no_lsp_filetype[vim.bo[bufnr].filetype] then
+    return true
+  end
+  if not lsp_utils.get_lsp_enabled(client.name) then
+    return true
+  end
+  -- lsp specific disable rules
+  if client.name == "typos_lsp" then
+    if vim.o.readonly or vim.bo[bufnr].filetype == "oil" then
+      return true
+    end
+  end
+  return false
+end
+
 function M.on_attach(client, bufnr)
   set_keymaps(bufnr)
 
   if client.server_capabilities.inlayHintProvider then
-    vim.lsp.inlay_hint.enable(true)
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
 
   if client:supports_method "textDocument/inlineCompletion" then
+    vim.notify(client.name .. ": inline_completion enable")
     vim.lsp.inline_completion.enable(true)
     map("i", "<A-l>", function()
       vim.lsp.inline_completion.get()
     end, { buffer = bufnr, desc = "Accept inline completion" })
   end
 
-  if (client:supports_method "textDocument/formatting" or client.name == "jdtls") and M.formatter_filter(client) then
+  if (client:supports_method "textDocument/formatting" or client.name == "jdtls") and formatter_filter(client) then
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
       desc = ("Format buffer with %s"):format(client.name),
@@ -114,7 +76,7 @@ function M.on_attach(client, bufnr)
         if vim.g.FormatOnSave == 0 then
           return
         end
-        if M.formatter_filter(client) then
+        if formatter_filter(client) then
           vim.lsp.buf.format { id = client.id }
         end
       end,
@@ -122,7 +84,43 @@ function M.on_attach(client, bufnr)
   end
 end
 
-function M.setup()
+function M.on_detach(client, bufnr)
+  local clients = vim.lsp.get_clients { bufnr = bufnr }
+  if client:supports_method "textDocument/inlineCompletion" then
+    vim.notify(client.name .. ": inline_completion disable")
+    vim.lsp.inline_completion.enable(false, { bufnr = bufnr })
+    for _, other_client in ipairs(clients) do
+      if other_client.id ~= client.id and other_client:supports_method "textDocument/inlineCompletion" then
+        vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
+        break
+      end
+    end
+  end
+end
+
+---@param opts {servers:string[]}
+function M.init(opts)
+  local servers = opts.servers
+
+  -- do normal on attach/detach work
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("lsp.attach", { clear = true }),
+    callback = function(args)
+      local bufnr = args.buf
+      local client_id = args.data.client_id
+      M.on_attach(vim.lsp.get_client_by_id(client_id), bufnr)
+    end,
+  })
+  vim.api.nvim_create_autocmd("LspDetach", {
+    group = vim.api.nvim_create_augroup("lsp.detach", { clear = true }),
+    callback = function(args)
+      local bufnr = args.buf
+      local client_id = args.data.client_id
+      M.on_detach(vim.lsp.get_client_by_id(client_id), bufnr)
+    end,
+  })
+
+  -- formatting
   vim.api.nvim_create_user_command("FormatOnSaveEnable", function()
     vim.g.FormatOnSave = nil
   end, {})
@@ -130,15 +128,16 @@ function M.setup()
     vim.g.FormatOnSave = 0
   end, {})
 
-  vim.api.nvim_create_user_command("Format", function(opts)
-    if opts.range == 0 then
-      vim.lsp.buf.format { filter = M.formatter_filter }
+  vim.api.nvim_create_user_command("Format", function(args)
+    if args.range == 0 then
+      vim.lsp.buf.format { filter = formatter_filter }
     else
       vim.cmd "normal! gv"
-      vim.lsp.buf.format { filter = M.formatter_filter }
+      vim.lsp.buf.format { filter = formatter_filter }
     end
   end, { range = true })
 
+  -- detach lsps from current buffer
   vim.api.nvim_create_user_command("DetachLsp", function()
     vim.diagnostic.reset(nil, 0)
     local clients = vim.lsp.get_clients { bufnr = 0 }
@@ -149,40 +148,9 @@ function M.setup()
     end)
   end, {})
 
-  -- disable lsp for certain filetypes and in diff mode
-  local function should_disable_lsp(client, bufnr)
-    if vim.wo.diff then
-      return true
-    end
-
-    local no_lsp_filetype = {
-      ["toggleterm"] = true,
-      ["help"] = true,
-      ["log"] = true,
-      -- from snacks bigfile
-      ["bigfile"] = true,
-    }
-
-    if no_lsp_filetype[vim.bo[bufnr].filetype] then
-      return true
-    end
-
-    if not lsp_utils.get_lsp_enabled(client.name) then
-      return true
-    end
-
-    -- lsp specific disable rules
-    if client.name == "typos_lsp" then
-      if vim.o.readonly or vim.bo[bufnr].filetype == "oil" then
-        return true
-      end
-    end
-
-    return false
-  end
-
+  -- disable lsp servers per buffer under some conditions
   vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("DisableLsp", { clear = true }),
+    group = vim.api.nvim_create_augroup("lsp.disable.buffer", { clear = true }),
     callback = function(args)
       local bufnr = args.buf
       local client_id = args.data.client_id
@@ -197,18 +165,68 @@ function M.setup()
     end,
   })
 
-  vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("LspOnAttach", { clear = true }),
-    callback = function(args)
-      local bufnr = args.buf
-      local client_id = args.data.client_id
-      M.on_attach(vim.lsp.get_client_by_id(client_id), bufnr)
+  -- enable/disable lsp servers per project with global variable
+  vim.api.nvim_create_user_command("LspEnable", function(args)
+    if not vim.tbl_contains(servers, args.args) then
+      vim.notify(("Unknown LSP server: %s"):format(args.args), vim.log.levels.ERROR)
+      return
+    end
+    lsp_utils.set_lsp_enabled(args.args, true)
+    vim.cmd("LspRestart " .. args.args)
+    vim.diagnostic.reset(nil, 0)
+  end, {
+    nargs = 1,
+    complete = function()
+      return servers
     end,
   })
+
+  vim.api.nvim_create_user_command("LspDisable", function(args)
+    if not vim.tbl_contains(servers, args.args) then
+      vim.notify(("Unknown LSP server: %s"):format(args.args), vim.log.levels.ERROR)
+      return
+    end
+    lsp_utils.set_lsp_enabled(args.args, false)
+    vim.cmd("LspStop " .. args.args)
+    vim.diagnostic.reset(nil, 0)
+  end, {
+    nargs = 1,
+    complete = function()
+      return servers
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("SessionLoadPost", {
+    group = vim.api.nvim_create_augroup("lsp.disable.project", { clear = true }),
+    callback = function()
+      for _, lsp in ipairs(servers) do
+        if not lsp_utils.get_lsp_enabled(lsp) then
+          vim.cmd("LspStop " .. lsp)
+        end
+      end
+      vim.diagnostic.reset(nil, 0)
+    end,
+  })
+
+  require "plugins.lsp.copilot"
 end
 
-function M.cond()
-  return not require("modes").minimal_mode
+---@alias ServerConfig vim.lsp.Config | fun(): vim.lsp.Config
+---@param opts {servers:string[], server_configs:table<string, ServerConfig>}
+function M.setup(opts)
+  local servers = opts.servers
+  local server_configs = opts.server_configs
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+  vim.lsp.config("*", { capabilities = capabilities })
+  for lsp, config in pairs(server_configs) do
+    if type(config) == "function" then
+      config = config()
+    end
+    vim.lsp.config(lsp, config)
+  end
+  -- this reads the default values, since session is likely not loaded yet
+  vim.lsp.enable(vim.tbl_filter(lsp_utils.get_lsp_enabled, servers))
 end
 
 return M

@@ -127,7 +127,7 @@ return {
   },
 
   {
-    cond = lsp_config.cond(),
+    cond = not require("modes").minimal_mode,
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
@@ -135,61 +135,13 @@ return {
       "williamboman/mason-lspconfig.nvim",
     },
     init = function()
-      vim.api.nvim_create_user_command("LspEnable", function(opts)
-        if not vim.tbl_contains(servers, opts.args) then
-          vim.notify(("Unknown LSP server: %s"):format(opts.args), vim.log.levels.ERROR)
-          return
-        end
-        lsp_utils.set_lsp_enabled(opts.args, true)
-        vim.cmd("LspRestart " .. opts.args)
-        vim.diagnostic.reset(nil, 0)
-      end, {
-        nargs = 1,
-        complete = function()
-          return servers
-        end,
-      })
-
-      vim.api.nvim_create_user_command("LspDisable", function(opts)
-        if not vim.tbl_contains(servers, opts.args) then
-          vim.notify(("Unknown LSP server: %s"):format(opts.args), vim.log.levels.ERROR)
-          return
-        end
-        lsp_utils.set_lsp_enabled(opts.args, false)
-        vim.cmd("LspStop " .. opts.args)
-        vim.diagnostic.reset(nil, 0)
-      end, {
-        nargs = 1,
-        complete = function()
-          return servers
-        end,
-      })
-
-      vim.api.nvim_create_autocmd("SessionLoadPost", {
-        group = vim.api.nvim_create_augroup("lspconfig.global_var_disable", { clear = true }),
-        callback = function()
-          for _, lsp in ipairs(servers) do
-            if not lsp_utils.get_lsp_enabled(lsp) then
-              vim.cmd("LspStop " .. lsp)
-            end
-          end
-          vim.diagnostic.reset(nil, 0)
-        end,
-      })
-
-      require "plugins.lsp.copilot"
+      lsp_config.init { servers = servers }
     end,
     config = function()
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
-      vim.lsp.config("*", { capabilities = capabilities })
-      for lsp, config in pairs(server_configs) do
-        if type(config) == "function" then
-          config = config()
-        end
-        vim.lsp.config(lsp, config)
-      end
-      vim.lsp.enable(servers)
+      lsp_config.setup {
+        servers = servers,
+        server_configs = server_configs,
+      }
     end,
   },
 }

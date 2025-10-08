@@ -2,13 +2,11 @@ local vault_folder = vim.fn.resolve(vim.fn.expand "~/obsidian")
 
 return {
   {
+    cond = vim.startswith(vim.uv.cwd() or "", vault_folder),
     "obsidian-nvim/obsidian.nvim",
     version = "*",
+    lazy = false,
     dependencies = { "nvim-lua/plenary.nvim" },
-    event = {
-      "BufReadPre " .. vault_folder .. "/**.md",
-      "BufNewFile " .. vault_folder .. "/**.md",
-    },
     opts = {
       workspaces = {
         {
@@ -19,26 +17,6 @@ return {
       completion = {
         blink = true,
         min_chars = 2,
-      },
-      mappings = {
-        ["gd"] = {
-          action = function()
-            return require("obsidian").util.gf_passthrough()
-          end,
-          opts = { noremap = false, expr = true, buffer = true },
-        },
-        ["<cr>"] = {
-          action = function()
-            return require("obsidian").util.toggle_checkbox()
-          end,
-          opts = { buffer = true },
-        },
-        ["<leader>ch"] = {
-          action = function()
-            vim.cmd "Obsidian toggle_checkbox"
-          end,
-          opts = { buffer = true },
-        },
       },
       picker = {
         name = "snacks.pick",
@@ -59,24 +37,42 @@ return {
         end
         return tostring(os.time()) .. "-" .. suffix
       end,
+      legacy_commands = false,
     },
-    config = function(_, opts)
-      require("obsidian").setup(opts)
+    init = function()
+      local map = require("utils").safe_keymap_set
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "ObsidianNoteEnter",
+        callback = function(opts)
+          vim.wo.conceallevel = 1
+          map("n", "gd", function()
+            return require("obsidian").util.gf_passthrough()
+          end, {
+            buffer = opts.buf,
+            expr = true,
+            desc = "Go to definition",
+          })
+          map("n", "<cr>", function()
+            require("obsidian").util.toggle_checkbox()
+          end, {
+            buffer = opts.buf,
+            desc = "Toggle checkbox",
+          })
+        end,
+      })
+
+      map("n", "<leader>fo", "<cmd>Obsidian search<cr>", {})
 
       vim.cmd.cabbrev("O", "Obsidian")
-
-      local config = require "plugins.obsidian.config"
-
-      config.setup_auto_commit {
+    end,
+    config = function(_, opts)
+      require("obsidian").setup(opts)
+      require("plugins.obsidian.config").setup_auto_commit {
         vault_folder = vault_folder,
         auto_save_interval = 10 * 60,
         commit_interval = 60 * 60,
       }
-
-      vim.wo.conceallevel = 1
-
-      local map = require("utils").safe_keymap_set
-      map("n", "<leader>fo", "<cmd>Obsidian search<cr>", {})
     end,
   },
 

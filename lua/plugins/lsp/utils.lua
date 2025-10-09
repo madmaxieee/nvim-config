@@ -35,7 +35,7 @@ local function get_lsp_global_var(client_name)
 end
 
 ---@param client_name string
-function M.get_lsp_enabled(client_name)
+function M.lsp_is_enabled(client_name)
   if client_name == nil or client_name == "" then
     return false
   end
@@ -55,7 +55,7 @@ end
 
 ---@param client_name string
 ---@param enabled boolean
-function M.set_lsp_enabled(client_name, enabled)
+local function set_lsp_enabled_var(client_name, enabled)
   if client_name == nil or client_name == "" then
     return
   end
@@ -72,6 +72,40 @@ function M.set_lsp_enabled(client_name, enabled)
     else
       vim.g[var_name] = 0
     end
+  end
+end
+
+function M.lsp_enable(server)
+  set_lsp_enabled_var(server, true)
+  if vim.fn.exists ":LspRestart" == 1 then
+    vim.cmd("LspRestart " .. server)
+    vim.diagnostic.reset(nil, 0)
+  end
+end
+
+function M.lsp_disable(server)
+  set_lsp_enabled_var(server, false)
+  if vim.fn.exists ":LspStop" == 1 then
+    vim.cmd("LspStop " .. server)
+    vim.diagnostic.reset(nil, 0)
+  end
+end
+
+function M.null_ls_enable(source_name, source)
+  local null_ls = require "null-ls"
+  set_lsp_enabled_var(source_name, false)
+  if null_ls.is_registered(source_name) then
+    null_ls.enable(source_name)
+  else
+    null_ls.register(source)
+  end
+end
+
+function M.null_ls_disable(source_name)
+  local null_ls = require "null-ls"
+  set_lsp_enabled_var(source_name, false)
+  if null_ls.is_registered(source_name) then
+    null_ls.disable(source_name)
   end
 end
 

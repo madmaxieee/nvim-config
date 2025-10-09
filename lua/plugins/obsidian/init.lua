@@ -39,20 +39,13 @@ return {
       end,
       legacy_commands = false,
     },
+
     init = function()
       local map = require("utils").safe_keymap_set
-
       vim.api.nvim_create_autocmd("User", {
         pattern = "ObsidianNoteEnter",
         callback = function(opts)
           vim.wo.conceallevel = 1
-          map("n", "gd", function()
-            return require("obsidian").util.gf_passthrough()
-          end, {
-            buffer = opts.buf,
-            expr = true,
-            desc = "Go to definition",
-          })
           map("n", "<cr>", function()
             require("obsidian").util.toggle_checkbox()
           end, {
@@ -61,11 +54,22 @@ return {
           })
         end,
       })
-
       map("n", "<leader>fo", "<cmd>Obsidian search<cr>", {})
-
       vim.cmd.cabbrev("O", "Obsidian")
+
+      -- NOTE: typos_lsp for some reason would attach to the unnamed buffer
+      -- when obsidian is active, causing errors
+      local lsp_utils = require "plugins.lsp.utils"
+      lsp_utils.lsp_disable "typos_lsp"
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "ObsidianNoteEnter",
+        once = true,
+        callback = function()
+          lsp_utils.lsp_enable "typos_lsp"
+        end,
+      })
     end,
+
     config = function(_, opts)
       require("obsidian").setup(opts)
       require("plugins.obsidian.config").setup_auto_commit {
@@ -74,33 +78,5 @@ return {
         commit_interval = 60 * 60,
       }
     end,
-  },
-
-  {
-    "saghen/blink.cmp",
-    opts = {
-      sources = {
-        default = {
-          "obsidian",
-          "obsidian_new",
-          "obsidian_tags",
-        },
-        providers = {
-          obsidian = {
-            name = "obsidian",
-            module = "blink.compat.source",
-          },
-          obsidian_new = {
-            name = "obsidian_new",
-            module = "blink.compat.source",
-          },
-          obsidian_tags = {
-            name = "obsidian_tags",
-            module = "blink.compat.source",
-          },
-        },
-      },
-    },
-    opts_extend = { "sources.default" },
   },
 }

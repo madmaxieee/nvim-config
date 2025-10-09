@@ -74,17 +74,12 @@ return {
 
       vim.api.nvim_create_user_command("NullLsEnable", function(opts)
         local source_name = opts.args
-        lsp_utils.set_lsp_enabled(source_name, true)
         local source = sources_map[source_name]
         if not source then
           vim.notify(("Unknown null-ls source: %s"):format(source_name), vim.log.levels.ERROR)
           return
         end
-        if null_ls.is_registered(source_name) then
-          null_ls.enable(source_name)
-        else
-          null_ls.register(source)
-        end
+        lsp_utils.null_ls_enable(source_name, source)
       end, {
         nargs = 1,
         complete = function()
@@ -94,15 +89,12 @@ return {
 
       vim.api.nvim_create_user_command("NullLsDisable", function(opts)
         local source_name = opts.args
-        lsp_utils.set_lsp_enabled(source_name, false)
         local source = sources_map[source_name]
         if not source then
           vim.notify(("Unknown null-ls source: %s"):format(source_name), vim.log.levels.ERROR)
           return
         end
-        if null_ls.is_registered(source_name) then
-          null_ls.disable(source_name)
-        end
+        lsp_utils.null_ls_disable(source_name)
       end, {
         nargs = 1,
         complete = function()
@@ -114,7 +106,7 @@ return {
         group = vim.api.nvim_create_augroup("null-ls.global_var_disable", { clear = true }),
         callback = function()
           for name, _ in pairs(sources_map) do
-            if not lsp_utils.get_lsp_enabled(name) and null_ls.is_registered(name) then
+            if not lsp_utils.lsp_is_enabled(name) and null_ls.is_registered(name) then
               null_ls.disable(name)
             end
           end

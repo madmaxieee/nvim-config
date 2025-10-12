@@ -46,7 +46,7 @@ vim.opt.diffopt:append {
 }
 
 vim.g.mapleader = vim.keycode "<space>"
-vim.g.maplocalleader = "\\"
+vim.g.maplocalleader = vim.keycode "<space>"
 
 vim.diagnostic.config {
   virtual_text = false,

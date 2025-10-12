@@ -47,7 +47,7 @@ return {
         desc = "Toggle zen mode",
       },
       {
-        "<leader>e",
+        "<A-e>",
         function()
           require("snacks").explorer()
         end,
@@ -86,7 +86,7 @@ return {
         desc = "Open lazygit log view for current file",
       },
       {
-        "<A-e>",
+        "<A-q>",
         mode = { "n", "t" },
         function()
           require("snacks").terminal.toggle()

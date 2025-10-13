@@ -10,7 +10,6 @@ return {
   init = function()
     vim.opt.sessionoptions = {
       "buffers",
-      "curdir",
       "folds",
       "help",
       "tabpages",

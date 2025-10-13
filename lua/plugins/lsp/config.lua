@@ -169,7 +169,7 @@ function M.init(opts)
       vim.notify(("Unknown LSP server: %s"):format(args.args), vim.log.levels.ERROR)
       return
     end
-    M.lsp_enable(args.args)
+    lsp_utils.lsp_enable(args.args)
   end, {
     nargs = 1,
     complete = function()
@@ -182,7 +182,7 @@ function M.init(opts)
       vim.notify(("Unknown LSP server: %s"):format(args.args), vim.log.levels.ERROR)
       return
     end
-    M.lsp_disable(args.args)
+    lsp_utils.lsp_disable(args.args)
   end, {
     nargs = 1,
     complete = function()

@@ -8,6 +8,7 @@ return {
         vim.o.readonly
         or params.ft == "diff"
         or params.ft == "log"
+        or params.ft == "hgcommit"
         -- from snacks bigfile
         or params.ft == "bigfile"
       then

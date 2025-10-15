@@ -220,6 +220,10 @@ local hg_opts = {
   end,
 }
 
+local jj_config = {
+  base_rev = "@-",
+}
+
 local function jj_cmd(...)
   local JJ = {
     "jj",
@@ -233,6 +237,45 @@ end
 local jj_opts = {
   name = "jj",
 
+  setup = function()
+    vim.api.nvim_create_user_command("MiniJJDiff", function(opts)
+      local rev = opts.args
+      local path = vim.api.nvim_buf_get_name(0)
+      local dir = vim.fs.dirname(path)
+      vim.system(
+        jj_cmd("log", "-r", rev, "--no-graph", "-T", ""),
+        { cwd = dir },
+        function(res)
+          if res.code ~= 0 then
+            vim.schedule(function()
+              vim.notify(("mini.diff jj: '%s' is not a valid rev"):format(rev))
+            end)
+            return
+          end
+          jj_config.base_rev = rev
+          for buf, entry in pairs(cache) do
+            if entry.attached == "jj" then
+              vim.schedule(function()
+                require("mini.diff").disable(buf)
+                require("mini.diff").enable(buf)
+                vim.notify(
+                  ("mini.diff jj: reference rev is set to '%s'"):format(rev)
+                )
+              end)
+            end
+          end
+        end
+      )
+    end, { nargs = 1 })
+    vim.api.nvim_create_user_command("MiniJJPDiff", function()
+      if jj_config.base_rev == "@-" then
+        vim.cmd([[MiniJJDiff @--]])
+      else
+        vim.cmd([[MiniJJDiff @-]])
+      end
+    end, { nargs = 0 })
+  end,
+
   root_to_watch_pattern = function(root)
     return { dir = root .. "/.jj/working_copy", file = "checkout" }
   end,
@@ -245,7 +288,15 @@ local jj_opts = {
     local dir = vim.fs.dirname(path)
     local file = vim.fs.basename(path)
     vim.system(
-      jj_cmd("--ignore-working-copy", "file", "show", "-r", "@-", "--", file),
+      jj_cmd(
+        "--ignore-working-copy",
+        "file",
+        "show",
+        "-r",
+        jj_config.base_rev,
+        "--",
+        file
+      ),
       { cwd = dir },
       function(res)
         if res.code ~= 0 then

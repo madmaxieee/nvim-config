@@ -1,5 +1,7 @@
 local M = {}
 
+local get_jj_root = require("utils.vcs").get_jj_root
+
 local function jj_args(...)
   local args = {
     "--no-pager",
@@ -9,45 +11,13 @@ local function jj_args(...)
   return vim.list_extend(args, { ... })
 end
 
-local jj_cache = {} ---@type table<string, boolean>
----@param dir string
-local function is_jj_root(dir)
-  if jj_cache[dir] == nil then
-    jj_cache[dir] = vim.uv.fs_stat(dir .. "/.jj") ~= nil
-  end
-  return jj_cache[dir]
-end
-
---- Gets the git root for a buffer or path.
---- Defaults to the current buffer.
----@param path? number|string buffer or path
----@return string?
-function M.get_root(path)
-  path = path or 0
-  path = type(path) == "number" and vim.api.nvim_buf_get_name(path) or path --[[@as string]]
-  path = path == "" and vim.uv.cwd() or path
-  path = vim.fs.normalize(path)
-
-  if is_jj_root(path) then
-    return path
-  end
-
-  for dir in vim.fs.parents(path) do
-    if is_jj_root(dir) then
-      return vim.fs.normalize(dir)
-    end
-  end
-
-  return nil
-end
-
 ---@param opts snacks.picker.git.diff.Config
 ---@type snacks.picker.finder
 local function jj_diff_finder(opts, ctx)
   opts = opts or {}
   local args = jj_args("--config", "ui.diff-formatter=:git", "diff")
 
-  local cwd = M.get_root(ctx:cwd())
+  local cwd = get_jj_root(ctx:cwd())
   ctx.picker:set_cwd(cwd)
 
   local Diff = require("snacks.picker.source.diff")

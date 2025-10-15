@@ -1,3 +1,6 @@
+local get_jj_root = require("utils.vcs").get_jj_root
+local get_hg_root = require("utils.vcs").get_hg_root
+
 ---@alias DiffCacheEntry {fs_event:uv.uv_fs_event_t, timer:uv.uv_timer_t, attached?:string}
 
 ---@type table<integer, DiffCacheEntry>
@@ -20,21 +23,13 @@ end
 ---@field name                  string
 ---@field should_enable?        fun(): boolean
 ---@field setup?                fun()
----@field async_find_root       fun(path: string, callback: fun(root: string?))
+---@field get_root              fun(path: string): string?
 ---@field root_to_watch_pattern fun(root: string): WatchPattern
 ---@field async_get_ref_text    fun(path: string, callback: fun(text: string|string[]))
 
 ---@type fun(buf: integer, text: string|string[])
 local set_ref_text = vim.schedule_wrap(function(buf, text)
   local ok, err = pcall(require("mini.diff").set_ref_text, buf, text)
-  if not ok and err then
-    vim.notify(err)
-  end
-end)
-
----@type fun(buf: integer)
-local fail_attach = vim.schedule_wrap(function(buf)
-  local ok, err = pcall(require("mini.diff").fail_attach, buf)
   if not ok and err then
     vim.notify(err)
   end
@@ -112,25 +107,24 @@ local function make_diff_source(opts)
       if cache[buf] ~= nil then
         return false
       end
+
       local path = get_buf_realpath(buf)
       if not path then
         return false
       end
 
+      local root = opts.get_root(path)
+      if not root then
+        return false
+      end
+
       cache[buf] = { attached = name }
 
-      local function fs_callback()
+      local watch_pattern = opts.root_to_watch_pattern(root)
+      start_watching(buf, watch_pattern, function()
         opts.async_get_ref_text(path, function(text)
           set_ref_text(buf, text)
         end)
-      end
-      opts.async_find_root(path, function(root)
-        if root then
-          local watch_pattern = opts.root_to_watch_pattern(root)
-          start_watching(buf, watch_pattern, fs_callback)
-        else
-          fail_attach(buf)
-        end
       end)
     end,
 
@@ -205,21 +199,8 @@ local hg_opts = {
     return { dir = root .. "/.hg", file = "dirstate" }
   end,
 
-  async_find_root = function(path, callback)
-    local dir = vim.fn.fnamemodify(path, ":h")
-    vim.system(hg_cmd("root"), { cwd = dir }, function(res)
-      if res.code ~= 0 then
-        callback(nil)
-        return
-      end
-      local output = res.stdout or ""
-      local root = vim.trim(output)
-      if not root or root == "" then
-        callback(nil)
-        return
-      end
-      callback(root)
-    end)
+  get_root = function(path)
+    return get_hg_root(path)
   end,
 
   async_get_ref_text = function(path, callback)
@@ -257,21 +238,8 @@ local jj_opts = {
     return { dir = root .. "/.jj/working_copy", file = "checkout" }
   end,
 
-  async_find_root = function(path, callback)
-    local dir = vim.fn.fnamemodify(path, ":h")
-    vim.system(jj_cmd("root"), { cwd = dir }, function(res)
-      if res.code ~= 0 then
-        callback(nil)
-        return
-      end
-      local output = res.stdout or ""
-      local root = vim.trim(output)
-      if not root or root == "" then
-        callback(nil)
-        return
-      end
-      callback(root)
-    end)
+  get_root = function(path)
+    return get_jj_root(path)
   end,
 
   async_get_ref_text = function(path, callback)

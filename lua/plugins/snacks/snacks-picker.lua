@@ -46,9 +46,8 @@ return {
     {
       "<leader>fg",
       function()
-        local jj = require("plugins.snacks.jj")
-        if jj.get_root() ~= nil then
-          jj.diff()
+        if require("utils.vcs").get_jj_root() ~= nil then
+          require("plugins.snacks.jj").diff()
         else
           require("snacks").picker.git_status()
         end

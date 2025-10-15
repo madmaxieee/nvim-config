@@ -9,21 +9,34 @@ local no_format = {
   ["eslint"] = true, -- don't auto fix eslint errors
   ["cmake"] = true,
 }
-local function formatter_filter(client)
-  if no_format[client.name] then
-    return false
+---@param bufnr number?
+local function make_formatter_filter(bufnr)
+  local ft = vim.bo[bufnr or 0].filetype
+
+  ---@param client vim.lsp.Client
+  local function formatter_filter(client)
+    if no_format[client.name] then
+      return false
+    end
+    local null_ls = require "null-ls"
+    if ft == "lua" and null_ls.is_registered "stylua" then
+      return client.name == "null-ls"
+    end
+    if ft == "typescript" or ft == "typescriptreact" or ft == "javascript" or ft == "javascriptreact" then
+      if null_ls.is_registered "prettierd" then
+        return client.name == "null-ls"
+      end
+    end
+    if ft == "java" and null_ls.is_registered "google-java-format" then
+      return client.name == "null-ls"
+    end
+    if ft == "python" and null_ls.is_registered "pyformat" then
+      return client.name == "null-ls"
+    end
+    return true
   end
-  local null_ls = require "null-ls"
-  if client.name == "ts_ls" and null_ls.is_registered "prettierd" then
-    return false
-  end
-  if client.name == "lua_ls" and null_ls.is_registered "stylua" then
-    return false
-  end
-  if client.name == "jdtls" and null_ls.is_registered "google-java-format" then
-    return false
-  end
-  return true
+
+  return formatter_filter
 end
 
 local no_lsp_filetype = {
@@ -67,6 +80,7 @@ function M.on_attach(client, bufnr)
     end, { buffer = bufnr, desc = "Accept inline completion" })
   end
 
+  local formatter_filter = make_formatter_filter(bufnr)
   if (client:supports_method "textDocument/formatting" or client.name == "jdtls") and formatter_filter(client) then
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
@@ -127,6 +141,7 @@ function M.init(opts)
   end, {})
 
   vim.api.nvim_create_user_command("Format", function(args)
+    local formatter_filter = make_formatter_filter()
     if args.range == 0 then
       vim.lsp.buf.format { filter = formatter_filter }
     else
@@ -134,6 +149,7 @@ function M.init(opts)
       vim.lsp.buf.format { filter = formatter_filter }
     end
   end, { range = true })
+  vim.cmd.cabbrev("F", "Format")
 
   -- detach lsps from current buffer
   vim.api.nvim_create_user_command("DetachLsp", function()

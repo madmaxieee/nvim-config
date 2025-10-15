@@ -1,6 +1,5 @@
 return {
-  cond = vim.startswith(vim.uv.cwd() or "", "/google/src/cloud"),
-  -- NOTE: Don't need this when working in gerrit
+  cond = require("modes").google3_mode,
   "yairhochner/google-snacks.nvim",
   url = "sso://user/yairhochner/google-snacks.nvim",
   lazy = false,

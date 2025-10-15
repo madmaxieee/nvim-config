@@ -1,6 +1,7 @@
 ---@class Modes
 ---@field minimal_mode? boolean
 ---@field difftool_mode? boolean
+---@field google3_mode? boolean
 
 ---@type Modes
 local M = {}
@@ -55,6 +56,10 @@ local function is_difftool_mode()
   return false
 end
 
+local function is_google3_mode()
+  return vim.startswith(vim.uv.cwd() or "", "/google/src/cloud")
+end
+
 return setmetatable(M, {
   __index = function(t, k)
     if k == "minimal_mode" then
@@ -66,6 +71,11 @@ return setmetatable(M, {
       local difftool_mode = is_difftool_mode()
       rawset(t, k, difftool_mode)
       return difftool_mode
+    end
+    if k == "google3_mode" then
+      local google3_mode = is_google3_mode()
+      rawset(t, k, google3_mode)
+      return google3_mode
     end
   end,
 })

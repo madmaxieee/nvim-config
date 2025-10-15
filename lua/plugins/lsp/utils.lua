@@ -76,7 +76,7 @@ function M.make_formatter_filter(bufnr)
       vim.tbl_contains({
         "json",
         "jsonc",
-      }, ft) and null_ls.is_registered("pyformat")
+      }, ft) and null_ls.is_registered("prettierd")
     then
       return client.name == "null-ls"
     end

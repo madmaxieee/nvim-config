@@ -84,6 +84,10 @@ function M.on_attach(client, bufnr)
   if (client:supports_method "textDocument/formatting" or client.name == "jdtls") and formatter_filter(client) then
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
+      group = vim.api.nvim_create_augroup(
+        ("lsp.buf[%d].formatOnSave: %s"):format(bufnr, client.name),
+        { clear = true }
+      ),
       desc = ("Format buffer with %s"):format(client.name),
       callback = function()
         if vim.g.FormatOnSave == 0 then

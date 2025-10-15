@@ -63,10 +63,6 @@ function M.set_keymaps(bufnr)
     vim.lsp.buf.rename()
   end, { buffer = bufnr, desc = "LSP rename" })
 
-  map({ "n", "v" }, "<leader>F", function()
-    vim.lsp.buf.format { filter = M.formatter_filter }
-  end, { buffer = bufnr, desc = "Format buffer/range" })
-
   vim.b[bufnr].lsp_keymaps_set = true
 end
 

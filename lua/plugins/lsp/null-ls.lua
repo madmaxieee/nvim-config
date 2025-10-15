@@ -51,10 +51,11 @@ return {
         lint.fish,
         -- custom
         custom.bpfmt,
+        custom.cpplint,
         custom.google_java_format,
+        custom.pyformat,
         custom.trailing_ws,
         custom.trailing_ws_action,
-        custom.cpplint,
       }
 
       local sources_map = {}

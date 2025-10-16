@@ -7,6 +7,8 @@ local languages = {
   "doxygen",
   "rust",
   "go",
+  "gomod",
+  "gosum",
   "java",
   "zig",
   "python",

@@ -60,3 +60,6 @@ vim.diagnostic.config {
     },
   },
 }
+
+-- disable built in ftplugin mappings
+vim.g.no_plugin_maps = true

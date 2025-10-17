@@ -6,6 +6,8 @@
 ---@type Modes
 local M = {}
 
+local cwd = vim.uv.cwd() or vim.fn.getcwd()
+
 local function is_minimal_mode()
   -- when nvim used by tmux scrollback buffer
   if vim.env.TMUX_SCROLLBACK then
@@ -57,25 +59,18 @@ local function is_difftool_mode()
 end
 
 local function is_google3_mode()
-  return vim.startswith(vim.uv.cwd() or "", "/google/src/cloud")
+  return vim.startswith(cwd, "/google/src/cloud")
 end
 
 return setmetatable(M, {
   __index = function(t, k)
-    if k == "minimal_mode" then
-      local minimal_mode = is_minimal_mode()
-      rawset(t, k, minimal_mode)
-      return minimal_mode
-    end
-    if k == "difftool_mode" then
-      local difftool_mode = is_difftool_mode()
-      rawset(t, k, difftool_mode)
-      return difftool_mode
-    end
-    if k == "google3_mode" then
-      local google3_mode = is_google3_mode()
-      rawset(t, k, google3_mode)
-      return google3_mode
-    end
+    local get_mode = {
+      minimal_mode = is_minimal_mode,
+      difftool_mode = is_difftool_mode,
+      google3_mode = is_google3_mode,
+    }
+    local mode = get_mode[k]()
+    rawset(t, k, mode)
+    return mode
   end,
 })

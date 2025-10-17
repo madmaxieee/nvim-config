@@ -44,6 +44,7 @@ return {
 
   {
     "lewis6991/gitsigns.nvim",
+    event = { "BufRead" },
     ft = { "gitcommit", "diff" },
     opts = {
       current_line_blame = true,
@@ -117,22 +118,6 @@ return {
             buffer = opts.buf,
             once = true,
           })
-        end,
-      })
-
-      -- load gitsigns only when a git file is opened
-      vim.api.nvim_create_autocmd("BufRead", {
-        group = vim.api.nvim_create_augroup("GitSignsLazyLoad", { clear = true }),
-        callback = function()
-          if vim.g.loaded_gitsigns then
-            return
-          end
-          if vim.v.shell_error == 0 then
-            vim.api.nvim_del_augroup_by_name "GitSignsLazyLoad"
-            require("lazy").load { plugins = { "gitsigns.nvim" } }
-            vim.api.nvim_create_user_command("GitBlame", "Gitsigns blame", {})
-            vim.g.loaded_gitsigns = true
-          end
         end,
       })
     end,

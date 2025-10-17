@@ -24,6 +24,52 @@ function M.make_diagnostics_filter(to_filter)
   end
 end
 
+---@param bufnr number?
+function M.make_rename_filter(bufnr)
+  local ft = vim.bo[bufnr or 0].filetype
+  ---@param client vim.lsp.Client
+  return function(client)
+    if ft == "python" and vim.lsp.is_enabled "pyright" then
+      return client.name == "pyright"
+    end
+    return true
+  end
+end
+
+local no_format = {
+  ["eslint"] = true, -- don't auto fix eslint errors
+  ["cmake"] = true,
+}
+---@param bufnr number?
+function M.make_formatter_filter(bufnr)
+  local ft = vim.bo[bufnr or 0].filetype
+
+  ---@param client vim.lsp.Client
+  local function formatter_filter(client)
+    if no_format[client.name] then
+      return false
+    end
+    local null_ls = require "null-ls"
+    if ft == "lua" and null_ls.is_registered "stylua" then
+      return client.name == "null-ls"
+    end
+    if ft == "typescript" or ft == "typescriptreact" or ft == "javascript" or ft == "javascriptreact" then
+      if null_ls.is_registered "prettierd" then
+        return client.name == "null-ls"
+      end
+    end
+    if ft == "java" and null_ls.is_registered "google-java-format" then
+      return client.name == "null-ls"
+    end
+    if ft == "python" and null_ls.is_registered "pyformat" then
+      return client.name == "null-ls"
+    end
+    return true
+  end
+
+  return formatter_filter
+end
+
 local default_disabled_lsp = {
   ["cpplint"] = true,
   ["copilot"] = true,

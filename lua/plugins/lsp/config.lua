@@ -5,40 +5,6 @@ local map = utils.safe_keymap_set
 local lsp_utils = require "plugins.lsp.utils"
 local set_keymaps = require("plugins.lsp.keymaps").set_keymaps
 
-local no_format = {
-  ["eslint"] = true, -- don't auto fix eslint errors
-  ["cmake"] = true,
-}
----@param bufnr number?
-local function make_formatter_filter(bufnr)
-  local ft = vim.bo[bufnr or 0].filetype
-
-  ---@param client vim.lsp.Client
-  local function formatter_filter(client)
-    if no_format[client.name] then
-      return false
-    end
-    local null_ls = require "null-ls"
-    if ft == "lua" and null_ls.is_registered "stylua" then
-      return client.name == "null-ls"
-    end
-    if ft == "typescript" or ft == "typescriptreact" or ft == "javascript" or ft == "javascriptreact" then
-      if null_ls.is_registered "prettierd" then
-        return client.name == "null-ls"
-      end
-    end
-    if ft == "java" and null_ls.is_registered "google-java-format" then
-      return client.name == "null-ls"
-    end
-    if ft == "python" and null_ls.is_registered "pyformat" then
-      return client.name == "null-ls"
-    end
-    return true
-  end
-
-  return formatter_filter
-end
-
 local no_lsp_filetype = {
   ["toggleterm"] = true,
   ["help"] = true,
@@ -47,6 +13,8 @@ local no_lsp_filetype = {
   ["bigfile"] = true,
 }
 -- disable lsp for certain filetypes and in diff mode
+---@param client vim.lsp.Client
+---@param bufnr number
 local function should_disable_lsp(client, bufnr)
   if vim.wo.diff then
     return true
@@ -66,6 +34,8 @@ local function should_disable_lsp(client, bufnr)
   return false
 end
 
+---@param client vim.lsp.Client
+---@param bufnr number
 function M.on_attach(client, bufnr)
   set_keymaps(bufnr)
 
@@ -80,7 +50,7 @@ function M.on_attach(client, bufnr)
     end, { buffer = bufnr, desc = "Accept inline completion" })
   end
 
-  local formatter_filter = make_formatter_filter(bufnr)
+  local formatter_filter = lsp_utils.make_formatter_filter(bufnr)
   if (client:supports_method "textDocument/formatting" or client.name == "jdtls") and formatter_filter(client) then
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
@@ -124,7 +94,9 @@ function M.init(opts)
     callback = function(args)
       local bufnr = args.buf
       local client_id = args.data.client_id
-      M.on_attach(vim.lsp.get_client_by_id(client_id), bufnr)
+      local client = vim.lsp.get_client_by_id(client_id)
+      assert(client)
+      M.on_attach(client, bufnr)
     end,
   })
   vim.api.nvim_create_autocmd("LspDetach", {
@@ -145,7 +117,7 @@ function M.init(opts)
   end, {})
 
   vim.api.nvim_create_user_command("Format", function(args)
-    local formatter_filter = make_formatter_filter()
+    local formatter_filter = lsp_utils.make_formatter_filter()
     if args.range == 0 then
       vim.lsp.buf.format { filter = formatter_filter }
     else
@@ -173,6 +145,7 @@ function M.init(opts)
       local bufnr = args.buf
       local client_id = args.data.client_id
       local client = vim.lsp.get_client_by_id(client_id)
+      assert(client)
       if should_disable_lsp(client, bufnr) then
         vim.schedule(function()
           vim.lsp.buf_detach_client(bufnr, client_id)
@@ -230,8 +203,7 @@ end
 function M.setup(opts)
   local servers = opts.servers
   local server_configs = opts.server_configs
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+  local capabilities = require("blink.cmp").get_lsp_capabilities()
   vim.lsp.config("*", { capabilities = capabilities })
   for lsp, config in pairs(server_configs) do
     if type(config) == "function" then

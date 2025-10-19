@@ -80,21 +80,27 @@ return {
         enabled = true,
         cmdline = true,
         pairs = {
+          ["!"] = { { "<!--", "-->", languages = { "html", "markdown", "markdown_inline" } } },
+          ["("] = ")",
+          ["["] = "]",
+          ["{"] = "}",
           ["'"] = {
-            {
-              -- their is no single quote in nix, only two single quotes for multi-line strings
+            { -- new
+              -- there is no single quote in nix, only double single quotes for multi-line strings
               "''",
               "''",
               languages = { "nix" },
               priority = 100,
             },
-            -- default config
             {
               "'''",
               when = function(ctx)
                 return ctx:text_before_cursor(2) == "''"
               end,
-              languages = { "python" },
+              languages = {
+                "python",
+                "toml", -- new
+              },
             },
             {
               "'",
@@ -105,6 +111,78 @@ return {
                   and not ctx.char_under_cursor:match "%w"
                   and ctx.ts:blacklist("singlequote").matches
               end,
+            },
+          },
+          ['"'] = {
+            {
+              'r#"',
+              '"#',
+              languages = { "rust" },
+              priority = 100,
+            },
+            {
+              '"""',
+              when = function(ctx)
+                return ctx:text_before_cursor(2) == '""'
+              end,
+              languages = {
+                "python",
+                "elixir",
+                "julia",
+                "kotlin",
+                "scala",
+                "toml", -- new
+              },
+            },
+            { '"', enter = false, space = false },
+          },
+          ["`"] = {
+            {
+              "```",
+              when = function(ctx)
+                return ctx:text_before_cursor(2) == "``"
+              end,
+              languages = { "markdown", "markdown_inline", "typst", "vimwiki", "rmarkdown", "rmd", "quarto" },
+            },
+            {
+              "`",
+              "'",
+              languages = { "bibtex", "latex", "plaintex" },
+            },
+            { "`", enter = false, space = false },
+          },
+          ["_"] = {
+            {
+              "_",
+              when = function(ctx)
+                return not ctx.char_under_cursor:match "%w" and ctx.ts:blacklist("underscore").matches
+              end,
+              languages = { "typst" },
+            },
+          },
+          ["*"] = {
+            {
+              "*",
+              when = function(ctx)
+                return ctx.ts:blacklist("asterisk").matches
+              end,
+              languages = { "typst" },
+            },
+          },
+          ["<"] = {
+            {
+              "<",
+              ">",
+              when = function(ctx)
+                return ctx.ts:whitelist("angle").matches
+              end,
+              languages = { "rust" },
+            },
+          },
+          ["$"] = {
+            {
+              "$",
+              languages = { "markdown", "markdown_inline", "typst", "latex", "plaintex" },
             },
           },
         },

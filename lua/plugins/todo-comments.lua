@@ -28,11 +28,6 @@ return {
           icon = " ",
           color = "warning",
         },
-        FIX = {
-          icon = " ",
-          color = "error",
-          alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
-        },
         TODO = {
           icon = " ",
           color = "info",
@@ -41,11 +36,6 @@ return {
           icon = " ",
           color = "warning",
         },
-        WHY = {
-          icon = "? ",
-          color = "warning",
-          alt = { "WTF", "WHAT" },
-        },
         WARN = {
           icon = " ",
           color = "warning",
@@ -53,17 +43,10 @@ return {
         },
         PERF = {
           icon = "󰅒",
-          alt = { "PERFORMANCE", "OPTIM", "OPTIMIZE" },
         },
         NOTE = {
           icon = "",
           color = "hint",
-          alt = { "INFO" },
-        },
-        TEST = {
-          icon = "⏲ ",
-          color = "test",
-          alt = { "TESTING", "PASSED", "FAILED" },
         },
       },
       -- allow comments like these to work

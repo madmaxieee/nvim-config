@@ -78,6 +78,7 @@ local server_configs = {
     }
   end,
   taplo = {
+    root_dir = vim.uv.cwd() or vim.fn.getcwd(),
     handlers = {
       ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter {
         message = { "this document has been excluded" },

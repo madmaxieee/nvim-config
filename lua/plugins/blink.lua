@@ -86,11 +86,12 @@ return {
           ["{"] = "}",
           ["'"] = {
             { -- new
-              -- there is no single quote in nix, only double single quotes for multi-line strings
               "''",
               "''",
+              when = function(ctx)
+                return ctx:text_before_cursor(1) == "'"
+              end,
               languages = { "nix" },
-              priority = 100,
             },
             {
               "'''",

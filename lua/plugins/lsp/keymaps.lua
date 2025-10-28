@@ -61,7 +61,7 @@ function M.set_keymaps(bufnr)
   end, { buffer = bufnr, desc = "LSP code action" })
 
   map("n", "<leader>ra", function()
-    vim.lsp.buf.rename(nil, { filter = lsp_utils.make_rename_filter() })
+    vim.lsp.buf.rename()
   end, { buffer = bufnr, desc = "LSP rename" })
 
   vim.b[bufnr].lsp_keymaps_set = true

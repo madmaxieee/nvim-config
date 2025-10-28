@@ -26,12 +26,11 @@ end
 
 ---@param bufnr number?
 function M.make_rename_filter(bufnr)
+  ---@diagnostic disable-next-line: unused-local
   local ft = vim.bo[bufnr or 0].filetype
   ---@param client vim.lsp.Client
+  ---@diagnostic disable-next-line: unused-local
   return function(client)
-    if ft == "python" and vim.lsp.is_enabled "pyright" then
-      return client.name == "pyright"
-    end
     return true
   end
 end

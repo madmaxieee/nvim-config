@@ -77,11 +77,13 @@ utils.on_load("nvim-lspconfig", function()
             if client.name == "pyright" then
               client.server_capabilities.completionProvider = nil
               client.server_capabilities.definitionProvider = nil
+              -- client.server_capabilities.diagnosticProvider = nil
               client.server_capabilities.documentHighlightProvider = nil
               client.server_capabilities.documentSymbolProvider = nil
               client.server_capabilities.hoverProvider = nil
               client.server_capabilities.implementationProvider = nil
               client.server_capabilities.referencesProvider = nil
+              client.server_capabilities.renameProvider = nil
               client.server_capabilities.semanticTokensProvider = nil
               client.server_capabilities.signatureHelpProvider = nil
               client.server_capabilities.typeDefinitionProvider = nil

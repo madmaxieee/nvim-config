@@ -88,7 +88,7 @@ return {
           end
         end
         vim.schedule(function()
-          vim.cmd [[windo filetype detect]]
+          vim.cmd [[tabdo windo filetype detect]]
         end)
       end,
     })

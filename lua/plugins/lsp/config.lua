@@ -22,7 +22,7 @@ local function should_disable_lsp(client, bufnr)
   if no_lsp_filetype[vim.bo[bufnr].filetype] then
     return true
   end
-  if not lsp_utils.lsp_is_enabled(client.name) then
+  if not lsp_utils.lsp_should_enable(client.name) then
     return true
   end
   -- lsp specific disable rules
@@ -187,8 +187,12 @@ function M.init(opts)
     group = vim.api.nvim_create_augroup("lsp.disable.project", { clear = true }),
     callback = function()
       for _, lsp in ipairs(servers) do
-        if not lsp_utils.lsp_is_enabled(lsp) then
-          vim.cmd("LspStop " .. lsp)
+        if lsp_utils.lsp_should_enable(lsp) then
+          if not vim.lsp.is_enabled(lsp) then
+            lsp_utils.lsp_enable(lsp)
+          end
+        else
+          lsp_utils.lsp_disable(lsp)
         end
       end
       vim.diagnostic.reset(nil, 0)
@@ -212,7 +216,7 @@ function M.setup(opts)
     vim.lsp.config(lsp, config)
   end
   -- this reads the default values, since session is likely not loaded yet
-  vim.lsp.enable(vim.tbl_filter(lsp_utils.lsp_is_enabled, servers))
+  vim.lsp.enable(vim.tbl_filter(lsp_utils.lsp_should_enable, servers))
 end
 
 return M

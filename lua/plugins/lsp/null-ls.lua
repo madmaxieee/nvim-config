@@ -1,6 +1,8 @@
 local lsp_config = require "plugins.lsp.config"
 local lsp_utils = require "plugins.lsp.utils"
 
+local sources_map = {}
+
 return {
   {
     "williamboman/mason.nvim",
@@ -25,6 +27,28 @@ return {
     "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "williamboman/mason.nvim" },
+    init = function()
+      vim.api.nvim_create_autocmd("SessionLoadPost", {
+        group = vim.api.nvim_create_augroup("null-ls.disable.project", { clear = true }),
+        callback = function()
+          local null_ls = require "null-ls"
+          assert(not vim.tbl_isempty(sources_map), "null-ls sources_map is empty")
+          for name, _ in pairs(sources_map) do
+            if lsp_utils.lsp_should_enable(name) then
+              if null_ls.is_registered(name) then
+                null_ls.enable(name)
+              else
+                null_ls.register(sources_map[name])
+              end
+            else
+              if null_ls.is_registered(name) then
+                null_ls.disable(name)
+              end
+            end
+          end
+        end,
+      })
+    end,
     config = function()
       local null_ls = require "null-ls"
 
@@ -58,7 +82,7 @@ return {
         custom.trailing_ws_action,
       }
 
-      local sources_map = {}
+      -- initialize source map
       for _, source in ipairs(sources) do
         if type(source) == "function" then
           source = source()
@@ -100,17 +124,6 @@ return {
         nargs = 1,
         complete = function()
           return vim.tbl_keys(sources_map)
-        end,
-      })
-
-      vim.api.nvim_create_autocmd("SessionLoadPost", {
-        group = vim.api.nvim_create_augroup("null-ls.global_var_disable", { clear = true }),
-        callback = function()
-          for name, _ in pairs(sources_map) do
-            if not lsp_utils.lsp_is_enabled(name) and null_ls.is_registered(name) then
-              null_ls.disable(name)
-            end
-          end
         end,
       })
     end,

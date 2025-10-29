@@ -16,13 +16,13 @@ end
 vim.api.nvim_create_autocmd("SessionLoadPost", {
   once = true,
   callback = function()
-    if lsp_utils.lsp_is_enabled "copilot" and should_ask() then
+    if lsp_utils.lsp_should_enable "copilot" and should_ask() then
       vim.defer_fn(function()
         local enable = confirm_use_copilot()
         if enable then
-          vim.cmd "CopilotEnable"
+          lsp_utils.lsp_enable "copilot"
         else
-          vim.cmd "CopilotDisable"
+          lsp_utils.lsp_disable "copilot"
         end
       end, 300)
     end

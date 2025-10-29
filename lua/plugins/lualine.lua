@@ -35,7 +35,7 @@ end
 
 local function show_lsp_status()
   local icon = "   "
-  if require("plugins.lsp.utils").lsp_is_enabled "copilot" then
+  if require("plugins.lsp.utils").lsp_should_enable "copilot" then
     icon = "   "
   else
     icon = "   "

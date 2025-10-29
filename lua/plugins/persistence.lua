@@ -26,6 +26,19 @@ return {
       ["/tmp"] = true,
     }
 
+    local function get_current_session()
+      local persistence = require "persistence"
+      local file = persistence.current()
+      if vim.fn.filereadable(file) == 0 then
+        file = persistence.current { branch = false }
+      end
+      return file
+    end
+
+    local function has_session()
+      return vim.fn.filereadable(get_current_session()) == 1
+    end
+
     -- disable persistence for certain directories
     vim.api.nvim_create_autocmd("VimEnter", {
       group = persistence_group,
@@ -38,21 +51,26 @@ return {
         end
         local argv = vim.fn.argv()
         local argc = vim.fn.argc()
+        local persistence_did_load = false
         if argc == 0 then
           persistence.load()
+          persistence_did_load = has_session()
         elseif argc > 0 and vim.fn.isdirectory(argv[1]) == 1 then
           persistence.stop()
           vim.fn.chdir(argv[1])
-          local file = persistence.current { branch = false }
-          local file_branch = persistence.current { branch = true }
-          if vim.fn.filereadable(file_branch) == 0 and vim.fn.filereadable(file) == 0 then
+          if not has_session() then
             require("oil").open(vim.fn.getcwd())
           else
             persistence.load()
+            persistence_did_load = true
           end
           persistence.start()
         else
           persistence.stop()
+        end
+        if not persistence_did_load then
+          -- also triggers SessionLoadPost autocmd if no session was loaded
+          vim.api.nvim_exec_autocmds("SessionLoadPost", {})
         end
       end,
       nested = true,
@@ -92,6 +110,12 @@ return {
         end)
       end,
     })
+
+    vim.api.nvim_create_user_command("PersistenceDelete", function()
+      local persistence = require "persistence"
+      persistence.stop()
+      vim.fs.rm(get_current_session(), { force = true })
+    end, {})
   end,
   opts = {
     dir = vim.fn.expand(state_dir) .. "/sessions/",

@@ -80,7 +80,7 @@ local function get_lsp_global_var(client_name)
 end
 
 ---@param client_name string
-function M.lsp_is_enabled(client_name)
+function M.lsp_should_enable(client_name)
   if client_name == nil or client_name == "" then
     return false
   end

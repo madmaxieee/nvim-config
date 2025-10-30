@@ -45,6 +45,9 @@ vim.opt.diffopt:append {
   "algorithm:patience",
 }
 
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
 vim.g.mapleader = vim.keycode "<space>"
 vim.g.maplocalleader = vim.keycode "<space>"
 

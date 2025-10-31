@@ -122,8 +122,8 @@ end
 
 function M.lsp_enable(server)
   set_lsp_enabled_var(server, true)
-  if vim.fn.exists ":LspRestart" == 1 then
-    vim.cmd("LspRestart " .. server)
+  if vim.fn.exists ":LspStart" == 1 then
+    vim.cmd("LspStart " .. server)
     vim.diagnostic.reset(nil, 0)
   end
 end

@@ -34,11 +34,11 @@ local function show_branch()
 end
 
 local function show_lsp_status()
-  local icon = "   "
+  local copilot_icon
   if require("plugins.lsp.utils").lsp_should_enable "copilot" then
-    icon = "   "
+    copilot_icon = "   "
   else
-    icon = "   "
+    copilot_icon = "   "
   end
   for _, client in ipairs(vim.lsp.get_clients()) do
     if
@@ -47,9 +47,10 @@ local function show_lsp_status()
       and client.name ~= "typos_lsp"
       and client.name ~= "copilot"
     then
-      return (vim.o.columns > 100 and icon .. client.name) or icon
+      return (vim.o.columns > 100 and copilot_icon .. client.name) or copilot_icon
     end
   end
+  return copilot_icon
 end
 
 local function show_file_info()

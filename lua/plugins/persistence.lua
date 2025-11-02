@@ -100,11 +100,6 @@ return {
     vim.api.nvim_create_autocmd("SessionLoadPost", {
       group = persistence_group,
       callback = function()
-        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-          if vim.bo[buf].buftype == "" and vim.fn.filereadable(vim.api.nvim_buf_get_name(buf)) == 0 then
-            vim.api.nvim_buf_delete(buf, { force = true })
-          end
-        end
         vim.schedule(function()
           vim.cmd [[tabdo windo filetype detect]]
         end)

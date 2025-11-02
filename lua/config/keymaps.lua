@@ -14,11 +14,6 @@ map({ "n", "x", "o" }, "F", repeatable.builtin_F_expr, { expr = true })
 map({ "n", "x", "o" }, "t", repeatable.builtin_t_expr, { expr = true })
 map({ "n", "x", "o" }, "T", repeatable.builtin_T_expr, { expr = true })
 
-map("i", "<C-h>", "<Left>", { desc = "Move left" })
-map("i", "<C-j>", "<Down>", { desc = "Move down" })
-map("i", "<C-k>", "<Up>", { desc = "Move up" })
-map("i", "<C-l>", "<Right>", { desc = "Move right" })
-
 -- move line up and down
 map("n", "<A-j>", "<cmd> m+ <CR>", { desc = "Move current line down" })
 map("n", "<A-k>", "<cmd> m-- <CR>", { desc = "Move current line up" })

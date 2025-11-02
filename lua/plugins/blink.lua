@@ -18,7 +18,7 @@ return {
     opts = {
       keymap = {
         preset = "default",
-        ["<A-space>"] = { "show", "show_documentation", "hide_documentation" },
+        ["<C-j>"] = { "show", "show_documentation", "hide_documentation" },
       },
       appearance = {
         use_nvim_cmp_as_default = false,

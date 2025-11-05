@@ -18,7 +18,7 @@ return {
     opts = {
       keymap = {
         preset = "default",
-        ["<C-j>"] = { "show", "show_documentation", "hide_documentation" },
+        ["<C-n>"] = { "show", "select_next", "fallback_to_mappings" },
       },
       appearance = {
         use_nvim_cmp_as_default = false,

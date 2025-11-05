@@ -62,7 +62,7 @@ return {
       local lsp_utils = require "plugins.lsp.utils"
       lsp_utils.lsp_disable "typos_lsp"
       vim.api.nvim_create_autocmd("User", {
-        pattern = "ObsidianNoteEnter",
+        pattern = "VeryLazy",
         once = true,
         callback = function()
           lsp_utils.lsp_enable "typos_lsp"

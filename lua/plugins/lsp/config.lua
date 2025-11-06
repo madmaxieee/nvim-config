@@ -183,6 +183,14 @@ function M.init(opts)
     end,
   })
 
+  vim.api.nvim_create_user_command("CopilotEnable", function()
+    lsp_utils.lsp_enable "copilot"
+  end, {})
+
+  vim.api.nvim_create_user_command("CopilotDisable", function()
+    lsp_utils.lsp_disable "copilot"
+  end, {})
+
   vim.api.nvim_create_autocmd("SessionLoadPost", {
     group = vim.api.nvim_create_augroup("lsp.disable.project", { clear = true }),
     callback = function()
@@ -198,8 +206,6 @@ function M.init(opts)
       vim.diagnostic.reset(nil, 0)
     end,
   })
-
-  require "plugins.lsp.copilot"
 end
 
 ---@alias ServerConfig vim.lsp.Config | fun(): vim.lsp.Config

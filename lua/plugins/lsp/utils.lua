@@ -52,7 +52,15 @@ function M.make_formatter_filter(bufnr)
     if ft == "lua" and null_ls.is_registered "stylua" then
       return client.name == "null-ls"
     end
-    if ft == "typescript" or ft == "typescriptreact" or ft == "javascript" or ft == "javascriptreact" then
+    if
+      vim.tbl_contains({
+        "typescript",
+        "typescriptreact",
+        "javascript",
+        "javascriptreact",
+        "svelte",
+      }, ft)
+    then
       if null_ls.is_registered "prettierd" then
         return client.name == "null-ls"
       end
@@ -138,7 +146,7 @@ end
 
 function M.null_ls_enable(source_name, source)
   local null_ls = require "null-ls"
-  set_lsp_enabled_var(source_name, false)
+  set_lsp_enabled_var(source_name, true)
   if null_ls.is_registered(source_name) then
     null_ls.enable(source_name)
   else

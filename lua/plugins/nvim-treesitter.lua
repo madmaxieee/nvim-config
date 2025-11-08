@@ -25,10 +25,12 @@ local languages = {
   -- web
   "javascript",
   "typescript",
+  "jsx",
   "tsx",
   "html",
   "css",
   "graphql",
+  "svelte",
 
   -- document
   "markdown",

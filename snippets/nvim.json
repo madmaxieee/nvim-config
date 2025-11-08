@@ -25,7 +25,7 @@
     ]
   },
   "user command": {
-    "prefix": ["ncuc", "usercommand"],
+    "prefix": ["ncuc", "usercmd"],
     "body": [
       "vim.api.nvim_create_user_command(\"${1:Command}\", function(${2:opts})",
       "  ${3}",

@@ -42,3 +42,6 @@ vim.api.nvim_create_user_command("InlayHintToggle", function()
   vim.lsp.inlay_hint.enable(new_value)
   vim.notify("Inlay hints " .. (new_value and "enabled" or "disabled"))
 end, {})
+
+vim.api.nvim_create_user_command("Diffthis", "windo diffthis", {})
+vim.api.nvim_create_user_command("Diffoff", "windo diffoff", {})

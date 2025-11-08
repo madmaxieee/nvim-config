@@ -24,25 +24,30 @@ local function is_minimal_mode()
     return true
   end
 
-  -- when nvim is used by fish to edit command line
   local argc = vim.fn.argc()
   local argv = vim.fn.argv()
   -- if on macos then argv will be like this:
   -- { "/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.UDKOra60Bm.fish" }
+  -- { "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/editor-Hj11cQ.jjdescription" }
   -- { "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.0jb32zqIvy.fish" }
-  if vim.fn.has "mac" == 1 then
-    if argc == 1 and string.match(argv[1], "/var/folders/.+/.+/T/tmp%.%w+%.fish$") then
-      return true
-    end
-  end
-  if vim.fn.has "linux" == 1 then
-    if argc == 1 and string.match(argv[1], "/tmp/tmp%.%w+%.fish$") then
-      return true
+  if argc == 1 then
+    if
+      vim.fn.has "mac" == 1 and string.match(argv[1], "/var/folders/[^/]+/[^/]+/T/")
+      or vim.fn.has "linux" == 1 and string.match(argv[1], "^/tmp/")
+    then
+      -- when used by fish shell to edit command line
+      if string.match(argv[1], "/tmp%.%w+%.fish$") then
+        return true
+      end
+      -- when used by jujitsu to edit description
+      if string.match(argv[1], "/editor%-%w+%.jjdescription$") then
+        return true
+      end
     end
   end
 
   -- when nvim is used in vipe (my script)
-  if argc == 1 and string.match(argv[1], "/tmp/vipe%.[0-9]+%.txt$") then
+  if argc == 1 and string.match(argv[1], "^/tmp/vipe%.[0-9]+%.txt$") then
     return true
   end
 

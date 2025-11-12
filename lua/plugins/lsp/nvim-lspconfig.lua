@@ -55,6 +55,17 @@ local server_configs = {
       },
     },
   },
+  nil_ls = {
+    settings = {
+      ["nil"] = {
+        nix = {
+          flake = {
+            autoArchive = true,
+          },
+        },
+      },
+    },
+  },
   rust_analyzer = function()
     if vim.env.ANDROID_BUILD_TOP then
       return {

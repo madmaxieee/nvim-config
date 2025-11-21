@@ -16,7 +16,7 @@ local servers = {
   "jsonls",
   "lua_ls",
   "nil_ls",
-  "pyright",
+  "pyrefly",
   "ruff",
   "rust_analyzer",
   "svelte",

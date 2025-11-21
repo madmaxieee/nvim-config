@@ -66,7 +66,7 @@ utils.on_load("nvim-lspconfig", function()
           vim.cmd("LspStop " .. name)
         end
 
-        -- enable pyright for type checking even if ciderlsp is attached
+        -- enable pyrefly for type checking even if ciderlsp is attached
         vim.api.nvim_create_autocmd("LspAttach", {
           group = vim.api.nvim_create_augroup("ciderlsp.other", { clear = true }),
           callback = function(_args)
@@ -74,7 +74,7 @@ utils.on_load("nvim-lspconfig", function()
             if not client then
               return
             end
-            if client.name == "pyright" then
+            if client.name == "pyrefly" then
               client.server_capabilities.completionProvider = nil
               client.server_capabilities.definitionProvider = nil
               -- client.server_capabilities.diagnosticProvider = nil
@@ -91,13 +91,13 @@ utils.on_load("nvim-lspconfig", function()
             end
           end,
         })
-        vim.lsp.config("pyright", {
+        vim.lsp.config("pyrefly", {
           handlers = {
-            -- pyright can't find deps not in google3
+            -- can't find deps not in google3
             ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter { code = { "reportMissingImports" } },
           },
         })
-        vim.cmd "LspRestart pyright"
+        vim.cmd "LspRestart pyrefly"
 
         vim.api.nvim_del_augroup_by_id(ciderlsp_attach_once_group)
       end

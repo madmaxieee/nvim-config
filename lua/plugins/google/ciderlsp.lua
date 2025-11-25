@@ -105,5 +105,11 @@ utils.on_load("nvim-lspconfig", function()
   })
 end)
 
+vim.filetype.add {
+  extension = {
+    gcl = "gcl",
+  },
+}
+
 -- this file is imported as a lazy.nvim spec file
 return {}

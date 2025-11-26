@@ -82,6 +82,7 @@ utils.on_load("nvim-lspconfig", function()
               client.server_capabilities.documentSymbolProvider = nil
               client.server_capabilities.hoverProvider = nil
               client.server_capabilities.implementationProvider = nil
+              client.server_capabilities.inlayHintProvider = nil
               client.server_capabilities.referencesProvider = nil
               client.server_capabilities.renameProvider = nil
               client.server_capabilities.semanticTokensProvider = nil

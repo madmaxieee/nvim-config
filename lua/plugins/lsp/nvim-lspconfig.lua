@@ -11,6 +11,7 @@ local servers = {
   "dockerls",
   "eslint",
   "gopls",
+  "harper_ls",
   "html",
   "jdtls",
   "jsonls",
@@ -21,7 +22,7 @@ local servers = {
   "rust_analyzer",
   "svelte",
   "tailwindcss",
-  "taplo", -- toml
+  "taplo",
   "tinymist",
   "ts_ls",
   "typos_lsp",

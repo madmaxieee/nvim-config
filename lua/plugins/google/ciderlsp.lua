@@ -66,9 +66,6 @@ utils.on_load("nvim-lspconfig", function()
           vim.cmd("LspStop " .. name)
         end
 
-        -- use pyrefly to rename
-        ciderlsp_client.server_capabilities.renameProvider = nil
-
         -- enable pyrefly for type checking even if ciderlsp is attached
         vim.api.nvim_create_autocmd("LspAttach", {
           group = vim.api.nvim_create_augroup("ciderlsp.other", { clear = true }),
@@ -87,7 +84,7 @@ utils.on_load("nvim-lspconfig", function()
               client.server_capabilities.implementationProvider = nil
               client.server_capabilities.inlayHintProvider = nil
               client.server_capabilities.referencesProvider = nil
-              -- client.server_capabilities.renameProvider = nil
+              client.server_capabilities.renameProvider = nil
               client.server_capabilities.semanticTokensProvider = nil
               client.server_capabilities.signatureHelpProvider = nil
               client.server_capabilities.typeDefinitionProvider = nil

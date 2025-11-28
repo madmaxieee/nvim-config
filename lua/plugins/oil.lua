@@ -25,6 +25,7 @@ return {
   },
   opts = {
     float = {
+      border = "rounded",
       max_width = 0.6,
       max_height = 0.7,
     },

@@ -41,6 +41,9 @@ local server_configs = {
       "--header-insertion=iwyu",
     },
   },
+  harper_ls = {
+    filetypes = { "asciidoc", "gitcommit", "html", "markdown", "toml", "typst" },
+  },
   jdtls = {
     handlers = {
       -- 16: file is not a project-file

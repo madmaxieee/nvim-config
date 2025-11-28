@@ -45,6 +45,7 @@ local function show_lsp_status()
       client.attached_buffers[vim.api.nvim_get_current_buf()]
       and client.name ~= "null-ls"
       and client.name ~= "typos_lsp"
+      and client.name ~= "harper_ls"
       and client.name ~= "copilot"
     then
       return (vim.o.columns > 100 and copilot_icon .. client.name) or copilot_icon

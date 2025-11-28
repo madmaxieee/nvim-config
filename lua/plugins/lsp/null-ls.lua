@@ -71,7 +71,9 @@ return {
         formatting.fish_indent,
         formatting.just,
         formatting.nixfmt,
-        formatting.xmllint,
+        formatting.xmllint.with {
+          env = { XMLLINT_INDENT = "    " },
+        },
         lint.fish,
         -- custom
         custom.bpfmt,

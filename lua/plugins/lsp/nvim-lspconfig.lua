@@ -56,6 +56,10 @@ local server_configs = {
         diagnostics = {
           globals = { "vim", "require" },
         },
+        hint = {
+          enable = true,
+          arrayIndex = "Disable",
+        },
       },
     },
   },

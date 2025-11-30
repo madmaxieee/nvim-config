@@ -47,3 +47,19 @@ vim.api.nvim_create_user_command("Diffthis", "windo diffthis", {})
 vim.api.nvim_create_user_command("Diffoff", "windo diffoff", {})
 
 vim.api.nvim_create_user_command("CdBuf", "cd %:h", {})
+
+vim.api.nvim_create_user_command("FixSmartQuotes", function(opts)
+  local from = { "“", "”", "‘", "’" }
+  local to = { '"', '"', "'", "'" }
+
+  local range = ""
+  if opts.range == 2 then
+    range = opts.line1 .. "," .. opts.line2
+  else
+    range = "%"
+  end
+
+  for i = 1, #from do
+    vim.cmd("silent! " .. range .. "s/" .. from[i] .. "/" .. to[i] .. "/ge")
+  end
+end, { range = true })

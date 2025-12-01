@@ -9,6 +9,11 @@ local M = {}
 local cwd = vim.uv.cwd() or vim.fn.getcwd()
 
 local function is_minimal_mode()
+  -- allow override with `nvim --cmd 'lua vim.g.minimal_mode=true'`
+  if vim.g.minimal_mode then
+    return true
+  end
+
   -- when nvim used by tmux scrollback buffer
   if vim.env.TMUX_SCROLLBACK then
     return true

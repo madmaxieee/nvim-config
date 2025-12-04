@@ -42,7 +42,7 @@ local server_configs = {
     },
   },
   harper_ls = {
-    filetypes = { "asciidoc", "gitcommit", "html", "markdown", "toml", "typst" },
+    filetypes = { "asciidoc", "gitcommit", "html", "markdown", "typst" },
   },
   jdtls = {
     handlers = {

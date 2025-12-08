@@ -15,6 +15,7 @@ local servers = {
   "html",
   "jdtls",
   "jsonls",
+  "lemminx",
   "lua_ls",
   "nil_ls",
   "pyrefly",

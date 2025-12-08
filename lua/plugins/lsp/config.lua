@@ -35,6 +35,14 @@ local function should_disable_lsp(client, bufnr)
 end
 
 ---@param client vim.lsp.Client
+local function client_can_format(client)
+  if client:supports_method "textDocument/formatting" then
+    return true
+  end
+  return client.name == "jdtls" or client.name == "lemminx"
+end
+
+---@param client vim.lsp.Client
 ---@param bufnr number
 function M.on_attach(client, bufnr)
   set_keymaps(bufnr)
@@ -51,7 +59,7 @@ function M.on_attach(client, bufnr)
   end
 
   local formatter_filter = lsp_utils.make_formatter_filter(bufnr)
-  if (client:supports_method "textDocument/formatting" or client.name == "jdtls") and formatter_filter(client) then
+  if client_can_format(client) and formatter_filter(client) then
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
       group = vim.api.nvim_create_augroup(

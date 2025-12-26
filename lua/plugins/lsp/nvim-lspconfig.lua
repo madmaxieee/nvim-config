@@ -11,7 +11,6 @@ local servers = {
   "dockerls",
   "eslint",
   "gopls",
-  "harper_ls",
   "html",
   "jdtls",
   "jsonls",
@@ -41,9 +40,6 @@ local server_configs = {
       "--fallback-style=google",
       "--header-insertion=iwyu",
     },
-  },
-  harper_ls = {
-    filetypes = { "asciidoc", "gitcommit", "html", "markdown", "typst" },
   },
   jdtls = {
     handlers = {

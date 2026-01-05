@@ -1,6 +1,6 @@
 {
   "lazy.nvim spec keys": {
-    "prefix": "lzk",
+    "prefix": ["lazykey", "lzk"],
     "body": [
       "{",
       "  \"${1:<key>}\",",

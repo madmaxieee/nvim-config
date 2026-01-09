@@ -17,7 +17,7 @@ local servers = {
   "lemminx",
   "lua_ls",
   "nil_ls",
-  "pyrefly",
+  "pyright",
   "ruff",
   "rust_analyzer",
   "svelte",

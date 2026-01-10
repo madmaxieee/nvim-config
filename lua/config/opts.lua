@@ -48,6 +48,15 @@ vim.opt.diffopt:append {
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- detect utf-16 files
+vim.opt.fileencodings = {
+  "ucs-bom",
+  "utf-8",
+  "utf-16",
+  "default",
+  "latin1",
+}
+
 vim.g.mapleader = vim.keycode "<space>"
 vim.g.maplocalleader = vim.keycode "<space>"
 

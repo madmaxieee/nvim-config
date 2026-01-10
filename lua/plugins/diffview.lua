@@ -1,20 +1,3 @@
--- Compare clipboard to current buffer
-vim.api.nvim_create_user_command("DiffClipboard", function()
-  local ftype = vim.bo.filetype -- original filetype
-
-  vim.cmd [[tabnew %]]
-
-  vim.cmd.vnew()
-  vim.bo.buftype = "nofile"
-  vim.bo.bufhidden = "hide"
-  vim.bo.swapfile = false
-  vim.cmd [[norm! "+P]]
-
-  vim.cmd [[windo diffthis]]
-
-  vim.opt_local.filetype = ftype
-end, { nargs = 0 })
-
 return {
   "sindrets/diffview.nvim",
   cmd = {

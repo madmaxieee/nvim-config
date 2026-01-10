@@ -48,7 +48,7 @@ vim.api.nvim_create_user_command("Diffoff", "windo diffoff", {})
 
 vim.api.nvim_create_user_command("CdBuf", "cd %:h", {})
 
-vim.api.nvim_create_user_command("FixSmartQuotes", function(opts)
+vim.api.nvim_create_user_command("FixQuotes", function(opts)
   local from = { "“", "”", "‘", "’" }
   local to = { '"', '"', "'", "'" }
 
@@ -63,3 +63,20 @@ vim.api.nvim_create_user_command("FixSmartQuotes", function(opts)
     vim.cmd("silent! " .. range .. "s/" .. from[i] .. "/" .. to[i] .. "/ge")
   end
 end, { range = true })
+
+-- Compare clipboard to current buffer
+vim.api.nvim_create_user_command("DiffClipboard", function()
+  local ftype = vim.bo.filetype -- original filetype
+
+  vim.cmd [[tabnew %]]
+
+  vim.cmd.vnew()
+  vim.bo.buftype = "nofile"
+  vim.bo.bufhidden = "hide"
+  vim.bo.swapfile = false
+  vim.cmd [[norm! "+P]]
+
+  vim.cmd [[windo diffthis]]
+
+  vim.opt_local.filetype = ftype
+end, { nargs = 0 })

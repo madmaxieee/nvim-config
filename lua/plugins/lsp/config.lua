@@ -15,23 +15,23 @@ local no_lsp_filetype = {
 -- disable lsp for certain filetypes and in diff mode
 ---@param client vim.lsp.Client
 ---@param bufnr number
-local function should_disable_lsp(client, bufnr)
+local function lsp_buf_should_enable(client, bufnr)
   if vim.wo.diff then
-    return true
+    return false
   end
   if no_lsp_filetype[vim.bo[bufnr].filetype] then
-    return true
+    return false
   end
   if not lsp_utils.lsp_should_enable(client.name) then
-    return true
+    return false
   end
   -- lsp specific disable rules
   if client.name == "typos_lsp" then
     if vim.o.readonly or vim.bo[bufnr].filetype == "oil" then
-      return true
+      return false
     end
   end
-  return false
+  return true
 end
 
 ---@param client vim.lsp.Client
@@ -40,6 +40,18 @@ local function client_can_format(client)
     return true
   end
   return client.name == "jdtls" or client.name == "lemminx"
+end
+
+-- some files like lock files should not be auto formatted
+---@param bufnr number
+local function buf_should_auto_format(bufnr)
+  local file_path = vim.api.nvim_buf_get_name(bufnr)
+  -- Get only the filename (tail)
+  local file_name = vim.fn.fnamemodify(file_path, ":t")
+  if file_name == "lazy-lock.json" then
+    return false
+  end
+  return true
 end
 
 ---@param client vim.lsp.Client
@@ -69,6 +81,9 @@ function M.on_attach(client, bufnr)
       desc = ("Format buffer with %s"):format(client.name),
       callback = function()
         if vim.g.FormatOnSave == 0 then
+          return
+        end
+        if not buf_should_auto_format(bufnr) then
           return
         end
         if formatter_filter(client) then
@@ -154,7 +169,7 @@ function M.init(opts)
       local client_id = args.data.client_id
       local client = vim.lsp.get_client_by_id(client_id)
       assert(client)
-      if should_disable_lsp(client, bufnr) then
+      if not lsp_buf_should_enable(client, bufnr) then
         vim.schedule(function()
           vim.lsp.buf_detach_client(bufnr, client_id)
           vim.diagnostic.reset(nil, bufnr)

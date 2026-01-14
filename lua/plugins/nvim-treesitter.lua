@@ -39,7 +39,7 @@ local languages = {
 
   -- data
   "json",
-  "jsonc",
+  "json5",
   "kdl",
   "toml",
   "yaml",

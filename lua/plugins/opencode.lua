@@ -33,8 +33,8 @@ return {
       "<leader>aa",
       function()
         -- create tmux split if opencode is not running
-        require("opencode").prompt ""
-        require("opencode").ask "@cursor: "
+        require("opencode").prompt("")
+        require("opencode").ask("@cursor: ")
       end,
       mode = "n",
       desc = "Ask about this",
@@ -43,8 +43,8 @@ return {
       "<leader>aa",
       function()
         -- create tmux split if opencode is not running
-        require("opencode").prompt ""
-        require("opencode").ask "@selection: "
+        require("opencode").prompt("")
+        require("opencode").ask("@selection: ")
       end,
       mode = "v",
       desc = "Ask about selection",
@@ -68,7 +68,7 @@ return {
     {
       "<leader>ae",
       function()
-        require("opencode").prompt "Explain @cursor and its context"
+        require("opencode").prompt("Explain @cursor and its context")
       end,
       mode = "n",
       desc = "Explain this code",
@@ -76,7 +76,7 @@ return {
     {
       "<leader>ae",
       function()
-        require("opencode").prompt "Explain @selection and its context"
+        require("opencode").prompt("Explain @selection and its context")
       end,
       mode = "v",
       desc = "Explain this code",
@@ -84,7 +84,7 @@ return {
     {
       "<leader>an",
       function()
-        require("opencode").command "session_new"
+        require("opencode").command("session_new")
       end,
       mode = "n",
       desc = "New session",

@@ -6,35 +6,35 @@ return {
     "akinsho/git-conflict.nvim",
     event = { "BufReadPre" },
     config = function()
-      local gitconflict = require "git-conflict"
+      local gitconflict = require("git-conflict")
       ---@diagnostic disable-next-line: missing-fields
-      gitconflict.setup { default_mappings = false }
+      gitconflict.setup({ default_mappings = false })
 
       map({ "n", "v" }, "<leader>co", function()
-        gitconflict.choose "ours"
+        gitconflict.choose("ours")
       end, { desc = "Choose ours" })
       map({ "n", "v" }, "<leader>ct", function()
-        gitconflict.choose "theirs"
+        gitconflict.choose("theirs")
       end, { desc = "Choose theirs" })
       map({ "n", "v" }, "<leader>cb", function()
-        gitconflict.choose "both"
+        gitconflict.choose("both")
       end, { desc = "Choose both" })
       map({ "n", "v" }, "<leader>cn", function()
-        gitconflict.choose "none"
+        gitconflict.choose("none")
       end, { desc = "Choose none" })
 
       map_repeatable_pair({ "n" }, {
         next = {
           "]x",
           function()
-            gitconflict.find_next "ours"
+            gitconflict.find_next("ours")
           end,
           { desc = "Next conflict" },
         },
         prev = {
           "[x",
           function()
-            gitconflict.find_prev "ours"
+            gitconflict.find_prev("ours")
           end,
           { desc = "Previous conflict" },
         },
@@ -57,17 +57,17 @@ return {
         untracked = { text = "│" },
       },
       on_attach = function(bufnr)
-        local gs = require "gitsigns"
+        local gs = require("gitsigns")
 
         map_repeatable_pair({ "n" }, {
           next = {
             "]h",
             function()
               if vim.wo.diff then
-                vim.cmd.normal { "]c", bang = true }
+                vim.cmd.normal({ "]c", bang = true })
               else
                 ---@diagnostic disable-next-line: param-type-mismatch
-                gs.nav_hunk "next"
+                gs.nav_hunk("next")
               end
             end,
             { desc = "Next hunk", buffer = bufnr },
@@ -76,40 +76,78 @@ return {
             "[h",
             function()
               if vim.wo.diff then
-                vim.cmd.normal { "[c", bang = true }
+                vim.cmd.normal({ "[c", bang = true })
               else
                 ---@diagnostic disable-next-line: param-type-mismatch
-                gs.nav_hunk "prev"
+                gs.nav_hunk("prev")
               end
             end,
             { desc = "Previous hunk", buffer = bufnr },
           },
         })
 
-        map("n", "<leader>gb", gs.toggle_current_line_blame, { desc = "toggle line blame", buffer = bufnr })
+        map(
+          "n",
+          "<leader>gb",
+          gs.toggle_current_line_blame,
+          { desc = "toggle line blame", buffer = bufnr }
+        )
         ---@diagnostic disable-next-line: deprecated
-        map("n", "<leader>gd", gs.toggle_deleted, { desc = "toggle deleted", buffer = bufnr })
-        map("n", "<leader>ga", gs.stage_buffer, { desc = "stage buffer", buffer = bufnr })
-        map("n", "<leader>gu", gs.stage_buffer, { desc = "undo stage buffer", buffer = bufnr })
-        map("n", "<leader>hr", gs.reset_hunk, { desc = "reset hunk", buffer = bufnr })
-        map("n", "<leader>hs", gs.stage_hunk, { desc = "stage hunk", buffer = bufnr })
-        map({ "o", "x" }, "ih", gs.select_hunk, { desc = "select hunk", buffer = bufnr })
+        map(
+          "n",
+          "<leader>gd",
+          gs.toggle_deleted,
+          { desc = "toggle deleted", buffer = bufnr }
+        )
+        map(
+          "n",
+          "<leader>ga",
+          gs.stage_buffer,
+          { desc = "stage buffer", buffer = bufnr }
+        )
+        map(
+          "n",
+          "<leader>gu",
+          gs.stage_buffer,
+          { desc = "undo stage buffer", buffer = bufnr }
+        )
+        map(
+          "n",
+          "<leader>hr",
+          gs.reset_hunk,
+          { desc = "reset hunk", buffer = bufnr }
+        )
+        map(
+          "n",
+          "<leader>hs",
+          gs.stage_hunk,
+          { desc = "stage hunk", buffer = bufnr }
+        )
+        map(
+          { "o", "x" },
+          "ih",
+          gs.select_hunk,
+          { desc = "select hunk", buffer = bufnr }
+        )
       end,
     },
 
     init = function()
       vim.api.nvim_create_autocmd("FileType", {
-        group = vim.api.nvim_create_augroup("GitSignsFileType", { clear = true }),
+        group = vim.api.nvim_create_augroup(
+          "GitSignsFileType",
+          { clear = true }
+        ),
         pattern = "gitsigns-blame",
         callback = function(opts)
           -- set winbar to be empty
           vim.wo.winbar = " "
           -- disable virtual_lines when running git blame to avoid line misalignment
           local curr_diagnostics_config = vim.diagnostic.config()
-          vim.diagnostic.config {
+          vim.diagnostic.config({
             virtual_lines = false,
             virtual_text = true,
-          }
+          })
           -- restore to old diagnostic config
           vim.api.nvim_create_autocmd("BufUnload", {
             callback = function()

@@ -1,6 +1,6 @@
 local map = require("utils").safe_keymap_set
 
-local repeatable = require "repeatable"
+local repeatable = require("repeatable")
 
 map({ "n", "x", "o" }, ";", function()
   repeatable.repeat_last_move()
@@ -37,7 +37,12 @@ map("n", "<leader>tc", "<cmd> tabclose <CR>", { desc = "Close tab" })
 map("n", "<leader>bn", "<cmd> vnew <CR>", { desc = "New buffer" })
 
 -- Terminal mode
-map("t", "<C-x>", vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), { desc = "Escape terminal mode" })
+map(
+  "t",
+  "<C-x>",
+  vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true),
+  { desc = "Escape terminal mode" }
+)
 
 -- move the content in register to the system clipboard
 map("n", "<leader>y", '"+y', { desc = "Copy to clipboard" })
@@ -48,9 +53,18 @@ map("v", "<leader>y", '"+y', { desc = "Copy to clipboard" })
 map("n", "<leader>/", "gcc", { desc = "Toggle comment line", remap = true })
 map("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
 map("n", "gC", "gcic", { desc = "Uncomment commented lines", remap = true })
-map("o", "ic", require("vim._comment").textobject, { desc = "Select commented lines" })
+map(
+  "o",
+  "ic",
+  require("vim._comment").textobject,
+  { desc = "Select commented lines" }
+)
 map("x", "ic", function()
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, true, true), "nx", false)
+  vim.api.nvim_feedkeys(
+    vim.api.nvim_replace_termcodes("<esc>", true, true, true),
+    "nx",
+    false
+  )
   require("vim._comment").textobject()
 end, { desc = "Select commented lines" })
 
@@ -62,8 +76,18 @@ map("n", "<Esc>", "<cmd> noh <CR>", { desc = "Clear highlights" })
 map("n", "U", "<C-r>", { desc = "Redo" })
 map("n", "<leader><space>", "<cmd> update <CR>", { desc = "Save file" })
 
-map({ "n", "x", "o" }, "gl", "$", { desc = "Move to end of line", silent = true })
-map({ "n", "x", "o" }, "gh", "^", { desc = "Move to start of line", silent = true })
+map(
+  { "n", "x", "o" },
+  "gl",
+  "$",
+  { desc = "Move to end of line", silent = true }
+)
+map(
+  { "n", "x", "o" },
+  "gh",
+  "^",
+  { desc = "Move to start of line", silent = true }
+)
 
 map("n", "X", ":.lua<CR>", { desc = "Execute current line" })
 map("v", "X", ":lua<CR>", { desc = "Execute selected code" })
@@ -82,7 +106,7 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
   group = vim.api.nvim_create_augroup("QuitCmdWin", { clear = true }),
   callback = function()
     if not vim.g.requested_cmdwin then
-      vim.cmd "q"
+      vim.cmd("q")
       vim.api.nvim_input(vim.fn.getcmdwintype() .. "q")
     end
     vim.g.requested_cmdwin = nil

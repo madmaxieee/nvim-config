@@ -54,7 +54,7 @@ local function prompt_and_setup_avante(callback)
     return
   end
 
-  local SecretInput = require "plugins.avante.secret_input"
+  local SecretInput = require("plugins.avante.secret_input")
   local event = require("nui.utils.autocmd").event
 
   local input = SecretInput({
@@ -72,7 +72,9 @@ local function prompt_and_setup_avante(callback)
     on_submit = function(value)
       local output = vim
         .system({ "pass", password_store_path }, {
-          env = { PASSWORD_STORE_GPG_OPTS = "--passphrase-fd 0 --pinentry-mode loopback" },
+          env = {
+            PASSWORD_STORE_GPG_OPTS = "--passphrase-fd 0 --pinentry-mode loopback",
+          },
           stdin = value,
           text = true,
         })

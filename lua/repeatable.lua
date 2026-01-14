@@ -16,22 +16,31 @@ end
 -- indicating whether to move forward (true) or backward (false)
 function M.set_last_move(move_fn, opts, ...)
   if type(move_fn) ~= "function" then
-    vim.notify("repeatable: move_fn has to be a function but got " .. vim.inspect(move_fn), vim.log.levels.ERROR)
-    return false
-  end
-
-  if type(opts) ~= "table" then
-    vim.notify("repeatable: opts has to be a table but got " .. vim.inspect(opts), vim.log.levels.ERROR)
-    return false
-  elseif opts.forward == nil then
     vim.notify(
-      "repeatable: opts has to include a `forward` boolean but got " .. vim.inspect(opts),
+      "repeatable: move_fn has to be a function but got "
+        .. vim.inspect(move_fn),
       vim.log.levels.ERROR
     )
     return false
   end
 
-  M.last_move = { func = move_fn, opts = vim.deepcopy(opts), additional_args = { ... } }
+  if type(opts) ~= "table" then
+    vim.notify(
+      "repeatable: opts has to be a table but got " .. vim.inspect(opts),
+      vim.log.levels.ERROR
+    )
+    return false
+  elseif opts.forward == nil then
+    vim.notify(
+      "repeatable: opts has to include a `forward` boolean but got "
+        .. vim.inspect(opts),
+      vim.log.levels.ERROR
+    )
+    return false
+  end
+
+  M.last_move =
+    { func = move_fn, opts = vim.deepcopy(opts), additional_args = { ... } }
   return true
 end
 
@@ -75,7 +84,8 @@ function M.repeat_last_move(opts_extend)
     if opts_extend ~= nil then
       if type(opts_extend) ~= "table" then
         vim.notify(
-          "nvim-treesitter-textobjects: opts_extend has to be a table but got " .. vim.inspect(opts_extend),
+          "nvim-treesitter-textobjects: opts_extend has to be a table but got "
+            .. vim.inspect(opts_extend),
           vim.log.levels.ERROR
         )
         return false
@@ -107,15 +117,16 @@ function M.repeat_last_move(opts_extend)
 end
 
 function M.repeat_last_move_opposite()
-  return M.last_move and M.repeat_last_move { forward = not M.last_move.opts.forward }
+  return M.last_move
+    and M.repeat_last_move({ forward = not M.last_move.opts.forward })
 end
 
 function M.repeat_last_move_next()
-  return M.repeat_last_move { forward = true }
+  return M.repeat_last_move({ forward = true })
 end
 
 function M.repeat_last_move_previous()
-  return M.repeat_last_move { forward = false }
+  return M.repeat_last_move({ forward = false })
 end
 
 -- NOTE: map builtin_f_expr, builtin_F_expr, builtin_t_expr, builtin_T_expr with { expr = true }.

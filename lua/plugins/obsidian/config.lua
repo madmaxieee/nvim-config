@@ -16,7 +16,7 @@ function M.setup_auto_commit(opts)
     local command = "git -C '" .. vault_folder .. "' " .. args
     local handle = io.popen(command)
     if handle then
-      local result = handle:read "*a"
+      local result = handle:read("*a")
       handle:close()
       return result
     end
@@ -25,25 +25,27 @@ function M.setup_auto_commit(opts)
   ---@param message string?: the commit message
   ---@param write_all boolean?: the commit message
   local function try_commit(message, write_all)
-    local commit_time_str = git "log -1 --format=%ct"
+    local commit_time_str = git("log -1 --format=%ct")
     local commit_time = tonumber(commit_time_str)
     if commit_time == nil then
       return
     end
-    local commit_message = message and vim.fn.escape(message, [['\]]) or "auto commit"
+    local commit_message = message and vim.fn.escape(message, [['\]])
+      or "auto commit"
     local current_time = os.time()
     if current_time - commit_time >= commit_interval then
       if write_all then
-        vim.cmd "wa"
+        vim.cmd("wa")
       end
-      git "add --all"
+      git("add --all")
       git("commit  -m '" .. commit_message .. "'")
-      git "push --quiet"
+      git("push --quiet")
     end
   end
 
-  if git "rev-parse --is-inside-work-tree" == "true\n" then
-    local auto_save_group = vim.api.nvim_create_augroup("SaveObsidian", { clear = true })
+  if git("rev-parse --is-inside-work-tree") == "true\n" then
+    local auto_save_group =
+      vim.api.nvim_create_augroup("SaveObsidian", { clear = true })
     vim.api.nvim_create_autocmd("FocusGained", {
       group = auto_save_group,
       callback = function()
@@ -78,7 +80,7 @@ function M.setup_auto_commit(opts)
           return
         end
         -- can't call vim.cmd here, not sure why
-        try_commit "auto commit: leave"
+        try_commit("auto commit: leave")
       end,
     })
   end

@@ -23,19 +23,19 @@ return {
   config = function()
     require("marx").setup()
 
-    local utils = require "utils"
+    local utils = require("utils")
     utils.map_repeatable_pair("n", {
       next = {
         "]m",
         function()
-          require("marx").next_mark { wrap = true }
+          require("marx").next_mark({ wrap = true })
         end,
         { desc = "next bookmark" },
       },
       prev = {
         "[m",
         function()
-          require("marx").prev_mark { wrap = true }
+          require("marx").prev_mark({ wrap = true })
         end,
         { desc = "prev bookmark" },
       },

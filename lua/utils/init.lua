@@ -30,11 +30,12 @@ end
 ---@param name string
 ---@param fn fun(name:string)
 function M.on_load(name, fn)
-  local Config = require "lazy.core.config"
+  local Config = require("lazy.core.config")
   if Config.plugins[name] and Config.plugins[name]._.loaded then
     fn(name)
   else
-    local group_id = vim.api.nvim_create_augroup(("LazyLoad:%s"):format(name), {})
+    local group_id =
+      vim.api.nvim_create_augroup(("LazyLoad:%s"):format(name), {})
     vim.api.nvim_create_autocmd("User", {
       group = group_id,
       pattern = "LazyLoad",
@@ -89,13 +90,13 @@ end
 
 function M.set_jumplist_wrap(fn)
   return function(...)
-    vim.cmd "normal! m'"
+    vim.cmd("normal! m'")
     return fn(...)
   end
 end
 
 function M.set_jumplist()
-  vim.cmd "normal! m'"
+  vim.cmd("normal! m'")
 end
 
 ---@alias KeymapSpec [string,function,vim.keymap.set.Opts?]
@@ -111,8 +112,9 @@ function M.map_repeatable_pair(modes, specs, opts)
   if opts.set_jumplist == nil then
     opts.set_jumplist = true
   end
-  local repeatable = require "repeatable"
-  local next_repeat, prev_repeat = repeatable.make_repeatable_move_pair(specs.next[2], specs.prev[2])
+  local repeatable = require("repeatable")
+  local next_repeat, prev_repeat =
+    repeatable.make_repeatable_move_pair(specs.next[2], specs.prev[2])
   if opts.set_jumplist then
     next_repeat = M.set_jumplist_wrap(next_repeat)
     prev_repeat = M.set_jumplist_wrap(prev_repeat)

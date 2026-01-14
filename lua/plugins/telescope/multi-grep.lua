@@ -1,24 +1,25 @@
 local M = {}
 
-local utils = require "utils"
+local utils = require("utils")
 
 function M.multi_grep(opts)
   opts = opts or {}
   opts.cwd = opts.cwd and vim.fn.expand(opts.cwd) or vim.uv.cwd()
-  opts.shortcuts = opts.shortcuts or {
-    ["c"] = "*.{h,hpp,c,cc,cpp}",
-    ["l"] = "*.lua",
-    ["n"] = "*.nix",
-  }
+  opts.shortcuts = opts.shortcuts
+    or {
+      ["c"] = "*.{h,hpp,c,cc,cpp}",
+      ["l"] = "*.lua",
+      ["n"] = "*.nix",
+    }
   opts.pattern = opts.pattern or "%s"
   opts.delimiter = opts.delimiter or "  "
 
   local conf = require("telescope.config").values
-  local finders = require "telescope.finders"
-  local make_entry = require "telescope.make_entry"
-  local pickers = require "telescope.pickers"
+  local finders = require("telescope.finders")
+  local make_entry = require("telescope.make_entry")
+  local pickers = require("telescope.pickers")
 
-  local custom_grep = finders.new_async_job {
+  local custom_grep = finders.new_async_job({
     command_generator = function(prompt)
       if not prompt or prompt == "" then
         return nil
@@ -45,7 +46,7 @@ function M.multi_grep(opts)
         table.insert(args, string.format(opts.pattern, pattern))
       end
 
-      return utils.flatten {
+      return utils.flatten({
         args,
         {
           "--color=never",
@@ -55,11 +56,11 @@ function M.multi_grep(opts)
           "--column",
           "--smart-case",
         },
-      }
+      })
     end,
     entry_maker = make_entry.gen_from_vimgrep(opts),
     cwd = opts.cwd,
-  }
+  })
 
   pickers
     .new(opts, {

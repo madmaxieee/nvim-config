@@ -1,6 +1,6 @@
 local M = {}
 
-local utils = require "utils"
+local utils = require("utils")
 local map = utils.safe_keymap_set
 
 function M.set_keymaps(bufnr)
@@ -14,22 +14,22 @@ function M.set_keymaps(bufnr)
 
   map("n", "gd", function()
     -- vim.lsp.buf.definition()
-    require("trouble").open { mode = "lsp_definitions" }
+    require("trouble").open({ mode = "lsp_definitions" })
   end, { buffer = bufnr, desc = "Go to definition" })
 
   map("n", "gD", function()
     -- vim.lsp.buf.type_definition()
-    require("trouble").open { mode = "lsp_type_definitions" }
+    require("trouble").open({ mode = "lsp_type_definitions" })
   end, { buffer = bufnr, desc = "Go to type definition" })
 
   map("n", "gr", function()
     -- vim.lsp.buf.references()
-    require("trouble").open { mode = "lsp_references" }
+    require("trouble").open({ mode = "lsp_references" })
   end, { buffer = bufnr, desc = "LSP references" })
 
   map("n", "gi", function()
     -- vim.lsp.buf.implementation()
-    require("trouble").open { mode = "lsp_implementations" }
+    require("trouble").open({ mode = "lsp_implementations" })
   end, { buffer = bufnr, desc = "Go to implementation" })
 
   map("n", "<leader>ls", function()
@@ -40,14 +40,14 @@ function M.set_keymaps(bufnr)
     next = {
       "]d",
       function()
-        vim.diagnostic.jump { count = 1 }
+        vim.diagnostic.jump({ count = 1 })
       end,
       { buffer = bufnr, desc = "Go to next diagnostic" },
     },
     prev = {
       "[d",
       function()
-        vim.diagnostic.jump { count = -1 }
+        vim.diagnostic.jump({ count = -1 })
       end,
       { buffer = bufnr, desc = "Go to previous diagnostic" },
     },

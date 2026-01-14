@@ -11,7 +11,11 @@ function M.rgb(c)
     return { c / (256 ^ 2), (c % (256 ^ 2)) / 256, c % 256 }
   else
     c = string.lower(c)
-    return { tonumber(c:sub(2, 3), 16), tonumber(c:sub(4, 5), 16), tonumber(c:sub(6, 7), 16) }
+    return {
+      tonumber(c:sub(2, 3), 16),
+      tonumber(c:sub(4, 5), 16),
+      tonumber(c:sub(6, 7), 16),
+    }
   end
 end
 
@@ -36,7 +40,12 @@ function M.blend(color1, alpha, color2)
     return math.floor(math.min(math.max(0, ret), 255) + 0.5)
   end
 
-  return string.format("#%02x%02x%02x", blend_channel(1), blend_channel(2), blend_channel(3))
+  return string.format(
+    "#%02x%02x%02x",
+    blend_channel(1),
+    blend_channel(2),
+    blend_channel(3)
+  )
 end
 
 function M.blend_bg(color, amount)

@@ -15,8 +15,13 @@ return {
         return
       end
       ---@type string
-      local line = vim.api.nvim_buf_get_lines(params.bufnr, params.range.row - 1, params.range.end_row, false)[1]
-      local col, end_col = line:find "%s+$"
+      local line = vim.api.nvim_buf_get_lines(
+        params.bufnr,
+        params.range.row - 1,
+        params.range.end_row,
+        false
+      )[1]
+      local col, end_col = line:find("%s+$")
       if col and end_col then
         return {
           {
@@ -36,10 +41,18 @@ return {
             title = "remove trailing whitespace in this file!",
             action = function()
               local replacement = {}
-              for i, _line in ipairs(vim.api.nvim_buf_get_lines(params.bufnr, 0, -1, false)) do
+              for i, _line in
+                ipairs(vim.api.nvim_buf_get_lines(params.bufnr, 0, -1, false))
+              do
                 replacement[i] = _line:gsub("%s+$", "")
               end
-              vim.api.nvim_buf_set_lines(params.bufnr, 0, -1, false, replacement)
+              vim.api.nvim_buf_set_lines(
+                params.bufnr,
+                0,
+                -1,
+                false,
+                replacement
+              )
             end,
           },
         }

@@ -4,7 +4,7 @@ return {
   event = "VeryLazy",
   dependencies = { "nvim-treesitter/nvim-treesitter" },
   config = function()
-    require("nvim-treesitter-textobjects").setup {
+    require("nvim-treesitter-textobjects").setup({
       select = {
         enable = true,
         lookahead = true,
@@ -16,12 +16,12 @@ return {
       },
       swap = { enable = false },
       lsp_interop = { enable = false },
-    }
+    })
 
-    local utils = require "utils"
+    local utils = require("utils")
 
     local map = utils.safe_keymap_set
-    local select = require "nvim-treesitter-textobjects.select"
+    local select = require("nvim-treesitter-textobjects.select")
     local select_keymaps = {
       ["aa"] = { query = "@parameter.outer" },
       ["ia"] = { query = "@parameter.inner" },
@@ -51,7 +51,7 @@ return {
     end
 
     local map_repeatable_pair = utils.map_repeatable_pair
-    local move = require "nvim-treesitter-textobjects.move"
+    local move = require("nvim-treesitter-textobjects.move")
     local move_keymaps = {
       {
         next_key = "]f",

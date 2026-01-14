@@ -1,4 +1,4 @@
-local repeatable = require "repeatable"
+local repeatable = require("repeatable")
 
 local next_ref_repeat, prev_ref_repeat = repeatable.make_repeatable_move_pair( --
   function()
@@ -148,7 +148,10 @@ return {
           if require("snacks").picker[source] then
             require("snacks").picker[source]()
           else
-            vim.notify("unknown snacks picker source: " .. source, vim.log.levels.ERROR)
+            vim.notify(
+              "unknown snacks picker source: " .. source,
+              vim.log.levels.ERROR
+            )
           end
         else
           require("snacks").picker()
@@ -173,5 +176,5 @@ return {
     end,
   },
 
-  require "plugins.snacks.snacks-picker",
+  require("plugins.snacks.snacks-picker"),
 }

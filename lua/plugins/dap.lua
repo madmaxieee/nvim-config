@@ -36,10 +36,10 @@ return {
         "<leader>db",
         mode = { "n" },
         function()
-          local dap = require "dap"
+          local dap = require("dap")
           local ft = vim.bo.filetype
           if ft == "" then
-            print "Filetype option is required to determine which dap configs are available"
+            print("Filetype option is required to determine which dap configs are available")
             return
           end
           local configs = dap.configurations[ft]
@@ -53,7 +53,7 @@ return {
           local _, mConfig = iter(configs)
 
           -- redraw to make ui selector disappear
-          vim.api.nvim_command "redraw"
+          vim.api.nvim_command("redraw")
 
           if mConfig == nil then
             return
@@ -82,22 +82,34 @@ return {
     },
 
     init = function()
-      local color_utils = require "utils.colors"
+      local color_utils = require("utils.colors")
       color_utils.register_color_update(function()
         vim.api.nvim_set_hl(0, "DapBreakpoint", { ctermbg = 0, fg = "#993939" })
         vim.api.nvim_set_hl(0, "DapLogPoint", { ctermbg = 0, fg = "#61afef" })
         vim.api.nvim_set_hl(0, "DapStopped", { ctermbg = 0, fg = "#98c379" })
       end)
-      vim.fn.sign_define("DapBreakpoint", { text = " ", texthl = "DapBreakpoint" })
-      vim.fn.sign_define("DapBreakpointCondition", { text = " ", texthl = "DapBreakpoint" })
-      vim.fn.sign_define("DapBreakpointRejected", { text = " ", texthl = "DapBreakpoint" })
-      vim.fn.sign_define("DapLogPoint", { text = " ", texthl = "DapLogPoint" })
+      vim.fn.sign_define(
+        "DapBreakpoint",
+        { text = " ", texthl = "DapBreakpoint" }
+      )
+      vim.fn.sign_define(
+        "DapBreakpointCondition",
+        { text = " ", texthl = "DapBreakpoint" }
+      )
+      vim.fn.sign_define(
+        "DapBreakpointRejected",
+        { text = " ", texthl = "DapBreakpoint" }
+      )
+      vim.fn.sign_define(
+        "DapLogPoint",
+        { text = " ", texthl = "DapLogPoint" }
+      )
       vim.fn.sign_define("DapStopped", { text = " ", texthl = "DapStopped" })
     end,
 
     config = function()
-      local dap = require "dap"
-      local dapui = require "dapui"
+      local dap = require("dap")
+      local dapui = require("dapui")
       dapui.setup()
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()

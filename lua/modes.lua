@@ -37,8 +37,9 @@ local function is_minimal_mode()
   -- { "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.0jb32zqIvy.fish" }
   if argc == 1 then
     if
-      vim.fn.has "mac" == 1 and string.match(argv[1], "/var/folders/[^/]+/[^/]+/T/")
-      or vim.fn.has "linux" == 1 and string.match(argv[1], "^/tmp/")
+      vim.fn.has("mac") == 1
+        and string.match(argv[1], "/var/folders/[^/]+/[^/]+/T/")
+      or vim.fn.has("linux") == 1 and string.match(argv[1], "^/tmp/")
     then
       -- when used by fish shell to edit command line
       if string.match(argv[1], "/tmp%.%w+%.fish$") then
@@ -61,7 +62,7 @@ end
 
 local function is_difftool_mode()
   for _, arg in ipairs(vim.v.argv) do
-    if arg:match [[^%+DiffviewOpen]] then
+    if arg:match([[^%+DiffviewOpen]]) then
       return true
     end
   end

@@ -54,7 +54,7 @@ return {
     {
       "<leader>fa",
       function()
-        require("snacks").picker.files {
+        require("snacks").picker.files({
           cmd = "fd",
           args = {
             "--color=never",
@@ -67,7 +67,7 @@ return {
             "--exclude",
             ".git",
           },
-        }
+        })
       end,
       desc = "Find all files",
     },

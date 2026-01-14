@@ -7,11 +7,11 @@ return {
         "<leader>q",
         mode = "n",
         function()
-          local trouble = require "trouble"
+          local trouble = require("trouble")
           if trouble.is_open() then
             trouble.close()
           else
-            vim.cmd "Trouble diagnostics toggle auto_jump=false"
+            vim.cmd("Trouble diagnostics toggle auto_jump=false")
           end
         end,
         desc = "Open Trouble",
@@ -19,8 +19,8 @@ return {
     },
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      local trouble = require "trouble"
-      trouble.setup {
+      local trouble = require("trouble")
+      trouble.setup({
         auto_jump = true,
         signs = {
           error = "",
@@ -37,15 +37,15 @@ return {
             params = { include_current = true },
           },
         },
-      }
+      })
 
-      local utils = require "utils"
+      local utils = require("utils")
       utils.map_repeatable_pair("n", {
         next = {
           "]t",
           function()
             ---@diagnostic disable-next-line: missing-fields, missing-parameter
-            trouble.next { jump = true, skip_groups = true }
+            trouble.next({ jump = true, skip_groups = true })
           end,
           { desc = "jump to next trouble entry" },
         },
@@ -53,7 +53,7 @@ return {
           "[t",
           function()
             ---@diagnostic disable-next-line: missing-fields, missing-parameter
-            trouble.prev { jump = true, skip_groups = true }
+            trouble.prev({ jump = true, skip_groups = true })
           end,
           { desc = "jump to prev trouble entry" },
         },
@@ -69,7 +69,9 @@ return {
       picker = {
         actions = {
           trouble_open = function(...)
-            return require("trouble.sources.snacks").actions.trouble_open.action(...)
+            return require("trouble.sources.snacks").actions.trouble_open.action(
+              ...
+            )
           end,
         },
         win = {

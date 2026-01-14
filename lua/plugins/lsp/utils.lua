@@ -13,7 +13,10 @@ function M.make_diagnostics_filter(to_filter)
       while idx <= #params.diagnostics do
         local code = params.diagnostics[idx].code
         local message = params.diagnostics[idx].message
-        if vim.list_contains(to_filter.code, code) or vim.list_contains(to_filter.message, message) then
+        if
+          vim.list_contains(to_filter.code, code)
+          or vim.list_contains(to_filter.message, message)
+        then
           table.remove(params.diagnostics, idx)
         else
           idx = idx + 1
@@ -48,8 +51,8 @@ function M.make_formatter_filter(bufnr)
     if no_format[client.name] then
       return false
     end
-    local null_ls = require "null-ls"
-    if ft == "lua" and null_ls.is_registered "stylua" then
+    local null_ls = require("null-ls")
+    if ft == "lua" and null_ls.is_registered("stylua") then
       return client.name == "null-ls"
     end
     if
@@ -61,14 +64,14 @@ function M.make_formatter_filter(bufnr)
         "svelte",
       }, ft)
     then
-      if null_ls.is_registered "prettierd" then
+      if null_ls.is_registered("prettierd") then
         return client.name == "null-ls"
       end
     end
-    if ft == "java" and null_ls.is_registered "google-java-format" then
+    if ft == "java" and null_ls.is_registered("google-java-format") then
       return client.name == "null-ls"
     end
-    if ft == "python" and null_ls.is_registered "pyformat" then
+    if ft == "python" and null_ls.is_registered("pyformat") then
       return client.name == "null-ls"
     end
     return true
@@ -130,7 +133,7 @@ end
 
 function M.lsp_enable(server)
   set_lsp_enabled_var(server, true)
-  if vim.fn.exists ":LspStart" ~= 0 then
+  if vim.fn.exists(":LspStart") ~= 0 then
     vim.cmd("LspStart " .. server)
     vim.diagnostic.reset(nil, 0)
   end
@@ -138,14 +141,14 @@ end
 
 function M.lsp_disable(server)
   set_lsp_enabled_var(server, false)
-  if vim.fn.exists ":LspStop" ~= 0 then
+  if vim.fn.exists(":LspStop") ~= 0 then
     vim.cmd("LspStop " .. server)
     vim.diagnostic.reset(nil, 0)
   end
 end
 
 function M.null_ls_enable(source_name, source)
-  local null_ls = require "null-ls"
+  local null_ls = require("null-ls")
   set_lsp_enabled_var(source_name, true)
   if null_ls.is_registered(source_name) then
     null_ls.enable(source_name)
@@ -155,7 +158,7 @@ function M.null_ls_enable(source_name, source)
 end
 
 function M.null_ls_disable(source_name)
-  local null_ls = require "null-ls"
+  local null_ls = require("null-ls")
   set_lsp_enabled_var(source_name, false)
   if null_ls.is_registered(source_name) then
     null_ls.disable(source_name)

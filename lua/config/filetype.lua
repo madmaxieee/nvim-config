@@ -1,4 +1,4 @@
-vim.filetype.add {
+vim.filetype.add({
   extension = {
     typ = "typst",
     mdx = "mdx",
@@ -11,4 +11,4 @@ vim.filetype.add {
     [".*/logcat%.?%d*"] = "log",
     [".*/kitty/%w+%.conf"] = "kitty",
   },
-}
+})

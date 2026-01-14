@@ -15,9 +15,15 @@ local function show_git_status()
 
   local git_status = vim.b.gitsigns_status_dict
 
-  local added = (git_status.added and git_status.added ~= 0) and ("  " .. git_status.added) or ""
-  local changed = (git_status.changed and git_status.changed ~= 0) and ("  " .. git_status.changed) or ""
-  local removed = (git_status.removed and git_status.removed ~= 0) and ("  " .. git_status.removed) or ""
+  local added = (git_status.added and git_status.added ~= 0)
+      and ("  " .. git_status.added)
+    or ""
+  local changed = (git_status.changed and git_status.changed ~= 0)
+      and ("  " .. git_status.changed)
+    or ""
+  local removed = (git_status.removed and git_status.removed ~= 0)
+      and ("  " .. git_status.removed)
+    or ""
   local branch_name = "  " .. git_status.head
 
   return branch_name .. added .. changed .. removed
@@ -35,7 +41,7 @@ end
 
 local function show_lsp_status()
   local copilot_icon
-  if require("plugins.lsp.utils").lsp_should_enable "copilot" then
+  if require("plugins.lsp.utils").lsp_should_enable("copilot") then
     copilot_icon = "   "
   else
     copilot_icon = "   "
@@ -48,7 +54,8 @@ local function show_lsp_status()
       and client.name ~= "harper_ls"
       and client.name ~= "copilot"
     then
-      return (vim.o.columns > 100 and copilot_icon .. client.name) or copilot_icon
+      return (vim.o.columns > 100 and copilot_icon .. client.name)
+        or copilot_icon
     end
   end
   return copilot_icon
@@ -57,8 +64,8 @@ end
 local function show_file_info()
   local icon = " 󰈚 "
   local path = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
-  local name = (path == "" and "Empty ") or path:match "([^/\\]+)[/\\]*$"
-  if name:match ".*toggleterm.*" then
+  local name = (path == "" and "Empty ") or path:match("([^/\\]+)[/\\]*$")
+  if name:match(".*toggleterm.*") then
     name = string.gsub(name, ";.*$", "")
     name = string.gsub(name, "^.*:", "")
   end

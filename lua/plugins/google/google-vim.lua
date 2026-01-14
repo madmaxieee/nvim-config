@@ -1,4 +1,4 @@
-if vim.fn.isdirectory "/usr/share/vim/google" ~= 1 then
+if vim.fn.isdirectory("/usr/share/vim/google") ~= 1 then
   return {}
 end
 

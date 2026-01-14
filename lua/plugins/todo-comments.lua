@@ -22,7 +22,7 @@ return {
   },
 
   config = function()
-    require("todo-comments").setup {
+    require("todo-comments").setup({
       keywords = {
         DEBUG = {
           icon = " ",
@@ -63,9 +63,9 @@ return {
         -- pattern = [=[\b(KEYWORDS)\s?[:-]]=],
         pattern = [=[\b(KEYWORDS)(\(b/\d+\))?\s?[:-]]=],
       },
-    }
+    })
 
-    local utils = require "utils"
+    local utils = require("utils")
     utils.map_repeatable_pair("n", {
       next = {
         "]T",

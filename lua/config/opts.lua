@@ -28,7 +28,7 @@ vim.opt.timeoutlen = 250
 vim.opt.linebreak = true
 
 -- disable nvim intro
-vim.opt.shortmess:append "sI"
+vim.opt.shortmess:append("sI")
 
 vim.opt.whichwrap = "bs<>[]"
 
@@ -40,10 +40,10 @@ vim.opt.undofile = true
 
 vim.opt.jumpoptions = { "stack", "view" }
 
-vim.opt.diffopt:append {
+vim.opt.diffopt:append({
   "linematch:60",
   "algorithm:patience",
-}
+})
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -57,10 +57,10 @@ vim.opt.fileencodings = {
   "latin1",
 }
 
-vim.g.mapleader = vim.keycode "<space>"
-vim.g.maplocalleader = vim.keycode "<space>"
+vim.g.mapleader = vim.keycode("<space>")
+vim.g.maplocalleader = vim.keycode("<space>")
 
-vim.diagnostic.config {
+vim.diagnostic.config({
   virtual_text = false,
   virtual_lines = true,
   signs = {
@@ -71,7 +71,7 @@ vim.diagnostic.config {
       [vim.diagnostic.severity.HINT] = "󰌵 ",
     },
   },
-}
+})
 
 -- disable built in ftplugin mappings
 vim.g.no_plugin_maps = true

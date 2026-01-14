@@ -80,7 +80,13 @@ return {
         enabled = true,
         cmdline = true,
         pairs = {
-          ["!"] = { { "<!--", "-->", languages = { "html", "markdown", "markdown_inline" } } },
+          ["!"] = {
+            {
+              "<!--",
+              "-->",
+              languages = { "html", "markdown", "markdown_inline" },
+            },
+          },
           ["("] = ")",
           ["["] = "]",
           ["{"] = "}",
@@ -109,7 +115,7 @@ return {
               space = false,
               when = function(ctx)
                 return ctx.ft ~= "plaintext"
-                  and not ctx.char_under_cursor:match "%w"
+                  and not ctx.char_under_cursor:match("%w")
                   and ctx.ts:blacklist("singlequote").matches
               end,
             },
@@ -143,7 +149,15 @@ return {
               when = function(ctx)
                 return ctx:text_before_cursor(2) == "``"
               end,
-              languages = { "markdown", "markdown_inline", "typst", "vimwiki", "rmarkdown", "rmd", "quarto" },
+              languages = {
+                "markdown",
+                "markdown_inline",
+                "typst",
+                "vimwiki",
+                "rmarkdown",
+                "rmd",
+                "quarto",
+              },
             },
             {
               "`",
@@ -156,7 +170,8 @@ return {
             {
               "_",
               when = function(ctx)
-                return not ctx.char_under_cursor:match "%w" and ctx.ts:blacklist("underscore").matches
+                return not ctx.char_under_cursor:match("%w")
+                  and ctx.ts:blacklist("underscore").matches
               end,
               languages = { "typst" },
             },
@@ -183,7 +198,13 @@ return {
           ["$"] = {
             {
               "$",
-              languages = { "markdown", "markdown_inline", "typst", "latex", "plaintex" },
+              languages = {
+                "markdown",
+                "markdown_inline",
+                "typst",
+                "latex",
+                "plaintex",
+              },
             },
           },
         },

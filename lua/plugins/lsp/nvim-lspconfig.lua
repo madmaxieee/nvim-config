@@ -1,5 +1,5 @@
-local lsp_config = require "plugins.lsp.config"
-local lsp_utils = require "plugins.lsp.utils"
+local lsp_config = require("plugins.lsp.config")
+local lsp_utils = require("plugins.lsp.utils")
 
 local servers = {
   "bacon_ls",
@@ -44,7 +44,9 @@ local server_configs = {
   jdtls = {
     handlers = {
       -- 16: file is not a project-file
-      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter { code = { "16" } },
+      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
+        code = { "16" },
+      }),
     },
   },
   lua_ls = {
@@ -74,11 +76,17 @@ local server_configs = {
   rust_analyzer = function()
     if vim.env.ANDROID_BUILD_TOP then
       return {
-        cmd = { ("%s/prebuilts/rust-toolchain/linux-x86/stable/rust-analyzer"):format(vim.env.ANDROID_BUILD_TOP) },
+        cmd = {
+          ("%s/prebuilts/rust-toolchain/linux-x86/stable/rust-analyzer"):format(
+            vim.env.ANDROID_BUILD_TOP
+          ),
+        },
         rustfmt = {
           extraArgs = {
             "--config-path",
-            ("%s/build/soong/scripts/rustfmt.toml"):format(vim.env.ANDROID_BUILD_TOP),
+            ("%s/build/soong/scripts/rustfmt.toml"):format(
+              vim.env.ANDROID_BUILD_TOP
+            ),
           },
         },
       }
@@ -97,15 +105,17 @@ local server_configs = {
   taplo = {
     root_dir = vim.uv.cwd() or vim.fn.getcwd(),
     handlers = {
-      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter {
+      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
         message = { "this document has been excluded" },
-      },
+      }),
     },
   },
   ts_ls = {
     handlers = {
       -- 71007: ignore client component props must be serializable error
-      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter { code = { 71007 } },
+      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
+        code = { 71007 },
+      }),
     },
   },
   typos_lsp = {
@@ -153,13 +163,13 @@ return {
       "williamboman/mason-lspconfig.nvim",
     },
     init = function()
-      lsp_config.init { servers = servers }
+      lsp_config.init({ servers = servers })
     end,
     config = function()
-      lsp_config.setup {
+      lsp_config.setup({
         servers = servers,
         server_configs = server_configs,
-      }
+      })
     end,
   },
 }

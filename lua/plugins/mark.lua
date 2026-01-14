@@ -2,20 +2,20 @@ return {
   "chentoast/marks.nvim",
   event = "VeryLazy",
   config = function()
-    local marks = require "marks"
-    local marks_utils = require "marks.utils"
+    local marks = require("marks")
+    local marks_utils = require("marks.utils")
 
-    local utils = require "utils"
+    local utils = require("utils")
     local map = utils.safe_keymap_set
 
-    marks.setup {
+    marks.setup({
       default_mappings = false,
       mappings = {
         set = "m",
         set_next = "m,",
         toggle = "m;",
       },
-    }
+    })
 
     map("n", "dm", function()
       ---@diagnostic disable-next-line: param-type-mismatch

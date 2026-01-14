@@ -87,7 +87,7 @@ local function get_cmd(opts, filter)
   if file_glob then
     if shortcuts[file_glob] then
       vim.list_extend(args, { "--glob", shortcuts[file_glob] })
-    elseif not file_glob:find "[%*%?%[%{]" then
+    elseif not file_glob:find("[%*%?%[%{]") then
       vim.list_extend(args, { "--glob", "*" .. file_glob .. "*" })
     else
       vim.list_extend(args, { "--glob", file_glob })
@@ -130,13 +130,15 @@ local function finder(opts, ctx)
     return function() end
   end
   local absolute = (opts.dirs and #opts.dirs > 0) or opts.buffers or opts.rtp
-  local cwd = not absolute and svim.fs.normalize(opts and opts.cwd or uv.cwd() or ".") or nil
+  local cwd = not absolute
+      and svim.fs.normalize(opts and opts.cwd or uv.cwd() or ".")
+    or nil
   local cmd, args = get_cmd(opts, ctx.filter)
   if opts.debug.grep then
     Snacks.notify.info("grep: " .. cmd .. " " .. table.concat(args, " "))
   end
   return require("snacks.picker.source.proc").proc(
-    ctx:opts {
+    ctx:opts({
       notify = false, -- never notify on grep errors, since it's impossible to know if the error is due to the search pattern
       cmd = cmd,
       args = args,
@@ -144,9 +146,9 @@ local function finder(opts, ctx)
       transform = function(item)
         item.cwd = cwd
         -- Split on NUL byte (which comes from rg's -0 flag)
-        local file_sep = item.text:find "\0"
+        local file_sep = item.text:find("\0")
         if not file_sep then
-          if not item.text:match "WARNING" then
+          if not item.text:match("WARNING") then
             Snacks.notify.error("invalid grep output:\n" .. item.text)
           end
           return false
@@ -154,9 +156,9 @@ local function finder(opts, ctx)
         local file = item.text:sub(1, file_sep - 1)
         local rest = item.text:sub(file_sep + 1)
         ---@type string?, string?, string?
-        local line, col, text = rest:match "^(%d+):(%d+):(.*)$"
+        local line, col, text = rest:match("^(%d+):(%d+):(.*)$")
         if not (line and col and text) then
-          if not item.text:match "WARNING" then
+          if not item.text:match("WARNING") then
             Snacks.notify.error("invalid grep output:\n" .. item.text)
           end
           return false
@@ -192,19 +194,19 @@ local function finder(opts, ctx)
 
         item.file = file
       end,
-    },
+    }),
     ctx
   )
 end
 
 function M.multi_grep()
-  local picker = require "snacks.picker"
+  local picker = require("snacks.picker")
   ---@type snacks.picker.Config
-  picker.pick {
+  picker.pick({
     title = "Multi Grep",
     source = "grep",
     finder = finder,
-  }
+  })
 end
 
 return M

@@ -1,4 +1,4 @@
-local helpers = require "null-ls.helpers"
+local helpers = require("null-ls.helpers")
 local severities = helpers.diagnostics.severities
 
 local diagnostics = helpers.diagnostics.from_pattern(
@@ -16,7 +16,7 @@ local diagnostics = helpers.diagnostics.from_pattern(
 )
 
 local command
-if vim.fn.executable "cpplint.py" == 1 then
+if vim.fn.executable("cpplint.py") == 1 then
   command = "cpplint.py"
 else
   command = "cpplint"
@@ -26,7 +26,7 @@ return {
   name = "cpplint",
   method = require("null-ls").methods.DIAGNOSTICS,
   filetypes = { "cpp", "c" },
-  generator = helpers.generator_factory {
+  generator = helpers.generator_factory({
     command = command,
     args = {
       "$FILENAME",
@@ -49,5 +49,5 @@ return {
     check_exit_code = function(code)
       return code >= 1
     end,
-  },
+  }),
 }

@@ -17,14 +17,14 @@ return {
           next = {
             "]h",
             function()
-              vim.cmd.normal { "]c", bang = true }
+              vim.cmd.normal({ "]c", bang = true })
             end,
             { desc = "Next hunk", buffer = bufnr },
           },
           prev = {
             "[h",
             function()
-              vim.cmd.normal { "[c", bang = true }
+              vim.cmd.normal({ "[c", bang = true })
             end,
             { desc = "Previous hunk", buffer = bufnr },
           },

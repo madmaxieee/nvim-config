@@ -3,7 +3,7 @@ return {
   "Bekaboo/dropbar.nvim",
   lazy = false,
   init = function()
-    local color_utils = require "utils.colors"
+    local color_utils = require("utils.colors")
     color_utils.register_color_update(function()
       local fg = vim.api.nvim_get_hl(0, { name = "Normal" }).fg
       local winbar_fg = color_utils.blend_bg(fg, 0.9)
@@ -17,11 +17,11 @@ return {
       path = {
         modified = function(sym)
           if sym then
-            return sym:merge {
+            return sym:merge({
               icon = "● ",
               name_hl = "DiffAdded",
               icon_hl = "DiffAdded",
-            }
+            })
           end
         end,
       },

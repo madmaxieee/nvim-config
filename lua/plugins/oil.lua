@@ -7,7 +7,7 @@ return {
       "<leader>o",
       mode = "n",
       function()
-        local oil = require "oil"
+        local oil = require("oil")
         if vim.w.is_oil_win then
           oil.close()
         else

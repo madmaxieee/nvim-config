@@ -1,10 +1,11 @@
-local state_dir = vim.fn.stdpath "state"
+local state_dir = vim.fn.stdpath("state")
 if type(state_dir) == "table" then
   state_dir = state_dir[1]
 end
 
 return {
-  cond = not require("modes").minimal_mode and not require("modes").difftool_mode,
+  cond = not require("modes").minimal_mode
+    and not require("modes").difftool_mode,
   "folke/persistence.nvim",
   lazy = false,
   init = function()
@@ -17,8 +18,9 @@ return {
       "globals",
     }
 
-    local persistence_group = vim.api.nvim_create_augroup("Persistence", { clear = true })
-    local home = vim.fn.expand "~"
+    local persistence_group =
+      vim.api.nvim_create_augroup("Persistence", { clear = true })
+    local home = vim.fn.expand("~")
     local disabled_dirs = {
       [home] = true,
       [home .. "/Downloads"] = true,
@@ -27,10 +29,10 @@ return {
     }
 
     local function get_current_session()
-      local persistence = require "persistence"
+      local persistence = require("persistence")
       local file = persistence.current()
       if vim.fn.filereadable(file) == 0 then
-        file = persistence.current { branch = false }
+        file = persistence.current({ branch = false })
       end
       return file
     end
@@ -44,7 +46,7 @@ return {
       group = persistence_group,
       callback = function()
         local cwd = vim.fn.getcwd()
-        local persistence = require "persistence"
+        local persistence = require("persistence")
         if disabled_dirs[cwd] or vim.g.started_with_stdin then
           persistence.stop()
           return
@@ -101,13 +103,13 @@ return {
       group = persistence_group,
       callback = function()
         vim.schedule(function()
-          vim.cmd [[tabdo windo filetype detect]]
+          vim.cmd([[tabdo windo filetype detect]])
         end)
       end,
     })
 
     vim.api.nvim_create_user_command("PersistenceDelete", function()
-      local persistence = require "persistence"
+      local persistence = require("persistence")
       persistence.stop()
       vim.fs.rm(get_current_session(), { force = true })
     end, {})

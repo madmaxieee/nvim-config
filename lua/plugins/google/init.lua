@@ -1,4 +1,4 @@
-if vim.fn.isdirectory "/google/bin" ~= 1 then
+if vim.fn.isdirectory("/google/bin") ~= 1 then
   return {}
 end
 

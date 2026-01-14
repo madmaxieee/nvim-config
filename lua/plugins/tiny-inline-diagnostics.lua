@@ -3,10 +3,10 @@ return {
   event = "VeryLazy",
   priority = 1000,
   init = function()
-    vim.diagnostic.config {
+    vim.diagnostic.config({
       virtual_text = false,
       virtual_lines = false,
-    }
+    })
   end,
   opts = {
     options = {

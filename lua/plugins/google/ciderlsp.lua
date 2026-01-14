@@ -1,5 +1,5 @@
-local utils = require "utils"
-local lsp_utils = require "plugins.lsp.utils"
+local utils = require("utils")
+local lsp_utils = require("plugins.lsp.utils")
 
 utils.on_load("nvim-lspconfig", function()
   -- http://cl/783896564
@@ -38,15 +38,17 @@ utils.on_load("nvim-lspconfig", function()
     },
     root_dir = function(bufnr, cb)
       local fname = vim.api.nvim_buf_get_name(bufnr)
-      local root_dir = string.match(fname, "(/google/src/cloud/[%w_-]+/[%w_-]+/).+$")
+      local root_dir =
+        string.match(fname, "(/google/src/cloud/[%w_-]+/[%w_-]+/).+$")
       if root_dir then
         cb(root_dir)
       end
     end,
   })
-  vim.lsp.enable "ciderlsp"
+  vim.lsp.enable("ciderlsp")
 
-  local ciderlsp_attach_once_group = vim.api.nvim_create_augroup("ciderlsp.attach.once", { clear = true })
+  local ciderlsp_attach_once_group =
+    vim.api.nvim_create_augroup("ciderlsp.attach.once", { clear = true })
 
   vim.api.nvim_create_autocmd("LspAttach", {
     group = ciderlsp_attach_once_group,
@@ -54,7 +56,7 @@ utils.on_load("nvim-lspconfig", function()
       local ciderlsp_client = vim.lsp.get_client_by_id(args.data.client_id)
       if ciderlsp_client and ciderlsp_client.name == "ciderlsp" then
         -- disable lsps for languages ciderlsp supports
-        for _, name in ipairs {
+        for _, name in ipairs({
           "clangd",
           "copilot",
           "eslint",
@@ -62,13 +64,16 @@ utils.on_load("nvim-lspconfig", function()
           "jdtls",
           "ruff",
           "ts_ls",
-        } do
+        }) do
           vim.cmd("LspStop " .. name)
         end
 
         -- enable pyright for type checking even if ciderlsp is attached
         vim.api.nvim_create_autocmd("LspAttach", {
-          group = vim.api.nvim_create_augroup("ciderlsp.other", { clear = true }),
+          group = vim.api.nvim_create_augroup(
+            "ciderlsp.other",
+            { clear = true }
+          ),
           callback = function(_args)
             local client = vim.lsp.get_client_by_id(_args.data.client_id)
             if not client then
@@ -95,10 +100,12 @@ utils.on_load("nvim-lspconfig", function()
         vim.lsp.config("pyright", {
           handlers = {
             -- can't find deps not in google3
-            ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter { code = { "reportMissingImports" } },
+            ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
+              code = { "reportMissingImports" },
+            }),
           },
         })
-        vim.cmd "LspRestart pyright"
+        vim.cmd("LspRestart pyright")
 
         vim.api.nvim_del_augroup_by_id(ciderlsp_attach_once_group)
       end
@@ -106,11 +113,11 @@ utils.on_load("nvim-lspconfig", function()
   })
 end)
 
-vim.filetype.add {
+vim.filetype.add({
   extension = {
     gcl = "gcl",
   },
-}
+})
 
 -- this file is imported as a lazy.nvim spec file
 return {}

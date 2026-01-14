@@ -1,8 +1,8 @@
 local M = {}
 
-local utils = require "utils"
+local utils = require("utils")
 local map = utils.safe_keymap_set
-local lsp_utils = require "plugins.lsp.utils"
+local lsp_utils = require("plugins.lsp.utils")
 local set_keymaps = require("plugins.lsp.keymaps").set_keymaps
 
 local no_lsp_filetype = {
@@ -36,7 +36,7 @@ end
 
 ---@param client vim.lsp.Client
 local function client_can_format(client)
-  if client:supports_method "textDocument/formatting" then
+  if client:supports_method("textDocument/formatting") then
     return true
   end
   return client.name == "jdtls" or client.name == "lemminx"
@@ -63,7 +63,7 @@ function M.on_attach(client, bufnr)
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
 
-  if client:supports_method "textDocument/inlineCompletion" then
+  if client:supports_method("textDocument/inlineCompletion") then
     vim.lsp.inline_completion.enable(true)
     map("i", "<A-l>", function()
       vim.lsp.inline_completion.get()
@@ -87,7 +87,7 @@ function M.on_attach(client, bufnr)
           return
         end
         if formatter_filter(client) then
-          vim.lsp.buf.format { id = client.id }
+          vim.lsp.buf.format({ id = client.id })
         end
       end,
     })
@@ -95,11 +95,14 @@ function M.on_attach(client, bufnr)
 end
 
 function M.on_detach(client, bufnr)
-  local clients = vim.lsp.get_clients { bufnr = bufnr }
-  if client:supports_method "textDocument/inlineCompletion" then
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  if client:supports_method("textDocument/inlineCompletion") then
     vim.lsp.inline_completion.enable(false, { bufnr = bufnr })
     for _, other_client in ipairs(clients) do
-      if other_client.id ~= client.id and other_client:supports_method "textDocument/inlineCompletion" then
+      if
+        other_client.id ~= client.id
+        and other_client:supports_method("textDocument/inlineCompletion")
+      then
         vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
         break
       end
@@ -142,10 +145,10 @@ function M.init(opts)
   vim.api.nvim_create_user_command("Format", function(args)
     local formatter_filter = lsp_utils.make_formatter_filter()
     if args.range == 0 then
-      vim.lsp.buf.format { filter = formatter_filter }
+      vim.lsp.buf.format({ filter = formatter_filter })
     else
-      vim.cmd "normal! gv"
-      vim.lsp.buf.format { filter = formatter_filter }
+      vim.cmd("normal! gv")
+      vim.lsp.buf.format({ filter = formatter_filter })
     end
   end, { range = true })
   vim.cmd.cabbrev("F", "Format")
@@ -153,7 +156,7 @@ function M.init(opts)
   -- detach lsps from current buffer
   vim.api.nvim_create_user_command("DetachLsp", function()
     vim.diagnostic.reset(nil, 0)
-    local clients = vim.lsp.get_clients { bufnr = 0 }
+    local clients = vim.lsp.get_clients({ bufnr = 0 })
     vim.schedule(function()
       for _, client in ipairs(clients) do
         vim.lsp.buf_detach_client(0, client.id)
@@ -182,7 +185,10 @@ function M.init(opts)
   -- enable/disable lsp servers per project with global variable
   vim.api.nvim_create_user_command("LspEnable", function(args)
     if not vim.tbl_contains(servers, args.args) then
-      vim.notify(("Unknown LSP server: %s"):format(args.args), vim.log.levels.ERROR)
+      vim.notify(
+        ("Unknown LSP server: %s"):format(args.args),
+        vim.log.levels.ERROR
+      )
       return
     end
     lsp_utils.lsp_enable(args.args)
@@ -195,7 +201,10 @@ function M.init(opts)
 
   vim.api.nvim_create_user_command("LspDisable", function(args)
     if not vim.tbl_contains(servers, args.args) then
-      vim.notify(("Unknown LSP server: %s"):format(args.args), vim.log.levels.ERROR)
+      vim.notify(
+        ("Unknown LSP server: %s"):format(args.args),
+        vim.log.levels.ERROR
+      )
       return
     end
     lsp_utils.lsp_disable(args.args)
@@ -207,15 +216,18 @@ function M.init(opts)
   })
 
   vim.api.nvim_create_user_command("CopilotEnable", function()
-    lsp_utils.lsp_enable "copilot"
+    lsp_utils.lsp_enable("copilot")
   end, {})
 
   vim.api.nvim_create_user_command("CopilotDisable", function()
-    lsp_utils.lsp_disable "copilot"
+    lsp_utils.lsp_disable("copilot")
   end, {})
 
   vim.api.nvim_create_autocmd("SessionLoadPost", {
-    group = vim.api.nvim_create_augroup("lsp.disable.project", { clear = true }),
+    group = vim.api.nvim_create_augroup(
+      "lsp.disable.project",
+      { clear = true }
+    ),
     callback = function()
       for _, lsp in ipairs(servers) do
         if lsp_utils.lsp_should_enable(lsp) then

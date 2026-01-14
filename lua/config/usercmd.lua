@@ -32,9 +32,11 @@ vim.api.nvim_create_user_command("DiagBufDisable", function()
 end, {})
 vim.api.nvim_create_user_command("DiagBufToggle", function()
   local bufnr = vim.api.nvim_get_current_buf()
-  local new_value = not vim.diagnostic.is_enabled { bufnr = bufnr }
+  local new_value = not vim.diagnostic.is_enabled({ bufnr = bufnr })
   vim.diagnostic.enable(new_value, { bufnr = bufnr })
-  vim.notify("Diagnostics for current buffer " .. (new_value and "enabled" or "disabled"))
+  vim.notify(
+    "Diagnostics for current buffer " .. (new_value and "enabled" or "disabled")
+  )
 end, {})
 
 vim.api.nvim_create_user_command("InlayHintToggle", function()
@@ -68,15 +70,15 @@ end, { range = true })
 vim.api.nvim_create_user_command("DiffClipboard", function()
   local ftype = vim.bo.filetype -- original filetype
 
-  vim.cmd [[tabnew %]]
+  vim.cmd([[tabnew %]])
 
   vim.cmd.vnew()
   vim.bo.buftype = "nofile"
   vim.bo.bufhidden = "hide"
   vim.bo.swapfile = false
-  vim.cmd [[norm! "+P]]
+  vim.cmd([[norm! "+P]])
 
-  vim.cmd [[windo diffthis]]
+  vim.cmd([[windo diffthis]])
 
   vim.opt_local.filetype = ftype
 end, { nargs = 0 })

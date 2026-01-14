@@ -1,4 +1,4 @@
-local vault_folder = vim.fn.resolve(vim.fn.expand "~/obsidian")
+local vault_folder = vim.fn.resolve(vim.fn.expand("~/obsidian"))
 
 return {
   {
@@ -59,24 +59,24 @@ return {
 
       -- NOTE: typos_lsp for some reason would attach to the unnamed buffer
       -- when obsidian is active, causing errors
-      local lsp_utils = require "plugins.lsp.utils"
-      lsp_utils.lsp_disable "typos_lsp"
+      local lsp_utils = require("plugins.lsp.utils")
+      lsp_utils.lsp_disable("typos_lsp")
       vim.api.nvim_create_autocmd("User", {
         pattern = "VeryLazy",
         once = true,
         callback = function()
-          lsp_utils.lsp_enable "typos_lsp"
+          lsp_utils.lsp_enable("typos_lsp")
         end,
       })
     end,
 
     config = function(_, opts)
       require("obsidian").setup(opts)
-      require("plugins.obsidian.config").setup_auto_commit {
+      require("plugins.obsidian.config").setup_auto_commit({
         vault_folder = vault_folder,
         auto_save_interval = 10 * 60,
         commit_interval = 60 * 60,
-      }
+      })
     end,
   },
 }

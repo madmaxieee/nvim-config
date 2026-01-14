@@ -81,13 +81,14 @@ return {
     build = ":TSUpdate",
 
     init = function()
-      local group = vim.api.nvim_create_augroup("TreesitterConfig", { clear = true })
+      local group =
+        vim.api.nvim_create_augroup("TreesitterConfig", { clear = true })
 
       vim.api.nvim_create_autocmd("User", {
         pattern = "TSUpdate",
         group = group,
         callback = function()
-          local parsers = require "nvim-treesitter.parsers"
+          local parsers = require("nvim-treesitter.parsers")
 
           parsers.d2 = {
             tier = 0,
@@ -109,7 +110,8 @@ return {
           local bufnr = args.buf
           local filetype = args.match
 
-          local language = vim.treesitter.language.get_lang(filetype) or filetype
+          local language = vim.treesitter.language.get_lang(filetype)
+            or filetype
           if not vim.treesitter.language.add(language) then
             return
           end
@@ -117,7 +119,8 @@ return {
           vim.wo.foldmethod = "expr"
           vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
-          vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          vim.bo[bufnr].indentexpr =
+            "v:lua.require'nvim-treesitter'.indentexpr()"
 
           vim.treesitter.start(bufnr, language)
 

@@ -13,7 +13,8 @@ return {
     event = "InsertEnter",
     opts = {
       get_users = function(prefix)
-        local users_file_path = "/usr/share/vim/google/googlespell/spell/current-eng-googlers"
+        local users_file_path =
+          "/usr/share/vim/google/googlespell/spell/current-eng-googlers"
         local num_results = 15
         local command = string.format(
           "rg --ignore-case ^%s --max-count=%d %s",
@@ -22,7 +23,8 @@ return {
           users_file_path
         )
         if prefix == "" then
-          command = string.format("head --lines=%d %s", num_results, users_file_path)
+          command =
+            string.format("head --lines=%d %s", num_results, users_file_path)
         end
         local handle = io.popen(command)
         if not handle then

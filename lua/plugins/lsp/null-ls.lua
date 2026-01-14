@@ -1,5 +1,5 @@
-local lsp_config = require "plugins.lsp.config"
-local lsp_utils = require "plugins.lsp.utils"
+local lsp_config = require("plugins.lsp.config")
+local lsp_utils = require("plugins.lsp.utils")
 
 local sources_map = {}
 
@@ -29,10 +29,16 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     init = function()
       vim.api.nvim_create_autocmd("SessionLoadPost", {
-        group = vim.api.nvim_create_augroup("null-ls.disable.project", { clear = true }),
+        group = vim.api.nvim_create_augroup(
+          "null-ls.disable.project",
+          { clear = true }
+        ),
         callback = function()
-          local null_ls = require "null-ls"
-          assert(not vim.tbl_isempty(sources_map), "null-ls sources_map is empty")
+          local null_ls = require("null-ls")
+          assert(
+            not vim.tbl_isempty(sources_map),
+            "null-ls sources_map is empty"
+          )
           for name, _ in pairs(sources_map) do
             if lsp_utils.lsp_should_enable(name) then
               if null_ls.is_registered(name) then
@@ -50,12 +56,12 @@ return {
       })
     end,
     config = function()
-      local null_ls = require "null-ls"
+      local null_ls = require("null-ls")
 
       local formatting = null_ls.builtins.formatting
       local lint = null_ls.builtins.diagnostics
       -- local actions = null_ls.builtins.code_actions
-      local custom = require "plugins.lsp.custom"
+      local custom = require("plugins.lsp.custom")
 
       local sources = {
         -- managed
@@ -63,9 +69,12 @@ return {
         formatting.prettierd,
         formatting.stylua,
         formatting.typstyle,
-        lint.checkstyle.with {
-          extra_args = { "-c", (vim.fn.stdpath "config") .. "/misc/google_checks.xml" },
-        },
+        lint.checkstyle.with({
+          extra_args = {
+            "-c",
+            (vim.fn.stdpath("config")) .. "/misc/google_checks.xml",
+          },
+        }),
         -- external
         formatting.d2_fmt,
         formatting.fish_indent,
@@ -91,16 +100,19 @@ return {
         end
       end
 
-      null_ls.setup {
+      null_ls.setup({
         sources = sources,
         on_attach = lsp_config.on_attach,
-      }
+      })
 
       vim.api.nvim_create_user_command("NullLsEnable", function(opts)
         local source_name = opts.args
         local source = sources_map[source_name]
         if not source then
-          vim.notify(("Unknown null-ls source: %s"):format(source_name), vim.log.levels.ERROR)
+          vim.notify(
+            ("Unknown null-ls source: %s"):format(source_name),
+            vim.log.levels.ERROR
+          )
           return
         end
         lsp_utils.null_ls_enable(source_name, source)
@@ -115,7 +127,10 @@ return {
         local source_name = opts.args
         local source = sources_map[source_name]
         if not source then
-          vim.notify(("Unknown null-ls source: %s"):format(source_name), vim.log.levels.ERROR)
+          vim.notify(
+            ("Unknown null-ls source: %s"):format(source_name),
+            vim.log.levels.ERROR
+          )
           return
         end
         lsp_utils.null_ls_disable(source_name)

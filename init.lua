@@ -6,3 +6,5 @@ require("config.lazy")
 require("config.usercmd")
 require("config.keymaps")
 require("config.filetype")
+
+require("conflict")

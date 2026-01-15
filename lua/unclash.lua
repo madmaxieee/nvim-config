@@ -4,11 +4,13 @@ local M = {}
 
 ---@class State
 ---@field conflicted_files table<string, boolean> map of conflicted file paths
+---@field conflicted_bufs table<integer, boolean> map of conflicted buffer numbers
 ---@field hunks table<integer, ConflictHunk[]>
 
 ---@type State
 local state = {
   conflicted_files = {},
+  conflicted_bufs = {},
   hunks = {},
 }
 
@@ -74,21 +76,25 @@ end
 local augroup =
   vim.api.nvim_create_augroup("ConflictDetection", { clear = true })
 
-vim.api.nvim_create_autocmd("VimEnter", {
-  group = augroup,
-  desc = "Detect conflicted files in the current working directory on startup",
-  callback = function()
-    state.conflicted_files = detect_conflicted_files(vim.fn.getcwd())
-  end,
-})
+vim.api.nvim_create_autocmd(
+  { "VimEnter", "FileChangedShellPost", "DirChanged" },
+  {
+    group = augroup,
+    desc = "Detect conflicted files in the current working directory on startup",
+    callback = function()
+      state.conflicted_files = detect_conflicted_files(vim.fn.getcwd())
+    end,
+  }
+)
 
-vim.api.nvim_create_autocmd("BufRead", {
+vim.api.nvim_create_autocmd("BufReadPre", {
   group = augroup,
   desc = "Detect if the opened file is conflicted",
   callback = function(args)
     local file = vim.api.nvim_buf_get_name(args.buf)
     local conflicted_files = detect_conflicted_files(file)
     state.conflicted_files[file] = conflicted_files[file] or nil
+    state.conflicted_bufs[args.buf] = conflicted_files[file] or nil
   end,
 })
 
@@ -169,6 +175,51 @@ local function hl(bufnr, range)
   })
 end
 
+local ACCEPT_CURRENT = "[Accept Current]"
+local ACCEPT_INCOMING = "[Accept Incoming]"
+local ACCEPT_BOTH = "[Accept Both]"
+local ACCEPT_NONE = "[Accept None]"
+
+local _cursor = 0
+local accept_current_range = {
+  lower = _cursor,
+  upper = _cursor + #ACCEPT_CURRENT - 1,
+}
+_cursor = _cursor + #ACCEPT_CURRENT + 1
+local accept_incoming_range = {
+  lower = _cursor,
+  upper = _cursor + #ACCEPT_INCOMING - 1,
+}
+_cursor = _cursor + #ACCEPT_INCOMING + 1
+local accept_both_range = {
+  lower = _cursor,
+  upper = _cursor + #ACCEPT_BOTH - 1,
+}
+_cursor = _cursor + #ACCEPT_BOTH + 1
+local accept_none_range = {
+  lower = _cursor,
+  upper = _cursor + #ACCEPT_NONE - 1,
+}
+
+---@param bufnr integer
+---@param line integer
+local function draw_virtual_line(bufnr, line)
+  vim.api.nvim_buf_set_extmark(bufnr, ns, line - 1, 0, {
+    virt_lines = {
+      {
+        { ACCEPT_CURRENT, "Normal" },
+        { " ", "" },
+        { ACCEPT_INCOMING, "Normal" },
+        { " ", "" },
+        { ACCEPT_BOTH, "Normal" },
+        { " ", "" },
+        { ACCEPT_NONE, "Normal" },
+      },
+    },
+    virt_lines_above = true,
+  })
+end
+
 ---@class ConflictHunk
 ---@field target Marker
 ---@field base Marker?
@@ -181,6 +232,7 @@ local function highlight_conflicts(bufnr, conflicts)
   -- clear previous extmarks
   vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
   for _, conflict in ipairs(conflicts) do
+    draw_virtual_line(bufnr, conflict.target.line)
     if conflict.base then
       hl(bufnr, {
         start_line = conflict.target.line,
@@ -381,9 +433,61 @@ vim.keymap.set("n", "[X", function()
   M.prev_conflict({ wrap = true, bottom = true })
 end, { desc = "Go to previous conflict (bottom marker)" })
 
+-- run callbacks on virtual line clicks
+vim.keymap.set("n", "<LeftMouse>", function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  if not state.conflicted_bufs[bufnr] then
+    return "<LeftMouse>"
+  end
+
+  local mouse_pos = vim.fn.getmousepos()
+  local screen_pos = vim.fn.screenpos(0, mouse_pos.line, 0)
+
+  -- clicked real line
+  if mouse_pos.screenrow == screen_pos.row then
+    return "<LeftMouse>"
+  end
+
+  local hunks = state.hunks[bufnr]
+  if not hunks or #hunks == 0 then
+    return "<LeftMouse>"
+  end
+
+  for _, hunk in ipairs(hunks) do
+    if mouse_pos.line == hunk.target.line then
+      -- calculate the real "buffer column" of the mouse click
+      -- can't use mouse_pos.col because it only works on actual lines
+      local col = mouse_pos.screencol - screen_pos.col
+      if
+        col >= accept_current_range.lower
+        and col <= accept_current_range.upper
+      then
+        vim.notify("Accept Current", vim.log.levels.INFO)
+      elseif
+        col >= accept_incoming_range.lower
+        and col <= accept_incoming_range.upper
+      then
+        vim.notify("Accept Incoming", vim.log.levels.INFO)
+      elseif
+        col >= accept_both_range.lower and col <= accept_both_range.upper
+      then
+        vim.notify("Accept Both", vim.log.levels.INFO)
+      elseif
+        col >= accept_none_range.lower and col <= accept_none_range.upper
+      then
+        vim.notify("Accept None", vim.log.levels.INFO)
+      end
+      return ""
+    end
+  end
+
+  return "<LeftMouse>"
+end, { expr = true })
+
 return M
 
 -- TODO: make the marker line stand out more
+-- TODO: implement accept actions
 -- TODO: add snakcs picker to find conflict location
 -- TODO: use LSP to provide code actions for resolving conflicts
 -- TODO: implement vscode-like merge editor

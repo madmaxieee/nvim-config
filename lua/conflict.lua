@@ -1,8 +1,15 @@
 -- wip plugin for conflict highlighting
 
----@type {conflicted_files: table<string, boolean>}
+local M = {}
+
+---@class State
+---@field conflicted_files table<string, boolean> map of conflicted file paths
+---@field hunks table<integer, ConflictHunk[]>
+
+---@type State
 local state = {
   conflicted_files = {},
+  hunks = {},
 }
 
 local ns = vim.api.nvim_create_namespace("ConflictMarkers")
@@ -144,8 +151,60 @@ local function get_next_marker(markers, line)
       end
     end
   end
-  vim.print(next_marker)
   return next_marker
+end
+
+---@class HighlightRange
+---@field start_line integer 1-based indexing, inclusive
+---@field end_line integer
+---@field hl_group string
+
+---@param bufnr integer
+---@param range HighlightRange
+local function hl(bufnr, range)
+  vim.api.nvim_buf_set_extmark(bufnr, ns, range.start_line - 1, 0, {
+    end_line = range.end_line,
+    hl_group = range.hl_group,
+    hl_eol = true,
+  })
+end
+
+---@class ConflictHunk
+---@field target Marker
+---@field base Marker?
+---@field separator Marker
+---@field source Marker
+
+---@param bufnr integer
+---@param conflicts ConflictHunk[]
+local function highlight_conflicts(bufnr, conflicts)
+  -- clear previous extmarks
+  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+  for _, conflict in ipairs(conflicts) do
+    if conflict.base then
+      hl(bufnr, {
+        start_line = conflict.target.line,
+        end_line = conflict.base.line - 1,
+        hl_group = "DiffAdd",
+      })
+      hl(bufnr, {
+        start_line = conflict.base.line,
+        end_line = conflict.separator.line - 1,
+        hl_group = "DiffText",
+      })
+    else
+      hl(bufnr, {
+        start_line = conflict.target.line,
+        end_line = conflict.separator.line - 1,
+        hl_group = "DiffAdd",
+      })
+    end
+    hl(bufnr, {
+      start_line = conflict.separator.line + 1,
+      end_line = conflict.source.line,
+      hl_group = "DiffDelete",
+    })
+  end
 end
 
 vim.api.nvim_create_autocmd({ "BufRead", "TextChanged" }, {
@@ -159,6 +218,9 @@ vim.api.nvim_create_autocmd({ "BufRead", "TextChanged" }, {
     end
 
     local markers = find_markers(args.buf)
+
+    ---@type ConflictHunk[]
+    local hunks = {}
 
     ---@type Marker?
     local target = nil
@@ -215,7 +277,9 @@ vim.api.nvim_create_autocmd({ "BufRead", "TextChanged" }, {
       end
 
       assert(separator)
+      assert(next_marker)
 
+      ---@diagnostic disable-next-line: need-check-nil
       next_marker = get_next_marker(markers, next_marker.line)
       if not next_marker then
         break
@@ -234,43 +298,95 @@ vim.api.nvim_create_autocmd({ "BufRead", "TextChanged" }, {
       assert(target)
       assert(source)
 
-      -- move all extmark logics here
-      if base then
-        vim.api.nvim_buf_set_extmark(args.buf, ns, target.line - 1, 0, {
-          end_line = base.line - 1,
-          hl_group = "DiffAdd",
-          hl_eol = true,
-        })
-        vim.api.nvim_buf_set_extmark(args.buf, ns, base.line - 1, 0, {
-          end_line = separator.line - 1,
-          hl_group = "DiffText",
-          hl_eol = true,
-        })
-      else
-        vim.api.nvim_buf_set_extmark(args.buf, ns, target.line - 1, 0, {
-          end_line = separator.line - 1,
-          hl_group = "DiffAdd",
-          hl_eol = true,
-        })
-      end
-
-      vim.api.nvim_buf_set_extmark(args.buf, ns, separator.line, 0, {
-        end_line = source.line,
-        hl_group = "DiffDelete",
-        hl_eol = true,
-      })
+      hunks[#hunks + 1] = {
+        target = target,
+        base = base,
+        separator = separator,
+        source = source,
+      }
 
       target = nil
       ::continue::
     end
+
+    state.hunks[args.buf] = hunks
+    highlight_conflicts(args.buf, hunks)
   end,
 })
 
+---@param opts? {wrap?: boolean, bottom?: boolean}
+function M.next_conflict(opts)
+  opts = opts or {}
+  local bufnr = vim.api.nvim_get_current_buf()
+  local hunks = state.hunks[bufnr]
+  if not hunks or #hunks == 0 then
+    vim.notify("No conflicts detected in this file", vim.log.levels.INFO)
+    return
+  end
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local marker_type = opts.bottom and "source" or "target"
+  for _, hunk in ipairs(hunks) do
+    if hunk[marker_type].line > cursor[1] then
+      vim.api.nvim_win_set_cursor(0, { hunk[marker_type].line, 0 })
+      return
+    end
+  end
+  -- wrap around to the first hunk
+  if opts.wrap then
+    if hunks and #hunks > 0 then
+      vim.api.nvim_win_set_cursor(0, { hunks[1].target.line, 0 })
+    end
+  end
+end
+
+---@param opts? {wrap?: boolean, bottom?: boolean}
+function M.prev_conflict(opts)
+  opts = opts or {}
+  local bufnr = vim.api.nvim_get_current_buf()
+  local hunks = state.hunks[bufnr]
+  if not hunks or #hunks == 0 then
+    vim.notify("No conflicts detected in this file", vim.log.levels.INFO)
+    return
+  end
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local marker_type = opts.bottom and "source" or "target"
+  for i = #hunks, 1, -1 do
+    local hunk = hunks[i]
+    if hunk[marker_type].line < cursor[1] then
+      vim.api.nvim_win_set_cursor(0, { hunk[marker_type].line, 0 })
+      return
+    end
+  end
+  -- wrap around to the last hunk
+  if opts.wrap then
+    if hunks and #hunks > 0 then
+      vim.api.nvim_win_set_cursor(0, { hunks[#hunks].target.line, 0 })
+    end
+  end
+end
+
+vim.keymap.set("n", "]x", function()
+  M.next_conflict({ wrap = true })
+end, { desc = "Go to next conflict" })
+
+vim.keymap.set("n", "[x", function()
+  M.prev_conflict({ wrap = true })
+end, { desc = "Go to previous conflict" })
+
+vim.keymap.set("n", "]X", function()
+  M.next_conflict({ wrap = true, bottom = true })
+end, { desc = "Go to next conflict (bottom marker)" })
+
+vim.keymap.set("n", "[X", function()
+  M.prev_conflict({ wrap = true, bottom = true })
+end, { desc = "Go to previous conflict (bottom marker)" })
+
+return M
+
 -- TODO: make the marker line stand out more
--- TODO: reuse extmarks
--- TODO: add commands to navigate between conflict markers
 -- TODO: add snakcs picker to find conflict location
 -- TODO: use LSP to provide code actions for resolving conflicts
+-- TODO: implement vscode-like merge editor
 
 --[[
 <<<<<<< TARGET BRANCH

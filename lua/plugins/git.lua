@@ -3,6 +3,7 @@ local map = require("utils").safe_keymap_set
 
 return {
   {
+    cond = false,
     "akinsho/git-conflict.nvim",
     event = { "BufReadPre" },
     config = function()

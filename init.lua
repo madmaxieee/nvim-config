@@ -1,7 +1,7 @@
 require("config.opts")
 require("config.autocmd")
 
--- require("conflict")
+require("conflict")
 
 require("config.lazy")
 

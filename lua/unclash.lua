@@ -1,4 +1,4 @@
--- wip plugin for conflict highlighting
+-- unclash.nvim wip plugin for conflict highlighting
 
 local M = {}
 

@@ -2,6 +2,10 @@
 
 local M = {}
 
+local hl = require("unclash.highlight")
+
+hl.setup()
+
 ---@class State
 ---@field conflicted_files table<string, boolean> map of conflicted file paths
 ---@field conflicted_bufs table<integer, boolean> map of conflicted buffer numbers
@@ -14,24 +18,24 @@ local state = {
   hunks = {},
 }
 
-local ns = vim.api.nvim_create_namespace("ConflictMarkers")
+local ns = vim.api.nvim_create_namespace("UnClash")
 
-local TARGET_MARKER = "<<<<<<<"
+local CURRENT_MARKER = "<<<<<<<"
 local BASE_MARKER = "|||||||"
 local SEPARATOR_MARKER = "======="
-local SOURCE_MARKER = ">>>>>>>"
+local INCOMING_MARKER = ">>>>>>>"
 
----@alias MarkerType "target" | "base" | "separator" | "source"
+---@alias MarkerType "current" | "base" | "separator" | "incoming"
 
 ---@class Marker
 ---@field line integer
 ---@field type MarkerType
 
 ---@class MarkerSet
----@field target Marker[]
+---@field current Marker[]
 ---@field base Marker[]
 ---@field separator Marker[]
----@field source Marker[]
+---@field incoming Marker[]
 
 ---@param path string a directory or a single file
 ---@return table<string, boolean> conflicted files
@@ -105,16 +109,16 @@ local function find_markers(bufnr)
 
   ---@type MarkerSet
   local markers = {
-    target = {},
+    current = {},
     separator = {},
     base = {},
-    source = {},
+    incoming = {},
   }
   for i, line in ipairs(lines) do
-    if vim.startswith(line, TARGET_MARKER) then
-      markers.target[#markers.target + 1] = {
+    if vim.startswith(line, CURRENT_MARKER) then
+      markers.current[#markers.current + 1] = {
         line = i,
-        type = "target",
+        type = "current",
       }
     elseif vim.startswith(line, BASE_MARKER) then
       markers.base[#markers.base + 1] = {
@@ -126,10 +130,10 @@ local function find_markers(bufnr)
         line = i,
         type = "separator",
       }
-    elseif vim.startswith(line, SOURCE_MARKER) then
-      markers.source[#markers.source + 1] = {
+    elseif vim.startswith(line, INCOMING_MARKER) then
+      markers.incoming[#markers.incoming + 1] = {
         line = i,
-        type = "source",
+        type = "incoming",
       }
     end
   end
@@ -145,7 +149,7 @@ end
 local function get_next_marker(markers, line)
   ---@type Marker?
   local next_marker = nil
-  for _, t in ipairs({ "target", "base", "separator", "source" }) do
+  for _, t in ipairs({ "current", "base", "separator", "incoming" }) do
     if #markers[t] > 0 then
       while #markers[t] > 0 and markers[t][1].line <= line do
         table.remove(markers[t], 1)
@@ -158,21 +162,6 @@ local function get_next_marker(markers, line)
     end
   end
   return next_marker
-end
-
----@class HighlightRange
----@field start_line integer 1-based indexing, inclusive
----@field end_line integer
----@field hl_group string
-
----@param bufnr integer
----@param range HighlightRange
-local function hl(bufnr, range)
-  vim.api.nvim_buf_set_extmark(bufnr, ns, range.start_line - 1, 0, {
-    end_line = range.end_line,
-    hl_group = range.hl_group,
-    hl_eol = true,
-  })
 end
 
 local ACCEPT_CURRENT = "[Accept Current]"
@@ -207,13 +196,13 @@ local function draw_virtual_line(bufnr, line)
   vim.api.nvim_buf_set_extmark(bufnr, ns, line - 1, 0, {
     virt_lines = {
       {
-        { ACCEPT_CURRENT, "Normal" },
-        { " ", "" },
-        { ACCEPT_INCOMING, "Normal" },
-        { " ", "" },
-        { ACCEPT_BOTH, "Normal" },
-        { " ", "" },
-        { ACCEPT_NONE, "Normal" },
+        { ACCEPT_CURRENT, hl.action_button },
+        { " ", hl.action_line },
+        { ACCEPT_INCOMING, hl.action_button },
+        { " ", hl.action_line },
+        { ACCEPT_BOTH, hl.action_button },
+        { " ", hl.action_line },
+        { ACCEPT_NONE, hl.action_button },
       },
     },
     virt_lines_above = true,
@@ -221,10 +210,10 @@ local function draw_virtual_line(bufnr, line)
 end
 
 ---@class ConflictHunk
----@field target Marker
+---@field current Marker
 ---@field base Marker?
 ---@field separator Marker
----@field source Marker
+---@field incoming Marker
 
 ---@param bufnr integer
 ---@param conflicts ConflictHunk[]
@@ -232,29 +221,44 @@ local function highlight_conflicts(bufnr, conflicts)
   -- clear previous extmarks
   vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
   for _, conflict in ipairs(conflicts) do
-    draw_virtual_line(bufnr, conflict.target.line)
+    draw_virtual_line(bufnr, conflict.current.line)
+    hl.hl_lines(bufnr, {
+      start_line = conflict.current.line,
+      end_line = conflict.current.line,
+      hl_group = hl.current_marker,
+    })
     if conflict.base then
-      hl(bufnr, {
-        start_line = conflict.target.line,
+      hl.hl_lines(bufnr, {
+        start_line = conflict.current.line + 1,
         end_line = conflict.base.line - 1,
-        hl_group = "DiffAdd",
+        hl_group = hl.current,
       })
-      hl(bufnr, {
+      hl.hl_lines(bufnr, {
         start_line = conflict.base.line,
+        end_line = conflict.base.line,
+        hl_group = hl.base_marker,
+      })
+      hl.hl_lines(bufnr, {
+        start_line = conflict.base.line + 1,
         end_line = conflict.separator.line - 1,
-        hl_group = "DiffText",
+        hl_group = hl.base,
       })
     else
-      hl(bufnr, {
-        start_line = conflict.target.line,
+      hl.hl_lines(bufnr, {
+        start_line = conflict.current.line + 1,
         end_line = conflict.separator.line - 1,
-        hl_group = "DiffAdd",
+        hl_group = hl.current,
       })
     end
-    hl(bufnr, {
+    hl.hl_lines(bufnr, {
       start_line = conflict.separator.line + 1,
-      end_line = conflict.source.line,
-      hl_group = "DiffDelete",
+      end_line = conflict.incoming.line - 1,
+      hl_group = hl.incoming,
+    })
+    hl.hl_lines(bufnr, {
+      start_line = conflict.incoming.line,
+      end_line = conflict.incoming.line,
+      hl_group = hl.incoming_marker,
     })
   end
 end
@@ -275,40 +279,40 @@ vim.api.nvim_create_autocmd({ "BufRead", "TextChanged" }, {
     local hunks = {}
 
     ---@type Marker?
-    local target = nil
+    local current = nil
 
     while true do
       local base = nil
       ---@type Marker?
       local separator = nil
       ---@type Marker?
-      local source = nil
+      local incoming = nil
 
-      while not (target and target.type == "target") do
-        target = get_next_marker(markers, target and target.line or 0)
-        if not target then
+      while not (current and current.type == "current") do
+        current = get_next_marker(markers, current and current.line or 0)
+        if not current then
           break
         end
       end
-      if not target then
+      if not current then
         break
       end
 
       ---@type Marker?
-      local next_marker = get_next_marker(markers, target.line)
+      local next_marker = get_next_marker(markers, current.line)
       if not next_marker then
         break
       end
 
-      if next_marker.type == "target" then
-        target = next_marker
+      if next_marker.type == "current" then
+        current = next_marker
         goto continue
       elseif next_marker.type == "base" then
         base = next_marker
       elseif next_marker.type == "separator" then
         separator = next_marker
-      elseif next_marker.type == "source" then
-        target = nil
+      elseif next_marker.type == "incoming" then
+        current = nil
         goto continue
       end
 
@@ -317,13 +321,13 @@ vim.api.nvim_create_autocmd({ "BufRead", "TextChanged" }, {
         if not next_marker then
           break
         end
-        if next_marker.type == "target" then
-          target = next_marker
+        if next_marker.type == "current" then
+          current = next_marker
           goto continue
         elseif next_marker.type == "separator" then
           separator = next_marker
         else
-          target = nil
+          current = nil
           goto continue
         end
       end
@@ -337,27 +341,27 @@ vim.api.nvim_create_autocmd({ "BufRead", "TextChanged" }, {
         break
       end
 
-      if next_marker.type == "target" then
-        target = next_marker
+      if next_marker.type == "current" then
+        current = next_marker
         goto continue
-      elseif next_marker.type == "source" then
-        source = next_marker
+      elseif next_marker.type == "incoming" then
+        incoming = next_marker
       else
-        target = nil
+        current = nil
         goto continue
       end
 
-      assert(target)
-      assert(source)
+      assert(current)
+      assert(incoming)
 
       hunks[#hunks + 1] = {
-        target = target,
+        current = current,
         base = base,
         separator = separator,
-        source = source,
+        incoming = incoming,
       }
 
-      target = nil
+      current = nil
       ::continue::
     end
 
@@ -376,7 +380,7 @@ function M.next_conflict(opts)
     return
   end
   local cursor = vim.api.nvim_win_get_cursor(0)
-  local marker_type = opts.bottom and "source" or "target"
+  local marker_type = opts.bottom and "incoming" or "current"
   for _, hunk in ipairs(hunks) do
     if hunk[marker_type].line > cursor[1] then
       vim.api.nvim_win_set_cursor(0, { hunk[marker_type].line, 0 })
@@ -386,7 +390,7 @@ function M.next_conflict(opts)
   -- wrap around to the first hunk
   if opts.wrap then
     if hunks and #hunks > 0 then
-      vim.api.nvim_win_set_cursor(0, { hunks[1].target.line, 0 })
+      vim.api.nvim_win_set_cursor(0, { hunks[1].current.line, 0 })
     end
   end
 end
@@ -401,7 +405,7 @@ function M.prev_conflict(opts)
     return
   end
   local cursor = vim.api.nvim_win_get_cursor(0)
-  local marker_type = opts.bottom and "source" or "target"
+  local marker_type = opts.bottom and "incoming" or "current"
   for i = #hunks, 1, -1 do
     local hunk = hunks[i]
     if hunk[marker_type].line < cursor[1] then
@@ -412,7 +416,7 @@ function M.prev_conflict(opts)
   -- wrap around to the last hunk
   if opts.wrap then
     if hunks and #hunks > 0 then
-      vim.api.nvim_win_set_cursor(0, { hunks[#hunks].target.line, 0 })
+      vim.api.nvim_win_set_cursor(0, { hunks[#hunks].current.line, 0 })
     end
   end
 end
@@ -454,7 +458,7 @@ vim.keymap.set("n", "<LeftMouse>", function()
   end
 
   for _, hunk in ipairs(hunks) do
-    if mouse_pos.line == hunk.target.line then
+    if mouse_pos.line == hunk.current.line then
       -- calculate the real "buffer column" of the mouse click
       -- can't use mouse_pos.col because it only works on actual lines
       local col = mouse_pos.screencol - screen_pos.col
@@ -486,7 +490,6 @@ end, { expr = true })
 
 return M
 
--- TODO: make the marker line stand out more
 -- TODO: implement accept actions
 -- TODO: add snakcs picker to find conflict location
 -- TODO: use LSP to provide code actions for resolving conflicts

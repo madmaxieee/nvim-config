@@ -6,20 +6,22 @@
 ---@field incoming string
 ---@field incoming_marker string
 ---@field separator string
----@field setup fun()
+---@field action_line string
+---@field action_button string
 
----@type UnclashHlGroups
----@diagnostic disable-next-line: missing-fields
 local M = {
-  current = "UnclashCurrent",
-  current_marker = "UnclashCurrentMarker",
-  base = "UnclashBase",
-  base_marker = "UnclashBaseMarker",
-  incoming = "UnclashIncoming",
-  incoming_marker = "UnclashIncomingMarker",
-  separator = "UnclashSeparator",
-  action_line = "UnclashActionLine",
-  action_button = "UnclashActionButton",
+  ---@type UnclashHlGroups
+  groups = {
+    current = "UnclashCurrent",
+    current_marker = "UnclashCurrentMarker",
+    base = "UnclashBase",
+    base_marker = "UnclashBaseMarker",
+    incoming = "UnclashIncoming",
+    incoming_marker = "UnclashIncomingMarker",
+    separator = "UnclashSeparator",
+    action_line = "UnclashActionLine",
+    action_button = "UnclashActionButton",
+  },
 }
 
 local ns = vim.api.nvim_create_namespace("UnClash")
@@ -74,20 +76,20 @@ local function blend_fg(color, amount)
 end
 
 local default_colors = {
-  current = "#2A4556",
-  base = "#394B70",
-  incoming = "#4B2A3D",
-  separator = "#333333",
-  action_line = "#444444",
-  action_button = "#555555",
+  current = { bg = "#2A4556" },
+  base = { bg = "#394B70" },
+  incoming = { bg = "#4B2A3D" },
+  separator = { bg = "#333333" },
+  action_line = { bg = "#252A3F" },
+  action_button = { fg = "#636da6", bg = "#252A3F", underline = true },
 }
 
 local function setup_hl_groups()
   for group, color in pairs(default_colors) do
-    local hl_group = M[group]
-    vim.api.nvim_set_hl(0, hl_group, { bg = color })
+    local hl_group = M.groups[group]
+    vim.api.nvim_set_hl(0, hl_group, color)
     if group == "current" or group == "base" or group == "incoming" then
-      local marker_bg = blend_bg(color, 0.4)
+      local marker_bg = blend_bg(color.bg, 0.4)
       vim.api.nvim_set_hl(0, hl_group .. "Marker", { bg = marker_bg })
     end
   end

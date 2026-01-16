@@ -196,13 +196,13 @@ local function draw_virtual_line(bufnr, line)
   vim.api.nvim_buf_set_extmark(bufnr, ns, line - 1, 0, {
     virt_lines = {
       {
-        { ACCEPT_CURRENT, hl.action_button },
-        { " ", hl.action_line },
-        { ACCEPT_INCOMING, hl.action_button },
-        { " ", hl.action_line },
-        { ACCEPT_BOTH, hl.action_button },
-        { " ", hl.action_line },
-        { ACCEPT_NONE, hl.action_button },
+        { ACCEPT_CURRENT, hl.groups.action_button },
+        { " ", hl.groups.action_line },
+        { ACCEPT_INCOMING, hl.groups.action_button },
+        { " ", hl.groups.action_line },
+        { ACCEPT_BOTH, hl.groups.action_button },
+        { " ", hl.groups.action_line },
+        { ACCEPT_NONE, hl.groups.action_button },
       },
     },
     virt_lines_above = true,
@@ -225,40 +225,40 @@ local function highlight_conflicts(bufnr, conflicts)
     hl.hl_lines(bufnr, {
       start_line = conflict.current.line,
       end_line = conflict.current.line,
-      hl_group = hl.current_marker,
+      hl_group = hl.groups.current_marker,
     })
     if conflict.base then
       hl.hl_lines(bufnr, {
         start_line = conflict.current.line + 1,
         end_line = conflict.base.line - 1,
-        hl_group = hl.current,
+        hl_group = hl.groups.current,
       })
       hl.hl_lines(bufnr, {
         start_line = conflict.base.line,
         end_line = conflict.base.line,
-        hl_group = hl.base_marker,
+        hl_group = hl.groups.base_marker,
       })
       hl.hl_lines(bufnr, {
         start_line = conflict.base.line + 1,
         end_line = conflict.separator.line - 1,
-        hl_group = hl.base,
+        hl_group = hl.groups.base,
       })
     else
       hl.hl_lines(bufnr, {
         start_line = conflict.current.line + 1,
         end_line = conflict.separator.line - 1,
-        hl_group = hl.current,
+        hl_group = hl.groups.current,
       })
     end
     hl.hl_lines(bufnr, {
       start_line = conflict.separator.line + 1,
       end_line = conflict.incoming.line - 1,
-      hl_group = hl.incoming,
+      hl_group = hl.groups.incoming,
     })
     hl.hl_lines(bufnr, {
       start_line = conflict.incoming.line,
       end_line = conflict.incoming.line,
-      hl_group = hl.incoming_marker,
+      hl_group = hl.groups.incoming_marker,
     })
   end
 end
@@ -538,8 +538,8 @@ end, { expr = true })
 
 return M
 
--- TODO: add accept action api for keymaps
--- TODO: update action line colors
+-- TODO: add accept action api for keymap and commands
+-- TODO: read from predefined DiffAdd colors
 -- TODO: add snakcs picker to find conflict location
 -- TODO: use LSP to provide code actions for resolving conflicts
 -- TODO: implement vscode-like merge editor

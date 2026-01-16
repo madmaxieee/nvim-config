@@ -263,6 +263,53 @@ local function highlight_conflicts(bufnr, conflicts)
   end
 end
 
+---@param bufnr integer
+---@param hunk ConflictHunk
+---@param action "current" | "incoming" | "both" | "none"
+local function accept_hunk(bufnr, hunk, action)
+  local lines
+  if action == "current" then
+    lines = vim.api.nvim_buf_get_lines(
+      bufnr,
+      (hunk.current.line + 1) - 1,
+      (hunk.base and hunk.base.line or hunk.separator.line) - 1,
+      false
+    )
+  elseif action == "incoming" then
+    lines = vim.api.nvim_buf_get_lines(
+      bufnr,
+      (hunk.separator.line + 1) - 1,
+      hunk.incoming.line - 1,
+      false
+    )
+  elseif action == "both" then
+    local current_lines = vim.api.nvim_buf_get_lines(
+      bufnr,
+      (hunk.current.line + 1) - 1,
+      (hunk.base and hunk.base.line or hunk.separator.line) - 1,
+      false
+    )
+    local incoming_lines = vim.api.nvim_buf_get_lines(
+      bufnr,
+      (hunk.separator.line + 1) - 1,
+      hunk.incoming.line - 1,
+      false
+    )
+    lines = vim.list_extend(current_lines, incoming_lines)
+  elseif action == "none" then
+    lines = {}
+  else
+    error("Unknown action: " .. action)
+  end
+  vim.api.nvim_buf_set_lines(
+    bufnr,
+    hunk.current.line - 1,
+    (hunk.incoming.line + 1) - 1,
+    false,
+    lines
+  )
+end
+
 vim.api.nvim_create_autocmd({ "BufRead", "TextChanged" }, {
   group = augroup,
   desc = "Apply highlighting to conflicted files",
@@ -457,6 +504,7 @@ vim.keymap.set("n", "<LeftMouse>", function()
     return "<LeftMouse>"
   end
 
+  -- TODO: use binary search
   for _, hunk in ipairs(hunks) do
     if mouse_pos.line == hunk.current.line then
       -- calculate the real "buffer column" of the mouse click
@@ -466,20 +514,20 @@ vim.keymap.set("n", "<LeftMouse>", function()
         col >= accept_current_range.lower
         and col <= accept_current_range.upper
       then
-        vim.notify("Accept Current", vim.log.levels.INFO)
+        vim.schedule_wrap(accept_hunk)(bufnr, hunk, "current")
       elseif
         col >= accept_incoming_range.lower
         and col <= accept_incoming_range.upper
       then
-        vim.notify("Accept Incoming", vim.log.levels.INFO)
+        vim.schedule_wrap(accept_hunk)(bufnr, hunk, "incoming")
       elseif
         col >= accept_both_range.lower and col <= accept_both_range.upper
       then
-        vim.notify("Accept Both", vim.log.levels.INFO)
+        vim.schedule_wrap(accept_hunk)(bufnr, hunk, "both")
       elseif
         col >= accept_none_range.lower and col <= accept_none_range.upper
       then
-        vim.notify("Accept None", vim.log.levels.INFO)
+        vim.schedule_wrap(accept_hunk)(bufnr, hunk, "none")
       end
       return ""
     end
@@ -490,19 +538,20 @@ end, { expr = true })
 
 return M
 
--- TODO: implement accept actions
+-- TODO: add accept action api for keymaps
+-- TODO: update action line colors
 -- TODO: add snakcs picker to find conflict location
 -- TODO: use LSP to provide code actions for resolving conflicts
 -- TODO: implement vscode-like merge editor
 
 --[[
-<<<<<<< TARGET BRANCH
+<<<<<<< current
 base content
 target content
 base content
 =======
 source content
->>>>>>> SOURCE BRANCH
+>>>>>>> incoming
 ]]
 
 --[[

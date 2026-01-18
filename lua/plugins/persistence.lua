@@ -42,7 +42,7 @@ return {
     end
 
     -- disable persistence for certain directories
-    vim.api.nvim_create_autocmd("VimEnter", {
+    vim.api.nvim_create_autocmd("UIEnter", {
       group = persistence_group,
       callback = function()
         local cwd = vim.fn.getcwd()

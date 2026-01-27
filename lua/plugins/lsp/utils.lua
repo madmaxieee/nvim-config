@@ -81,8 +81,9 @@ function M.make_formatter_filter(bufnr)
 end
 
 local default_disabled_lsp = {
-  ["cpplint"] = true,
   ["copilot"] = true,
+  ["cpplint"] = true,
+  ["harper_ls"] = true,
 }
 
 ---@param client_name string

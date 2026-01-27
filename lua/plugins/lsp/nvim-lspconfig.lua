@@ -11,6 +11,7 @@ local servers = {
   "dockerls",
   "eslint",
   "gopls",
+  "harper_ls",
   "html",
   "jdtls",
   "jsonls",

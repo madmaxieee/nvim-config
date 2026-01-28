@@ -22,30 +22,30 @@ return {
   {
     "nvim-mini/mini.diff",
     event = "VeryLazy",
-    opts = {
-      view = {
-        style = "sign",
-        signs = {
-          add = "│",
-          change = "│",
-          delete = "󰍵",
+    config = function()
+      require("mini.diff").setup({
+        view = {
+          style = "sign",
+          signs = {
+            add = "│",
+            change = "│",
+            delete = "󰍵",
+          },
         },
-      },
-      mappings = {
-        apply = "",
-        reset = "",
-        textobject = "",
-        goto_first = "",
-        goto_prev = "",
-        goto_next = "",
-        goto_last = "",
-      },
-      options = {
-        algorithm = "patience",
-      },
-    },
+        mappings = {
+          apply = "",
+          reset = "",
+          textobject = "",
+          goto_first = "",
+          goto_prev = "",
+          goto_next = "",
+          goto_last = "",
+        },
+        options = {
+          algorithm = "patience",
+        },
+      })
 
-    init = function()
       local map_repeatable_pair = require("utils").map_repeatable_pair
       local map = require("utils").safe_keymap_set
 
@@ -81,7 +81,7 @@ return {
         require("mini.diff").textobject()
       end, { desc = "Current hunk text object" })
       map("n", "<leader>gd", function()
-        require("mini.diff").toggle_overlay()
+        require("mini.diff").toggle_overlay(0)
       end, { desc = "Toggle diff overlay" })
     end,
   },

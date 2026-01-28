@@ -80,6 +80,9 @@ return {
       map({ "o", "x" }, "ih", function()
         require("mini.diff").textobject()
       end, { desc = "Current hunk text object" })
+      map("n", "<leader>gd", function()
+        require("mini.diff").toggle_overlay()
+      end, { desc = "Toggle diff overlay" })
     end,
   },
 }

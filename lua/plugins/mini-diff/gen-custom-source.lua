@@ -21,7 +21,8 @@ end
 ---@class DiffSourceOpts
 ---@field name               string
 ---@field should_enable?     fun(): boolean
----@field async_check_path   fun(path: string, callback: fun(result:boolean, watch_path?:WatchPath))
+---@field setup?             fun()
+---@field async_find_root   fun(path: string, callback: fun(result:boolean, watch_path?:WatchPath))
 ---@field async_get_ref_text AsyncGetRefTextFunc
 
 ---@param buf integer
@@ -68,7 +69,8 @@ local function setup_fs_watcher(buf, path, watch_path, async_get_ref_text)
 
   buf_fs_event:start(watch_path.root, { recursive = false }, debounced_update)
   invalidate(cache[buf])
-  cache[buf] = { fs_event = buf_fs_event, timer = timer }
+  cache[buf].fs_event = buf_fs_event
+  cache[buf].timer = timer
 end
 
 ---@param opts DiffSourceOpts
@@ -91,6 +93,10 @@ local function make_diff_source(opts)
     }
   end
 
+  if opts.setup then
+    opts.setup()
+  end
+
   return {
     name = name,
 
@@ -106,16 +112,13 @@ local function make_diff_source(opts)
         return
       end
       local path = vim.api.nvim_buf_get_name(buf)
-      opts.async_check_path(
-        path,
-        vim.schedule_wrap(function(found, watch_path)
-          if not found then
-            require("mini.diff").fail_attach(buf)
-          else
-            setup_fs_watcher(buf, path, watch_path, opts.async_get_ref_text)
-          end
-        end)
-      )
+      opts.async_find_root(path, function(found, watch_path)
+        if found then
+          setup_fs_watcher(buf, path, watch_path, opts.async_get_ref_text)
+        else
+          require("mini.diff").fail_attach(buf)
+        end
+      end)
     end,
 
     ---@param buf integer
@@ -128,6 +131,10 @@ local function make_diff_source(opts)
   }
 end
 
+local hg_config = {
+  ref_revision = ".",
+}
+
 ---@type DiffSourceOpts
 local hg_opts = {
   name = "hg",
@@ -136,7 +143,49 @@ local hg_opts = {
     return require("modes").google3_mode
   end,
 
-  async_check_path = function(path, callback)
+  setup = function()
+    vim.api.nvim_create_user_command("MiniHgDiff", function(opts)
+      local rev = opts.args
+      local path = vim.api.nvim_buf_get_name(0)
+      local dir = vim.fn.fnamemodify(path, ":h")
+      vim.system({
+        "hg",
+        "--pager=never",
+        "--color=never",
+        "identify",
+        "--rev",
+        rev,
+      }, { cwd = dir }, function(res)
+        if res.code ~= 0 then
+          vim.schedule(function()
+            vim.notify(("mini.diff hg: '%s' is not a valid rev"):format(rev))
+          end)
+          return
+        end
+        hg_config.ref_revision = rev
+        for buf, entry in pairs(cache) do
+          if entry.attached == "hg" then
+            vim.schedule(function()
+              require("mini.diff").disable(buf)
+              require("mini.diff").enable(buf)
+              vim.notify(
+                ("mini.diff hg: reference rev is set to '%s'"):format(rev)
+              )
+            end)
+          end
+        end
+      end)
+    end, { nargs = 1 })
+    vim.api.nvim_create_user_command("MiniHgPDiff", function()
+      if hg_config.ref_revision == "." then
+        vim.cmd([[MiniHgDiff .^]])
+      else
+        vim.cmd([[MiniHgDiff .]])
+      end
+    end, { nargs = 0 })
+  end,
+
+  async_find_root = function(path, callback)
     local dir = vim.fn.fnamemodify(path, ":h")
     if vim.fn.isdirectory(dir) ~= 1 then
       return
@@ -173,7 +222,7 @@ local hg_opts = {
       "--color=never",
       "cat",
       "--rev",
-      ".",
+      hg_config.ref_revision,
       "--",
       basename,
     }, { cwd = dir }, function(res)
@@ -191,11 +240,7 @@ local hg_opts = {
 local jj_opts = {
   name = "jj",
 
-  should_enable = function()
-    return true
-  end,
-
-  async_check_path = function(path, callback)
+  async_find_root = function(path, callback)
     local dir = vim.fn.fnamemodify(path, ":h")
     if vim.fn.isdirectory(dir) ~= 1 then
       return

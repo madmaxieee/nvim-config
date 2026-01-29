@@ -26,9 +26,9 @@ return {
         algorithm = "patience",
       },
       source = {
-        require("mini.diff").gen_source.git(),
         gen_custom_source.hg(),
         gen_custom_source.jj(),
+        require("mini.diff").gen_source.git(),
         require("mini.diff").gen_source.save(),
         require("mini.diff").gen_source.none(),
       },

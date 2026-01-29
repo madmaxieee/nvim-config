@@ -86,8 +86,8 @@ local function make_diff_source(opts)
   if vim.fn.executable(name) ~= 1 or not opts.should_enable() then
     return {
       name = name,
-      attach = function(buf)
-        require("mini.diff").fail_attach(buf)
+      attach = function()
+        return false
       end,
       detach = function(_) end,
     }
@@ -116,7 +116,9 @@ local function make_diff_source(opts)
         if found then
           setup_fs_watcher(buf, path, watch_path, opts.async_get_ref_text)
         else
-          require("mini.diff").fail_attach(buf)
+          vim.schedule(function()
+            require("mini.diff").fail_attach(buf)
+          end)
         end
       end)
     end,

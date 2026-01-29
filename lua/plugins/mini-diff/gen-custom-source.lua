@@ -30,10 +30,6 @@ local set_ref_text = vim.schedule_wrap(function(buf, text)
   if not vim.api.nvim_buf_is_valid(buf) then
     return
   end
-  ---@type {ref_text:string[]}
-  local diff_source_state = vim.b[buf].diff_source or {}
-  diff_source_state.ref_text = text
-  vim.b[buf].diff_source = diff_source_state
   require("mini.diff").set_ref_text(buf, text)
 end)
 
@@ -147,10 +143,8 @@ local hg_opts = {
     end
     vim.system({
       "hg",
-      "--pager",
-      "never",
-      "--color",
-      "never",
+      "--pager=never",
+      "--color=never",
       "root",
     }, { cwd = dir }, function(res)
       if res.code ~= 0 then
@@ -175,6 +169,8 @@ local hg_opts = {
     end
     vim.system({
       "hg",
+      "--pager=never",
+      "--color=never",
       "cat",
       "--rev",
       ".",
@@ -206,9 +202,8 @@ local jj_opts = {
     end
     vim.system({
       "jj",
-      "--color",
-      "never",
       "--no-pager",
+      "--color=never",
       "--ignore-working-copy",
       "root",
     }, { cwd = dir }, function(res)
@@ -237,9 +232,8 @@ local jj_opts = {
     end
     vim.system({
       "jj",
-      "--color",
-      "never",
       "--no-pager",
+      "--color=never",
       "--ignore-working-copy",
       "file",
       "show",

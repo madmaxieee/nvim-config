@@ -4,7 +4,7 @@
 local cache = {}
 
 ---@param cache_entry DiffCacheEntry?
-local function invalidate(cache_entry)
+local function cleanup(cache_entry)
   if cache_entry == nil then
     return
   end
@@ -12,33 +12,43 @@ local function invalidate(cache_entry)
   pcall(vim.uv.timer_stop, cache_entry.timer)
 end
 
----@alias AsyncGetRefTextFunc fun(path: string, callback: fun(text: string[]))
-
----@class WatchPath
----@field root string
+---@class WatchPattern
+---@field dir string
 ---@field file string
 
 ---@class DiffSourceOpts
----@field name               string
----@field should_enable?     fun(): boolean
----@field setup?             fun()
----@field async_find_root   fun(path: string, callback: fun(result:boolean, watch_path?:WatchPath))
----@field async_get_ref_text AsyncGetRefTextFunc
+---@field name                  string
+---@field should_enable?        fun(): boolean
+---@field setup?                fun()
+---@field async_find_root       fun(path: string, callback: fun(root: string?))
+---@field root_to_watch_pattern fun(root: string): WatchPattern
+---@field async_get_ref_text    fun(path: string, callback: fun(text: string|string[]))
 
----@param buf integer
----@param text string[]
+---@type fun(buf: integer, text: string|string[])
 local set_ref_text = vim.schedule_wrap(function(buf, text)
-  if not vim.api.nvim_buf_is_valid(buf) then
-    return
+  local ok, err = pcall(require("mini.diff").set_ref_text, buf, text)
+  if not ok and err then
+    vim.notify(err)
   end
-  require("mini.diff").set_ref_text(buf, text)
+end)
+
+---@type fun(buf: integer)
+local fail_attach = vim.schedule_wrap(function(buf)
+  local ok, err = pcall(require("mini.diff").fail_attach, buf)
+  if not ok and err then
+    vim.notify(err)
+  end
 end)
 
 ---@param buf integer
----@param path string
----@param watch_path WatchPath
----@param async_get_ref_text AsyncGetRefTextFunc
-local function setup_fs_watcher(buf, path, watch_path, async_get_ref_text)
+local function get_buf_realpath(buf)
+  return vim.uv.fs_realpath(vim.api.nvim_buf_get_name(buf))
+end
+
+---@param buf integer used as the cache key
+---@param watch_pattern WatchPattern
+---@param callback fun()
+local function start_watching(buf, watch_pattern, callback)
   local buf_fs_event = vim.uv.new_fs_event()
   if not buf_fs_event then
     vim.notify("Could not create new_fs_event")
@@ -52,23 +62,17 @@ local function setup_fs_watcher(buf, path, watch_path, async_get_ref_text)
     return
   end
 
-  local do_update = function()
-    async_get_ref_text(path, function(text)
-      set_ref_text(buf, text)
-    end)
-  end
-  local debounced_update = function(_, filename, _)
-    if watch_path.file and filename ~= watch_path.file then
+  local debounced_cb = function(_, filename, _)
+    if watch_pattern.file and filename ~= watch_pattern.file then
       return
     end
-    -- Debounce to not overload during incremental staging (like in script)
     timer:stop()
-    timer:start(50, 0, do_update)
+    timer:start(50, 0, callback)
   end
-  timer:start(0, 0, do_update)
+  timer:start(0, 0, callback)
 
-  buf_fs_event:start(watch_path.root, { recursive = false }, debounced_update)
-  invalidate(cache[buf])
+  buf_fs_event:start(watch_pattern.dir, { recursive = false }, debounced_cb)
+  cleanup(cache[buf])
   cache[buf].fs_event = buf_fs_event
   cache[buf].timer = timer
 end
@@ -102,23 +106,27 @@ local function make_diff_source(opts)
 
     ---@param buf integer
     attach = function(buf)
-      cache[buf] = cache[buf] or {}
-      if cache[buf].attached ~= nil then
+      if cache[buf] ~= nil then
         return false
       end
-      cache[buf].attached = name
-      if not vim.api.nvim_buf_is_valid(buf) then
-        cache[buf] = nil
-        return
+      local path = get_buf_realpath(buf)
+      if not path then
+        return false
       end
-      local path = vim.api.nvim_buf_get_name(buf)
-      opts.async_find_root(path, function(found, watch_path)
-        if found then
-          setup_fs_watcher(buf, path, watch_path, opts.async_get_ref_text)
+
+      cache[buf] = { attached = name }
+
+      local function fs_callback()
+        opts.async_get_ref_text(path, function(text)
+          set_ref_text(buf, text)
+        end)
+      end
+      opts.async_find_root(path, function(root)
+        if root then
+          local watch_pattern = opts.root_to_watch_pattern(root)
+          start_watching(buf, watch_pattern, fs_callback)
         else
-          vim.schedule(function()
-            require("mini.diff").fail_attach(buf)
-          end)
+          fail_attach(buf)
         end
       end)
     end,
@@ -126,7 +134,7 @@ local function make_diff_source(opts)
     ---@param buf integer
     detach = function(buf)
       if cache[buf].attached == name then
-        invalidate(cache[buf])
+        cleanup(cache[buf])
         cache[buf] = nil
       end
     end,
@@ -134,8 +142,17 @@ local function make_diff_source(opts)
 end
 
 local hg_config = {
-  ref_revision = ".",
+  base_rev = ".",
 }
+
+local function hg_cmd(...)
+  local HG = {
+    "hg",
+    "--pager=never",
+    "--color=never",
+  }
+  return vim.list_extend(HG, { ... })
+end
 
 ---@type DiffSourceOpts
 local hg_opts = {
@@ -150,21 +167,14 @@ local hg_opts = {
       local rev = opts.args
       local path = vim.api.nvim_buf_get_name(0)
       local dir = vim.fn.fnamemodify(path, ":h")
-      vim.system({
-        "hg",
-        "--pager=never",
-        "--color=never",
-        "identify",
-        "--rev",
-        rev,
-      }, { cwd = dir }, function(res)
+      vim.system(hg_cmd("identify", "--rev", rev), { cwd = dir }, function(res)
         if res.code ~= 0 then
           vim.schedule(function()
             vim.notify(("mini.diff hg: '%s' is not a valid rev"):format(rev))
           end)
           return
         end
-        hg_config.ref_revision = rev
+        hg_config.base_rev = rev
         for buf, entry in pairs(cache) do
           if entry.attached == "hg" then
             vim.schedule(function()
@@ -179,7 +189,7 @@ local hg_opts = {
       end)
     end, { nargs = 1 })
     vim.api.nvim_create_user_command("MiniHgPDiff", function()
-      if hg_config.ref_revision == "." then
+      if hg_config.base_rev == "." then
         vim.cmd([[MiniHgDiff .^]])
       else
         vim.cmd([[MiniHgDiff .]])
@@ -187,115 +197,93 @@ local hg_opts = {
     end, { nargs = 0 })
   end,
 
+  root_to_watch_pattern = function(root)
+    return { dir = root .. "/.hg", file = "dirstate" }
+  end,
+
   async_find_root = function(path, callback)
     local dir = vim.fn.fnamemodify(path, ":h")
-    if vim.fn.isdirectory(dir) ~= 1 then
-      return
-    end
-    vim.system({
-      "hg",
-      "--pager=never",
-      "--color=never",
-      "root",
-    }, { cwd = dir }, function(res)
+    vim.system(hg_cmd("root"), { cwd = dir }, function(res)
       if res.code ~= 0 then
-        callback(false)
+        callback(nil)
         return
       end
       local output = res.stdout or ""
-      local hg_root = vim.trim(output)
-      if not hg_root or hg_root == "" then
-        callback(false)
+      local root = vim.trim(output)
+      if not root or root == "" then
+        callback(nil)
         return
       end
-      callback(true, { root = hg_root .. "/.hg", file = "dirstate" })
+      callback(root)
     end)
   end,
 
   async_get_ref_text = function(path, callback)
     local dir = vim.fn.fnamemodify(path, ":h")
     local basename = vim.fn.fnamemodify(path, ":t")
-    if vim.fn.isdirectory(dir) ~= 1 then
-      return
-    end
-    vim.system({
-      "hg",
-      "--pager=never",
-      "--color=never",
-      "cat",
-      "--rev",
-      hg_config.ref_revision,
-      "--",
-      basename,
-    }, { cwd = dir }, function(res)
-      if res.code ~= 0 then
-        return
+    vim.system(
+      hg_cmd("cat", "--rev", hg_config.base_rev, "--", basename),
+      { cwd = dir },
+      function(res)
+        if res.code ~= 0 then
+          return
+        end
+        local output = res.stdout or ""
+        callback(output)
       end
-      local output = res.stdout or ""
-      local lines = vim.split(output, "\n", { plain = true })
-      callback(lines)
-    end)
+    )
   end,
 }
+
+local function jj_cmd(...)
+  local JJ = {
+    "jj",
+    "--no-pager",
+    "--color=never",
+    "--ignore-working-copy",
+  }
+  return vim.list_extend(JJ, { ... })
+end
 
 ---@type DiffSourceOpts
 local jj_opts = {
   name = "jj",
 
+  root_to_watch_pattern = function(root)
+    return { dir = root .. "/.jj/working_copy", file = "checkout" }
+  end,
+
   async_find_root = function(path, callback)
     local dir = vim.fn.fnamemodify(path, ":h")
-    if vim.fn.isdirectory(dir) ~= 1 then
-      return
-    end
-    vim.system({
-      "jj",
-      "--no-pager",
-      "--color=never",
-      "--ignore-working-copy",
-      "root",
-    }, { cwd = dir }, function(res)
+    vim.system(jj_cmd("root"), { cwd = dir }, function(res)
       if res.code ~= 0 then
-        callback(false)
+        callback(nil)
         return
       end
       local output = res.stdout or ""
-      local jj_root = vim.trim(output)
-      if not jj_root or jj_root == "" then
-        callback(false)
+      local root = vim.trim(output)
+      if not root or root == "" then
+        callback(nil)
         return
       end
-      callback(
-        true,
-        { root = jj_root .. "/.jj/working_copy", file = "checkout" }
-      )
+      callback(root)
     end)
   end,
 
   async_get_ref_text = function(path, callback)
     local dir = vim.fn.fnamemodify(path, ":h")
     local basename = vim.fn.fnamemodify(path, ":t")
-    if vim.fn.isdirectory(dir) ~= 1 then
-      return
-    end
-    vim.system({
-      "jj",
-      "--no-pager",
-      "--color=never",
-      "--ignore-working-copy",
-      "file",
-      "show",
-      "-r",
-      "@-",
-      "--",
-      basename,
-    }, { cwd = dir }, function(res)
-      if res.code ~= 0 then
-        return
+    vim.system(
+      jj_cmd("file", "show", "-r", "@-", "--", basename),
+      { cwd = dir },
+      function(res)
+        if res.code ~= 0 then
+          return
+        end
+        local output = res.stdout or ""
+        callback(output)
       end
-      local output = res.stdout or ""
-      local lines = vim.split(output, "\n", { plain = true })
-      callback(lines)
-    end)
+    )
   end,
 }
 

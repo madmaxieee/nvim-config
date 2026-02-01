@@ -1,4 +1,5 @@
 return {
+  cond = false,
   "NickvanDyke/opencode.nvim",
   dependencies = {
     { "folke/snacks.nvim", opts = { input = { enabled = true } } },
@@ -7,25 +8,7 @@ return {
     ---@module 'opencode'
     ---@type opencode.Opts
     vim.g.opencode_opts = {
-      contexts = {
-        ["@buffer"] = {
-          description = "Current buffer",
-          value = function()
-            local path = require("opencode.context").buffer()
-            if path then
-              return "@" .. path
-            end
-          end,
-        },
-      },
-      on_opencode_not_found = function()
-        local ok = pcall(os.execute, "tmux split-window -h -d -p 30 'opencode'")
-        if ok then
-          return true
-        end
-        ok = pcall(require("opencode.terminal").open)
-        return ok
-      end,
+      provider = { enabled = "tmux" },
     }
   end,
   keys = {

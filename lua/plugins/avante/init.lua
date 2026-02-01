@@ -2,50 +2,34 @@ local password_store_path = "gemini/avante"
 
 local function setup_avante(api_key)
   local api_key_cmd = { "echo", api_key }
-  local opts = {
+  require("avante").setup({
     provider = "gemini",
     providers = {
       gemini = {
-        model = "gemini-2.5-pro",
+        model = "gemini-3-pro-preview",
+        api_key_name = api_key_cmd,
+      },
+      gemini_flash = {
+        __inherited_from = "gemini",
+        model = "gemini-3-flash-preview",
         api_key_name = api_key_cmd,
       },
     },
-    behaviour = {
-      auto_suggestions = false,
-      auto_set_highlight_group = true,
-      auto_set_keymaps = false,
-      auto_apply_diff_after_generation = false,
-      support_paste_from_clipboard = false,
-      minimize_diff = true,
+    behaviour = { auto_suggestions = false },
+    input = {
+      provider = "snacks",
+      provider_opts = {
+        title = "Avante Input",
+        icon = " ",
+      },
     },
     mappings = {
       diff = {
-        ours = "co",
-        theirs = "ct",
-        all_theirs = "ca",
-        both = "cb",
-        cursor = "cc",
         next = "]h",
         prev = "[h",
       },
-      jump = {
-        next = "]]",
-        prev = "[[",
-      },
-      submit = {
-        normal = "<CR>",
-        insert = "<C-s>",
-      },
-      sidebar = {
-        apply_all = "A",
-        apply_cursor = "a",
-        switch_windows = "<Tab>",
-        reverse_switch_windows = "<S-Tab>",
-      },
     },
-    hints = { enabled = false },
-  }
-  require("avante").setup(opts)
+  })
   vim.g.avante_loaded = true
 end
 
@@ -101,10 +85,9 @@ end
 
 return {
   {
-    cond = false,
     "yetone/avante.nvim",
     build = "make",
-    cmd = { "AvanteAsk", "AvanteEdit" },
+    event = { "VeryLazy" },
     keys = {
       {
         "<leader>aa",
@@ -158,6 +141,47 @@ return {
         end)
       end
     end,
+  },
+
+  {
+    "saghen/blink.cmp",
+    opts = {
+      sources = {
+        default = {
+          "avante_commands",
+          "avante_mentions",
+          "avante_shortcuts",
+          "avante_files",
+        },
+        providers = {
+          avante_commands = {
+            name = "avante_commands",
+            module = "blink.compat.source",
+            score_offset = 90,
+            opts = {},
+          },
+          avante_files = {
+            name = "avante_files",
+            module = "blink.compat.source",
+            score_offset = 100,
+            opts = {},
+          },
+          avante_mentions = {
+            name = "avante_mentions",
+            module = "blink.compat.source",
+            score_offset = 1000,
+            opts = {},
+          },
+          avante_shortcuts = {
+            name = "avante_shortcuts",
+            module = "blink.compat.source",
+            score_offset = 1000,
+            opts = {},
+          },
+        },
+      },
+    },
+    opts_extend = { "sources.default" },
   },
 
   {

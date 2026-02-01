@@ -62,7 +62,10 @@ local function start_watching(buf, watch_pattern, callback)
     return
   end
 
-  local debounced_cb = function(_, filename, _)
+  local debounced_cb = function(err, filename)
+    if err then
+      return
+    end
     if watch_pattern.file and filename ~= watch_pattern.file then
       return
     end
@@ -133,8 +136,9 @@ local function make_diff_source(opts)
 
     ---@param buf integer
     detach = function(buf)
-      if cache[buf].attached == name then
-        cleanup(cache[buf])
+      local entry = cache[buf]
+      if entry and entry.attached == name then
+        cleanup(entry)
         cache[buf] = nil
       end
     end,

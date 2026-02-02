@@ -1,18 +1,17 @@
 ---@param api_key string
 local function setup_avante(api_key)
-  api_key = vim.trim(api_key)
-  local api_key_cmd = { "echo", api_key }
+  vim.env.AVANTE_GOOGLE_API_KEY = api_key
   require("avante").setup({
     provider = "gemini",
     providers = {
       gemini = {
         model = "gemini-3-pro-preview",
-        api_key_name = api_key_cmd,
+        api_key_name = "AVANTE_GOOGLE_API_KEY",
       },
       gemini_flash = {
         __inherited_from = "gemini",
         model = "gemini-3-flash-preview",
-        api_key_name = api_key_cmd,
+        api_key_name = "AVANTE_GOOGLE_API_KEY",
       },
     },
     repo_map = {
@@ -43,12 +42,33 @@ local function setup_avante(api_key)
       },
     },
   })
+  vim.env.AVANTE_GOOGLE_API_KEY = nil
   vim.g.avante_loaded = true
 end
 
 ---@param callback? function
 local function prompt_and_setup_avante(callback)
   if vim.g.avante_loaded then
+    return
+  end
+
+  ---@param res vim.SystemCompleted
+  local function on_exit(res)
+    vim.schedule(function()
+      if res.code == 0 then
+        local api_key = vim.trim(res.stdout)
+        setup_avante(api_key)
+        if callback then
+          callback()
+        end
+      else
+        vim.notify("Can't unlock password store", vim.log.levels.ERROR)
+      end
+    end)
+  end
+
+  if vim.fn.executable("op") == 1 then
+    vim.system({ "op", "read", "op://google/gemini/credential" }, on_exit)
     return
   end
 
@@ -68,27 +88,12 @@ local function prompt_and_setup_avante(callback)
     },
   }, {
     on_submit = function(value)
-      ---@param res vim.SystemCompleted
-      local function on_exit(res)
-        if res.code == 0 then
-          setup_avante(res.stdout)
-          if callback then
-            callback()
-          end
-        else
-          vim.notify("Can't unlock password store", vim.log.levels.ERROR)
-        end
-      end
-      if vim.fn.executable("op") == 1 then
-        vim.system({ "op", "read", "op://google/gemini/credential" }, on_exit)
-      else
-        vim.system({ "pass", "gemini/cli" }, {
-          env = {
-            PASSWORD_STORE_GPG_OPTS = "--passphrase-fd 0 --pinentry-mode loopback",
-          },
-          stdin = value,
-        }, on_exit)
-      end
+      vim.system({ "pass", "gemini/cli" }, {
+        env = {
+          PASSWORD_STORE_GPG_OPTS = "--passphrase-fd 0 --pinentry-mode loopback",
+        },
+        stdin = value,
+      }, on_exit)
     end,
   })
 
@@ -150,19 +155,20 @@ return {
       vim.system({ "pass", "gemini/cli" }, {
         env = { PASSWORD_STORE_GPG_OPTS = "--pinentry-mode cancel" },
         text = true,
-      }, function(out)
-        if out.code == 0 then
-          vim.schedule(function()
-            setup_avante(out.stdout)
-          end)
-        else
-          vim.vim.api.nvim_create_user_command("AvanteLoad", function()
-            prompt_and_setup_avante()
-          end, {
-            nargs = 0,
-            desc = "Load Avante API key from password store",
-          })
-        end
+      }, function(res)
+        vim.schedule(function()
+          if res.code == 0 then
+            local api_key = vim.trim(res.stdout)
+            setup_avante(api_key)
+          else
+            vim.api.nvim_create_user_command("AvanteLoad", function()
+              prompt_and_setup_avante()
+            end, {
+              nargs = 0,
+              desc = "Load Avante API key from password store",
+            })
+          end
+        end)
       end)
     end,
   },
@@ -216,6 +222,7 @@ return {
           statusline = {
             "Avante",
             "AvanteSelectedFiles",
+            "AvanteSelectedCode",
           },
         },
       },

@@ -1,7 +1,8 @@
 return {
-  cond = false,
   "NickvanDyke/opencode.nvim",
   dependencies = {
+    ---@module 'snacks'
+    ---@diagnostic disable-next-line: missing-fields
     { "folke/snacks.nvim", opts = { input = { enabled = true } } },
   },
   init = function()
@@ -13,72 +14,70 @@ return {
   end,
   keys = {
     {
+      "<leader>ac",
+      mode = "n",
+      function()
+        require("opencode").prompt("", { clear = true })
+      end,
+      desc = "Clear opencode prompt",
+    },
+    {
+      "<C-s>",
+      mode = "n",
+      function()
+        require("opencode").prompt("", { submit = true })
+      end,
+      desc = "Submit opencode prompt",
+    },
+    {
       "<leader>aa",
+      mode = { "n", "x" },
       function()
-        -- create tmux split if opencode is not running
-        require("opencode").prompt("")
-        require("opencode").ask("@cursor: ")
+        require("opencode").ask("@this: ", { submit = true })
       end,
-      mode = "n",
-      desc = "Ask about this",
+      desc = "Ask opencode…",
     },
     {
-      "<leader>aa",
-      function()
-        -- create tmux split if opencode is not running
-        require("opencode").prompt("")
-        require("opencode").ask("@selection: ")
-      end,
-      mode = "v",
-      desc = "Ask about selection",
-    },
-    {
-      "<leader>ap",
-      function()
-        require("opencode").prompt("@buffer", { append = true })
-      end,
-      mode = "n",
-      desc = "Ask about buffer",
-    },
-    {
-      "<leader>ap",
-      function()
-        require("opencode").prompt("@selection", { append = true })
-      end,
-      mode = "v",
-      desc = "Add selection to prompt",
-    },
-    {
-      "<leader>ae",
-      function()
-        require("opencode").prompt("Explain @cursor and its context")
-      end,
-      mode = "n",
-      desc = "Explain this code",
-    },
-    {
-      "<leader>ae",
-      function()
-        require("opencode").prompt("Explain @selection and its context")
-      end,
-      mode = "v",
-      desc = "Explain this code",
-    },
-    {
-      "<leader>an",
-      function()
-        require("opencode").command("session_new")
-      end,
-      mode = "n",
-      desc = "New session",
-    },
-    {
-      "<leader>as",
+      "<leader>af",
+      mode = { "n", "x" },
       function()
         require("opencode").select()
       end,
-      mode = { "n", "v" },
-      desc = "Select prompt",
+      desc = "Execute opencode action…",
+    },
+    {
+      "go",
+      mode = { "n", "x" },
+      function()
+        return require("opencode").operator("@this ")
+      end,
+      desc = "Add range to opencode",
+      expr = true,
+    },
+    {
+      "goo",
+      mode = "n",
+      function()
+        return require("opencode").operator("@this ") .. "_"
+      end,
+      desc = "Add line to opencode",
+      expr = true,
+    },
+    {
+      "<S-C-u>",
+      mode = "n",
+      function()
+        require("opencode").command("session.half.page.up")
+      end,
+      desc = "Scroll opencode up",
+    },
+    {
+      "<S-C-d>",
+      mode = "n",
+      function()
+        require("opencode").command("session.half.page.down")
+      end,
+      desc = "Scroll opencode down",
     },
   },
 }

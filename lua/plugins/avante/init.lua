@@ -110,6 +110,7 @@ end
 
 return {
   {
+    cond = false,
     "yetone/avante.nvim",
     build = "make",
     event = { "VeryLazy" },

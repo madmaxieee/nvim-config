@@ -134,7 +134,10 @@ end
 
 function M.lsp_enable(server)
   set_lsp_enabled_var(server, true)
-  if vim.fn.exists(":LspStart") ~= 0 then
+  if vim.fn.exists(":lsp") ~= 0 then
+    vim.cmd("lsp enable " .. server)
+    vim.diagnostic.reset(nil, 0)
+  elseif vim.fn.exists(":LspStart") ~= 0 then
     vim.cmd("LspStart " .. server)
     vim.diagnostic.reset(nil, 0)
   end
@@ -142,7 +145,10 @@ end
 
 function M.lsp_disable(server)
   set_lsp_enabled_var(server, false)
-  if vim.fn.exists(":LspStop") ~= 0 then
+  if vim.fn.exists(":lsp") ~= 0 then
+    vim.cmd("lsp disable " .. server)
+    vim.diagnostic.reset(nil, 0)
+  elseif vim.fn.exists(":LspStop") ~= 0 then
     vim.cmd("LspStop " .. server)
     vim.diagnostic.reset(nil, 0)
   end

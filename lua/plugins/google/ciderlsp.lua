@@ -65,7 +65,7 @@ utils.on_load("nvim-lspconfig", function()
           "ruff",
           "ts_ls",
         }) do
-          vim.cmd("LspStop " .. name)
+          vim.cmd("lsp disable " .. name)
         end
 
         -- enable pyright for type checking even if ciderlsp is attached

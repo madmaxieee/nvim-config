@@ -1,3 +1,46 @@
+---@type {pane_id:string?}
+local provider = {}
+
+local function get_pane_id()
+  if provider.pane_id then
+    local res = vim
+      .system({
+        "tmux",
+        "list-panes",
+        "-t",
+        provider.pane_id,
+      })
+      :wait()
+    if res.code ~= 0 then
+      provider.pane_id = nil
+    end
+  end
+  return provider.pane_id
+end
+
+local function start(_)
+  local pane_id = get_pane_id()
+  if not pane_id then
+    vim.system({
+      "tmux",
+      "split-window",
+      "-d",
+      "-P",
+      "-F",
+      "#{pane_id}",
+      "-h",
+      "-p",
+      "35",
+      "exec opencode --port",
+    }, function(res)
+      if res.code ~= 0 then
+        return
+      end
+      provider.pane_id = vim.trim(res.stdout)
+    end)
+  end
+end
+
 return {
   "NickvanDyke/opencode.nvim",
   dependencies = {
@@ -9,7 +52,11 @@ return {
     ---@module 'opencode'
     ---@type opencode.Opts
     vim.g.opencode_opts = {
-      provider = { enabled = "tmux" },
+      provider = {
+        start = start,
+        stop = function(_) end,
+        toggle = function(_) end,
+      },
     }
   end,
   keys = {

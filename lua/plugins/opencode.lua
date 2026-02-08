@@ -21,23 +21,42 @@ end
 local function start(_)
   local pane_id = get_pane_id()
   if not pane_id then
+    -- stylua: ignore
     vim.system({
-      "tmux",
-      "split-window",
-      "-d",
-      "-P",
-      "-F",
-      "#{pane_id}",
-      "-h",
-      "-p",
-      "35",
+      -- create a new pain in detached mode (no focus)
+      "tmux", "split-window", "-d",
+      -- print the pane id to stdout so we can capture it
+      "-P", "-F", "#{pane_id}",
+      -- split horizontally and set the width to 35% of the screen
+      "-h", "-p", "35",
+      -- the opencode command
       "exec opencode --port",
     }, function(res)
       if res.code ~= 0 then
         return
       end
       provider.pane_id = vim.trim(res.stdout)
+      vim.system({
+        -- target the pane we just created
+        "tmux", "set-option", "-t", provider.pane_id,
+        -- disable allow-passthrough so the terminal does not send escape code
+        -- to the vim pane
+        "-p", "allow-passthrough", "off",
+      })
     end)
+  end
+end
+
+local function stop()
+  local pane_id = get_pane_id()
+  if pane_id then
+    -- stylua: ignore
+    vim.system({
+      "tmux", "send-keys", "-t", pane_id,
+      -- clear prompt then exit opencode
+      "C-c", "/exit",
+    })
+    provider.pane_id = nil
   end
 end
 
@@ -54,12 +73,25 @@ return {
     vim.g.opencode_opts = {
       provider = {
         start = start,
-        stop = function(_) end,
+        stop = stop,
         toggle = function(_) end,
       },
     }
   end,
   keys = {
+    {
+      "<C-.>",
+      mode = "n",
+      function()
+        if provider.pane_id then
+          vim.system({ "tmux", "resize-pane", "-Z" })
+        else
+          -- trigger opencode.nvim to start the provider
+          require("opencode").prompt("", {})
+        end
+      end,
+      desc = "Toggle opencode",
+    },
     {
       "<leader>ac",
       mode = "n",

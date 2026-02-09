@@ -105,7 +105,8 @@ utils.on_load("nvim-lspconfig", function()
             }),
           },
         })
-        vim.cmd("LspRestart pyright")
+        vim.cmd("lsp stop pyright")
+        vim.cmd("lsp enable pyright")
 
         vim.api.nvim_del_augroup_by_id(ciderlsp_attach_once_group)
       end

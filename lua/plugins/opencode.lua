@@ -83,7 +83,7 @@ return {
       "<C-.>",
       mode = "n",
       function()
-        if provider.pane_id then
+        if get_pane_id() then
           vim.system({ "tmux", "resize-pane", "-Z" })
         else
           -- trigger opencode.nvim to start the provider

@@ -114,7 +114,3 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
     vim.opt_local.relativenumber = false
   end,
 })
-
-map("n", "<C-.>", function()
-  vim.notify("<C-.>")
-end, {})

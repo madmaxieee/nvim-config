@@ -2,7 +2,6 @@ local lsp_config = require("plugins.lsp.config")
 local lsp_utils = require("plugins.lsp.utils")
 
 local servers = {
-  "bacon_ls",
   "bashls",
   "clangd",
   "cmake",
@@ -76,18 +75,22 @@ local server_configs = {
   },
   rust_analyzer = function()
     if vim.env.ANDROID_BUILD_TOP then
+      local android_root = vim.env.ANDROID_BUILD_TOP
       return {
         cmd = {
-          ("%s/prebuilts/rust-toolchain/linux-x86/stable/rust-analyzer"):format(
-            vim.env.ANDROID_BUILD_TOP
-          ),
+          android_root
+            .. "/prebuilts/rust-toolchain/linux-x86/stable/rust-analyzer",
         },
-        rustfmt = {
-          extraArgs = {
-            "--config-path",
-            ("%s/build/soong/scripts/rustfmt.toml"):format(
-              vim.env.ANDROID_BUILD_TOP
-            ),
+        settings = {
+          ["rust-analyzer"] = {
+            rustfmt = {
+              extraArgs = {
+                "--config-path",
+                (android_root .. "/build/soong/scripts/rustfmt.toml"),
+              },
+            },
+            linkedProjects = { (android_root .. "/rust-project.json") },
+            procMacro = { enable = false },
           },
         },
       }

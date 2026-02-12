@@ -72,7 +72,7 @@ local function prompt_and_setup_avante(callback)
     return
   end
 
-  local SecretInput = require("plugins.avante.secret_input")
+  local SecretInput = require("plugins.nui.secret_input")
   local event = require("nui.utils.autocmd").event
 
   local input = SecretInput({

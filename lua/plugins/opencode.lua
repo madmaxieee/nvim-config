@@ -54,6 +54,7 @@ end
 
 ---@param path string
 ---@param callback fun(api_key: string)
+---@diagnostic disable-next-line: unused-function, unused-local
 local function get_credential_from_op(path, callback)
   vim.system({ "op", "read", path }, function(res)
     if res.code ~= 0 then
@@ -175,14 +176,6 @@ return {
           local api_key = get_credential_from_pass_sync("gemini/cli")
           if api_key then
             create_opencode_pane(api_key)
-            return
-          end
-          -- fallback to async credential retrieval
-          if vim.fn.executable("op") == 1 then
-            get_credential_from_op(
-              "op://google/gemini/credential",
-              create_opencode_pane
-            )
           else
             get_credential_from_pass("gemini/cli", create_opencode_pane)
           end

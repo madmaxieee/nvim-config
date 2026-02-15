@@ -6,14 +6,15 @@ local languages = {
   "cpp",
   "doxygen",
   "rust",
+  "zig",
+  "odin",
   "go",
   "gomod",
   "gosum",
   "java",
-  "zig",
   "python",
 
-  -- scripting languages
+  -- shell languages
   "bash",
   "fish",
 

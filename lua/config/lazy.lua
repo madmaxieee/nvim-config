@@ -32,8 +32,6 @@ require("lazy").setup({
     rtp = {
       disabled_plugins = {
         "netrwPlugin",
-        "spellfile",
-        "tohtml",
       },
     },
   },

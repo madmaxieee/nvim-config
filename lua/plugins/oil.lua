@@ -11,7 +11,13 @@ return {
         if vim.w.is_oil_win then
           oil.close()
         else
-          oil.open_float(nil, { preview = { vertical = true } })
+          oil.open_float(
+            nil,
+            {},
+            vim.schedule_wrap(function()
+              oil.open_preview({ vertical = true })
+            end)
+          )
         end
       end,
       desc = "Toggle oil",

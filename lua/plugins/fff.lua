@@ -9,14 +9,39 @@ return {
 
   {
     "madmaxieee/fff-snacks.nvim",
-    cmd = "FFFSnacks",
+    lazy = false, -- lazy loaded by design
     keys = {
       {
         "<leader>ff",
-        "<cmd> FFFSnacks <cr>",
-        desc = "FFF",
+        function()
+          require("fff-snacks").find_files()
+        end,
+        desc = "FFF find files",
+      },
+      {
+        "<leader>fw",
+        function()
+          require("fff-snacks").live_grep()
+        end,
+        desc = "FFF live grep",
+      },
+      {
+        mode = "v",
+        "<leader>fw",
+        function()
+          require("fff-snacks").grep_word()
+        end,
+        desc = "FFF grep word",
+      },
+      {
+        "<leader>fz",
+        function()
+          require("fff-snacks").live_grep({
+            grep_mode = { "fuzzy", "plain", "regex" },
+          })
+        end,
+        desc = "FFF live grep (fuzzy)",
       },
     },
-    config = true,
   },
 }

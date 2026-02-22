@@ -25,23 +25,23 @@ return {
   },
 
   keys = {
-    {
-      "<leader>fw",
-      mode = "n",
-      function()
-        require("plugins.snacks.multi-grep").multi_grep()
-      end,
-      desc = "Live grep",
-    },
+    -- {
+    --   "<leader>fw",
+    --   mode = "n",
+    --   function()
+    --     require("plugins.snacks.multi-grep").multi_grep()
+    --   end,
+    --   desc = "Live grep",
+    -- },
 
-    {
-      "<leader>fw",
-      mode = "v",
-      function()
-        require("snacks").picker.grep_word()
-      end,
-      desc = "Grep string",
-    },
+    -- {
+    --   "<leader>fw",
+    --   mode = "v",
+    --   function()
+    --     require("snacks").picker.grep_word()
+    --   end,
+    --   desc = "Grep string",
+    -- },
 
     {
       "<leader>fg",
@@ -97,7 +97,7 @@ return {
     },
 
     {
-      "<leader>fz",
+      "<leader>fl",
       function()
         require("snacks").picker.lines()
       end,

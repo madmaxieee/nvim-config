@@ -249,6 +249,8 @@ function M.setup(opts)
   local servers = opts.servers
   local server_configs = opts.server_configs
   local capabilities = require("blink.cmp").get_lsp_capabilities()
+  ---@diagnostic disable-next-line: inject-field
+  capabilities.offsetEncoding = { "utf-16" }
   vim.lsp.config("*", { capabilities = capabilities })
   for lsp, config in pairs(server_configs) do
     if type(config) == "function" then

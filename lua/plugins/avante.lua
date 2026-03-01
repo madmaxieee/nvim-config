@@ -5,7 +5,7 @@ local function setup_avante(api_key)
     provider = "gemini",
     providers = {
       gemini = {
-        model = "gemini-3-pro-preview",
+        model = "gemini-3.1-pro-preview",
         api_key_name = "AVANTE_GOOGLE_API_KEY",
       },
       gemini_flash = {

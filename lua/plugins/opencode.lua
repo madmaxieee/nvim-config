@@ -85,9 +85,22 @@ local function get_credential_from_pass_sync(path)
   end
 end
 
----@param path string
----@param callback fun(api_key: string)
-local function get_credential_from_pass(path, callback)
+---@param callback fun(passphrase: string)
+local function get_pass_passphrase_from_op(callback)
+  vim.system(
+    { "op", "read", "op://personal/password-store/password" },
+    function(res)
+      if res.code ~= 0 then
+        return
+      end
+      local passphrase = vim.trim(res.stdout)
+      callback(passphrase)
+    end
+  )
+end
+
+---@param callback fun(passphrase: string)
+local function get_pass_passphrase_from_input(callback)
   local SecretInput = require("plugins.nui.secret_input")
   local event = require("nui.utils.autocmd").event
 
@@ -104,21 +117,7 @@ local function get_credential_from_pass(path, callback)
     },
   }, {
     on_submit = function(value)
-      vim.system({ "pass", path }, {
-        env = {
-          PASSWORD_STORE_GPG_OPTS = "--passphrase-fd 0 --pinentry-mode loopback",
-        },
-        stdin = value,
-      }, function(res)
-        if res.code ~= 0 then
-          vim.schedule(function()
-            vim.notify("Can't unlock password store", vim.log.levels.ERROR)
-          end)
-          return
-        end
-        local api_key = vim.trim(res.stdout)
-        callback(api_key)
-      end)
+      callback(value)
     end,
   })
 
@@ -131,6 +130,33 @@ local function get_credential_from_pass(path, callback)
   end)
 
   input:mount()
+end
+
+---@param path string
+---@param callback fun(api_key: string)
+local function get_credential_from_pass(path, callback)
+  local function unlock_pass(passphrase)
+    vim.system({ "pass", path }, {
+      env = {
+        PASSWORD_STORE_GPG_OPTS = "--passphrase-fd 0 --pinentry-mode loopback",
+      },
+      stdin = passphrase,
+    }, function(res)
+      if res.code ~= 0 then
+        vim.schedule(function()
+          vim.notify("Can't unlock password store", vim.log.levels.ERROR)
+        end)
+        return
+      end
+      local api_key = vim.trim(res.stdout)
+      callback(api_key)
+    end)
+  end
+  if vim.fn.executable("op") == 1 then
+    get_pass_passphrase_from_op(unlock_pass)
+  else
+    get_pass_passphrase_from_input(unlock_pass)
+  end
 end
 
 return {

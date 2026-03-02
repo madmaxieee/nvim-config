@@ -46,7 +46,12 @@ return {
     {
       "<leader>fg",
       function()
-        require("snacks").picker.git_status()
+        local jj = require("plugins.snacks.jj")
+        if jj.get_root() ~= nil then
+          jj.diff()
+        else
+          require("snacks").picker.git_status()
+        end
       end,
       desc = "Git status",
     },

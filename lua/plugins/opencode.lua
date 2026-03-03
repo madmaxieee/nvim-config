@@ -166,6 +166,7 @@ return {
     ---@diagnostic disable-next-line: missing-fields
     { "folke/snacks.nvim", opts = { input = { enabled = true } } },
   },
+
   init = function()
     ---@module 'opencode'
     ---@type opencode.Opts
@@ -197,7 +198,7 @@ return {
         ---@diagnostic disable-next-line: assign-type-mismatch
         ["@buffers"] = false,
       },
-      provider = {
+      server = {
         start = function()
           local api_key = get_credential_from_pass_sync("gemini/cli")
           if api_key then
@@ -221,7 +222,15 @@ return {
         toggle = function() end,
       },
     }
+    vim.api.nvim_create_autocmd("VimLeave", {
+      group = vim.api.nvim_create_augroup("opencode.cleanup", { clear = true }),
+      desc = "ceanup opencode pane on exit",
+      callback = function()
+        require("opencode").stop()
+      end,
+    })
   end,
+
   keys = {
     {
       "<C-.>",

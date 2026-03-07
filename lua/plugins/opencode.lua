@@ -149,7 +149,9 @@ local function get_credential_from_pass(path, callback)
         return
       end
       local api_key = vim.trim(res.stdout)
-      callback(api_key)
+      vim.schedule(function()
+        callback(api_key)
+      end)
     end)
   end
   if vim.fn.executable("op") == 1 then

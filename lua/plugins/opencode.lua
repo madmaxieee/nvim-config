@@ -162,9 +162,7 @@ local function get_credential_from_pass(path, callback)
 end
 
 return {
-  -- "NickvanDyke/opencode.nvim",
-  "madmaxieee/opencode.nvim",
-  branch = "fix-processes-without-ports",
+  "NickvanDyke/opencode.nvim",
   dependencies = {
     ---@module 'snacks'
     ---@diagnostic disable-next-line: missing-fields

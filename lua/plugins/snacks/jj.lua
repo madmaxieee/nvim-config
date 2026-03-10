@@ -2,20 +2,10 @@ local M = {}
 
 local get_jj_root = require("utils.vcs").get_jj_root
 
-local function jj_args(...)
-  local args = {
-    "--no-pager",
-    "--color=never",
-    "--ignore-working-copy",
-  }
-  return vim.list_extend(args, { ... })
-end
-
 ---@param opts snacks.picker.git.diff.Config
 ---@type snacks.picker.finder
 local function jj_diff_finder(opts, ctx)
   opts = opts or {}
-  local args = jj_args("--config", "ui.diff-formatter=:git", "diff")
 
   local cwd = get_jj_root(ctx:cwd())
   ctx.picker:set_cwd(cwd)
@@ -25,7 +15,12 @@ local function jj_diff_finder(opts, ctx)
   local finder = Diff.diff(
     ctx:opts({
       cmd = "jj",
-      args = args,
+      -- stylua: ignore
+      args = {
+        "--no-pager", "--color=never",
+        "--config", "ui.diff-formatter=:git",
+        "diff",
+      },
       cwd = cwd,
     }),
     ctx
@@ -54,8 +49,9 @@ function M.diff()
   ---@type snacks.picker.git.diff.Config
   picker.pick({
     title = "Jujutsu Diff",
-    source = "git_diff",
     finder = jj_diff_finder,
+    format = "git_status",
+    preview = "diff",
   })
 end
 

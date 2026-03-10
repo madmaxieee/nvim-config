@@ -164,7 +164,7 @@ local hg_opts = {
     vim.api.nvim_create_user_command("MiniHgDiff", function(opts)
       local rev = opts.args
       local path = vim.api.nvim_buf_get_name(0)
-      local dir = vim.fn.fnamemodify(path, ":h")
+      local dir = vim.fs.dirname(path)
       vim.system(hg_cmd("identify", "--rev", rev), { cwd = dir }, function(res)
         if res.code ~= 0 then
           vim.schedule(function()
@@ -204,8 +204,8 @@ local hg_opts = {
   end,
 
   async_get_ref_text = function(path, callback)
-    local dir = vim.fn.fnamemodify(path, ":h")
-    local basename = vim.fn.fnamemodify(path, ":t")
+    local dir = vim.fs.dirname(path)
+    local basename = vim.fs.basename(path)
     vim.system(
       hg_cmd("cat", "--rev", hg_config.base_rev, "--", basename),
       { cwd = dir },
@@ -225,7 +225,6 @@ local function jj_cmd(...)
     "jj",
     "--no-pager",
     "--color=never",
-    "--ignore-working-copy",
   }
   return vim.list_extend(JJ, { ... })
 end
@@ -243,10 +242,10 @@ local jj_opts = {
   end,
 
   async_get_ref_text = function(path, callback)
-    local dir = vim.fn.fnamemodify(path, ":h")
-    local basename = vim.fn.fnamemodify(path, ":t")
+    local dir = vim.fs.dirname(path)
+    local basename = vim.fs.basename(path)
     vim.system(
-      jj_cmd("file", "show", "-r", "@-", "--", basename),
+      jj_cmd("--ignore-working-copy", "file", "show", "-r", "@-", "--", basename),
       { cwd = dir },
       function(res)
         if res.code ~= 0 then

@@ -9,7 +9,7 @@ function state:pre_tohtml()
     require("snacks").words.disable()
   end
   self.colors_name = vim.g.colors_name
-  vim.cmd.colorscheme("tokyonight-day")
+  pcall(vim.cmd.colorscheme, require("kv").get("colorscheme_light"))
 end
 
 function state:post_tohtml()
@@ -19,7 +19,7 @@ function state:post_tohtml()
   if self.snacks_words_enabled then
     require("snacks").words.enable()
   end
-  vim.cmd.colorscheme(self.colors_name)
+  pcall(vim.cmd.colorscheme, self.colors_name or "default")
 end
 
 local hammerspoon_code = [[

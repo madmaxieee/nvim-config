@@ -205,9 +205,9 @@ local hg_opts = {
 
   async_get_ref_text = function(path, callback)
     local dir = vim.fs.dirname(path)
-    local basename = vim.fs.basename(path)
+    local file = vim.fs.basename(path)
     vim.system(
-      hg_cmd("cat", "--rev", hg_config.base_rev, "--", basename),
+      hg_cmd("cat", "--rev", hg_config.base_rev, "--", file),
       { cwd = dir },
       function(res)
         if res.code ~= 0 then
@@ -243,9 +243,9 @@ local jj_opts = {
 
   async_get_ref_text = function(path, callback)
     local dir = vim.fs.dirname(path)
-    local basename = vim.fs.basename(path)
+    local file = vim.fs.basename(path)
     vim.system(
-      jj_cmd("--ignore-working-copy", "file", "show", "-r", "@-", "--", basename),
+      jj_cmd("--ignore-working-copy", "file", "show", "-r", "@-", "--", file),
       { cwd = dir },
       function(res)
         if res.code ~= 0 then

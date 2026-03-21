@@ -69,10 +69,9 @@ return {
   },
 
   {
-    -- "saghen/blink.pairs",
-    "madmaxieee/blink.pairs", -- for my abbr expand patch
+    "saghen/blink.pairs",
+    build = "nix run .#build-plugin",
     event = { "InsertEnter", "CmdlineEnter" },
-    build = "cargo build --release",
     --- @module 'blink.pairs'
     --- @type blink.pairs.Config
     opts = {

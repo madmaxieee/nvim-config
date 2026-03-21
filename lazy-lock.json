@@ -3,7 +3,7 @@
   "better-escape.nvim": { "branch": "master", "commit": "19a38aab94961016430905ebec30d272a01e9742" },
   "blink.cmp": { "branch": "main", "commit": "b19413d214068f316c78978b08264ed1c41830ec" },
   "blink.compat": { "branch": "main", "commit": "2ed6d9a28b07fa6f3bface818470605f8896408c" },
-  "blink.pairs": { "branch": "main", "commit": "2fa0aa21f46f15ba253778a266ae86c86014b5fb" },
+  "blink.pairs": { "branch": "main", "commit": "262b03d52d2763557a5261a421a639a7edba4bab" },
   "camelsnek.nvim": { "branch": "main", "commit": "d3d98e30a8a88bc670f202354903246065b57ddd" },
   "catppuccin": { "branch": "main", "commit": "12c004cde3f36cb1d57242f1e6aac46b09a0e5b4" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },

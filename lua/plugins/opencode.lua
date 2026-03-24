@@ -129,6 +129,10 @@ local function get_pass_passphrase_from_input(callback)
     input:unmount()
   end)
 
+  input:on(event.BufEnter, function()
+    vim.cmd("startinsert")
+  end)
+
   input:mount()
 end
 

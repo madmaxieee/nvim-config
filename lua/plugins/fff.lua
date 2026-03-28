@@ -49,7 +49,21 @@ return {
         desc = "FFF find files",
       },
       {
+        "ff",
+        function()
+          require("fff-snacks").find_files(find_files_opts)
+        end,
+        desc = "FFF find files",
+      },
+      {
         "<leader>fw",
+        function()
+          require("fff-snacks").live_grep(live_grep_opts)
+        end,
+        desc = "FFF live grep",
+      },
+      {
+        "fw",
         function()
           require("fff-snacks").live_grep(live_grep_opts)
         end,

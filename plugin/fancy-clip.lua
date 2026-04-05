@@ -58,6 +58,11 @@ vim.api.nvim_create_user_command("FancyClip", function(args)
     return
   end
 
+  -- since 0.12.0, the tohtml plugin is opt-in
+  if not vim.g.loaded_2html_plugin then
+    vim.cmd.packadd("nvim.tohtml")
+  end
+
   if args.range == 0 then
     args.line1 = 1
     args.line2 = vim.api.nvim_buf_line_count(0)

@@ -96,6 +96,8 @@ map({ "n", "v" }, "<leader>rn", function()
   vim.o.relativenumber = not vim.o.relativenumber
 end, { desc = "Toggle relative number" })
 
+map("n", "<leader>rr", "<cmd>restart<CR>", { desc = "Restart Neovim" })
+
 -- avoid "q:" typo
 map("c", "<C-f>", function()
   vim.g.requested_cmdwin = true

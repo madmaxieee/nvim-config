@@ -17,8 +17,10 @@ local function maybe_set_colorscheme(conf)
   end
   local target_colorscheme
   if conf.theme == "dark" then
+    vim.opt.background = "dark"
     target_colorscheme = conf.colorscheme
   elseif conf.theme == "light" then
+    vim.opt.background = "light"
     target_colorscheme = conf.colorscheme_light
   else
     return

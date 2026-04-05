@@ -54,12 +54,13 @@ local languages = {
   "bp",
   "dockerfile",
 
-  -- git
+  -- git/jj
   "git_config",
   "git_rebase",
   "gitattributes",
   "gitcommit",
   "gitignore",
+  "jjdescription",
 
   -- vim
   "vim",

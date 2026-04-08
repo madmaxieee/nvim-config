@@ -245,8 +245,7 @@ return {
         if get_pane_id() then
           vim.system({ "tmux", "resize-pane", "-Z" })
         else
-          -- trigger opencode.nvim to start the provider
-          require("opencode").prompt("", {})
+          require("opencode").start()
         end
       end,
       desc = "Toggle opencode",

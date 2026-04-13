@@ -8,6 +8,7 @@ local languages = {
   "rust",
   "zig",
   "odin",
+  "swift",
   "go",
   "gomod",
   "gosum",

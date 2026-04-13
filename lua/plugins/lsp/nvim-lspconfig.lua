@@ -1,7 +1,7 @@
 local lsp_config = require("plugins.lsp.config")
 local lsp_utils = require("plugins.lsp.utils")
 
-local servers = {
+local SERVERS = {
   "bashls",
   "clangd",
   "cmake",
@@ -21,6 +21,7 @@ local servers = {
   "pyright",
   "ruff",
   "rust_analyzer",
+  "sourcekit",
   "svelte",
   "tailwindcss",
   "taplo",
@@ -29,6 +30,10 @@ local servers = {
   "typos_lsp",
   "yamlls",
   "zls",
+}
+
+local NO_MASON_INSTALL = {
+  ["sourcekit"] = true,
 }
 
 ---@type table<string, vim.lsp.Config | fun(): vim.lsp.Config>
@@ -99,6 +104,9 @@ local server_configs = {
       return {}
     end
   end,
+  sourcekit = {
+    cmd = { "xcrun", "sourcekit-lsp" },
+  },
   tailwindcss = function()
     local original_ft = vim.lsp.config["tailwindcss"].filetypes or {}
     return {
@@ -154,7 +162,9 @@ return {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = servers,
+      ensure_installed = vim.tbl_filter(function(server)
+        return not NO_MASON_INSTALL[server]
+      end, SERVERS),
       automatic_enable = false,
     },
   },
@@ -168,11 +178,11 @@ return {
       "williamboman/mason-lspconfig.nvim",
     },
     init = function()
-      lsp_config.init({ servers = servers })
+      lsp_config.init({ servers = SERVERS })
     end,
     config = function()
       lsp_config.setup({
-        servers = servers,
+        servers = SERVERS,
         server_configs = server_configs,
       })
     end,

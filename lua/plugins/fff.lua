@@ -1,5 +1,3 @@
----@module 'snacks''
-
 local find_files_opts = {
   win = {
     input = {
@@ -28,6 +26,9 @@ local live_grep_opts = {
   },
 }
 
+local fuzzy_grep_opts = vim.deepcopy(live_grep_opts)
+fuzzy_grep_opts.grep_mode = { "fuzzy", "plain", "regex" }
+
 return {
   {
     "dmtrKovalenko/fff.nvim",
@@ -42,25 +43,11 @@ return {
     lazy = false, -- lazy loaded by design
     keys = {
       {
-        "<leader>ff",
-        function()
-          require("fff-snacks").find_files(find_files_opts)
-        end,
-        desc = "FFF find files",
-      },
-      {
         "ff",
         function()
           require("fff-snacks").find_files(find_files_opts)
         end,
         desc = "FFF find files",
-      },
-      {
-        "<leader>fw",
-        function()
-          require("fff-snacks").live_grep(live_grep_opts)
-        end,
-        desc = "FFF live grep",
       },
       {
         "fw",
@@ -71,18 +58,16 @@ return {
       },
       {
         mode = "v",
-        "<leader>fw",
+        "fw",
         function()
-          require("fff-snacks").grep_word()
+          require("fff-snacks").grep_word(live_grep_opts)
         end,
         desc = "FFF grep word",
       },
       {
-        "<leader>fz",
+        "fz",
         function()
-          require("fff-snacks").live_grep({
-            grep_mode = { "fuzzy", "plain", "regex" },
-          })
+          require("fff-snacks").live_grep(fuzzy_grep_opts)
         end,
         desc = "FFF live grep (fuzzy)",
       },

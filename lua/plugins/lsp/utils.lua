@@ -62,16 +62,22 @@ function M.make_formatter_filter(bufnr)
         "javascript",
         "javascriptreact",
         "svelte",
-      }, ft)
+      }, ft) and null_ls.is_registered("prettierd")
     then
-      if null_ls.is_registered("prettierd") then
-        return client.name == "null-ls"
-      end
+      return client.name == "null-ls"
     end
     if ft == "java" and null_ls.is_registered("google-java-format") then
       return client.name == "null-ls"
     end
     if ft == "python" and null_ls.is_registered("pyformat") then
+      return client.name == "null-ls"
+    end
+    if
+      vim.tbl_contains({
+        "json",
+        "jsonc",
+      }, ft) and null_ls.is_registered("pyformat")
+    then
       return client.name == "null-ls"
     end
     return true

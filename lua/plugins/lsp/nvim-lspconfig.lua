@@ -170,7 +170,7 @@ return {
   },
 
   {
-    cond = not require("modes").minimal_mode,
+    cond = not require("flags").is_minimal,
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {

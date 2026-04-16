@@ -4,8 +4,8 @@ if type(state_dir) == "table" then
 end
 
 return {
-  cond = not require("modes").minimal_mode
-    and not require("modes").difftool_mode,
+  cond = not require("flags").is_minimal
+    and not require("flags").is_difftool,
   "folke/persistence.nvim",
   lazy = false,
   init = function()

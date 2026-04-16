@@ -1,4 +1,4 @@
-if vim.fn.isdirectory("/google/bin") ~= 1 then
+if not require("flags").on_glinux then
   return {}
 end
 

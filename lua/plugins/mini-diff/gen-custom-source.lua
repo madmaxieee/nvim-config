@@ -157,7 +157,7 @@ local hg_opts = {
   name = "hg",
 
   should_enable = function()
-    return require("modes").google3_mode
+    return require("flags").in_google3
   end,
 
   setup = function()

@@ -1,5 +1,5 @@
 return {
-  cond = not require("modes").minimal_mode,
+  cond = not require("flags").is_minimal,
   "Bekaboo/dropbar.nvim",
   lazy = false,
   init = function()

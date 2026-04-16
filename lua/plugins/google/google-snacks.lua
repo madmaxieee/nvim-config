@@ -1,5 +1,5 @@
 return {
-  cond = require("modes").google3_mode,
+  cond = require("flags").in_google3,
   "yairhochner/google-snacks.nvim",
   url = "sso://user/yairhochner/google-snacks.nvim",
   lazy = false,

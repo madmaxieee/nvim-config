@@ -31,7 +31,7 @@ return {
         })
       end,
       view_opened = function()
-        if require("modes").difftool_mode then
+        if require("flags").is_difftool then
           local diff_tab = vim.api.nvim_win_get_tabpage(0)
           for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
             if tab ~= diff_tab then

@@ -1,9 +1,10 @@
----@class Modes
----@field minimal_mode? boolean
----@field difftool_mode? boolean
----@field google3_mode? boolean
+---@class Flags
+---@field is_minimal? boolean
+---@field is_difftool? boolean
+---@field in_google3? boolean
+---@field on_glinux? boolean
 
----@type Modes
+---@type Flags
 local M = {}
 
 local cwd = vim.uv.cwd() or vim.fn.getcwd()
@@ -73,15 +74,20 @@ local function is_google3_mode()
   return vim.startswith(cwd, "/google/src/cloud")
 end
 
+local function is_glinux_mode()
+  return vim.fn.isdirectory("/google/bin") == 1
+end
+
 return setmetatable(M, {
   __index = function(t, k)
-    local get_mode = {
-      minimal_mode = is_minimal_mode,
-      difftool_mode = is_difftool_mode,
-      google3_mode = is_google3_mode,
+    local get_flag = {
+      is_minimal = is_minimal_mode,
+      is_difftool = is_difftool_mode,
+      in_google3 = is_google3_mode,
+      on_glinux = is_glinux_mode,
     }
-    local mode = get_mode[k]()
-    rawset(t, k, mode)
-    return mode
+    local flag = get_flag[k]()
+    rawset(t, k, flag)
+    return flag
   end,
 })

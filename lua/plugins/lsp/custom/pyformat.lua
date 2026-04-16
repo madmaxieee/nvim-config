@@ -5,7 +5,7 @@ return function()
     return nil
   end
 
-  if require("modes").google3_mode then
+  if require("flags").in_google3 then
     return {
       name = "pyformat",
       method = require("null-ls").methods.FORMATTING,

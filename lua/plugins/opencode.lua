@@ -82,33 +82,28 @@ return {
       desc = "Toggle opencode",
     },
     {
-      "<leader>ac",
-      mode = "n",
-      function()
-        require("opencode").prompt("", { clear = true })
-      end,
-      desc = "Clear opencode prompt",
-    },
-    {
-      "<C-s>",
-      mode = "n",
-      function()
-        require("opencode").prompt("", { submit = true })
-      end,
-      desc = "Submit opencode prompt",
-    },
-    {
       "<leader>aa",
       mode = { "n", "x" },
       function()
-        require("opencode").ask("@this: ", { submit = true })
+        require("opencode").start()
+        require("opencode").ask("", { submit = true })
       end,
-      desc = "Ask opencode…",
+      desc = "Ask opencode",
+    },
+    {
+      "<leader>at",
+      mode = { "n", "x" },
+      function()
+        require("opencode").start()
+        require("opencode").ask("@this ", { submit = true })
+      end,
+      desc = "Ask opencode about @this",
     },
     {
       "<leader>af",
       mode = { "n", "x" },
       function()
+        require("opencode").start()
         require("opencode").select()
       end,
       desc = "Execute opencode action…",
@@ -117,6 +112,7 @@ return {
       "go",
       mode = { "n", "x" },
       function()
+        require("opencode").start()
         return require("opencode").operator("@this ")
       end,
       desc = "Add range to opencode",
@@ -126,6 +122,7 @@ return {
       "goo",
       mode = "n",
       function()
+        require("opencode").start()
         return require("opencode").operator("@this ") .. "_"
       end,
       desc = "Add line to opencode",

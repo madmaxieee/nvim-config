@@ -41,35 +41,35 @@ function M.create_pane(api_key)
     "exec opencode --port",
   }
   local env = api_key and { GEMINI_API_KEY = api_key } or nil
-  vim.system(OPENCODE_PANE_CMD, env and { env = env } or {}, function(res)
-    if res.code ~= 0 then
-      return
-    end
-    provider.pane_id = vim.trim(res.stdout)
-    -- stylua: ignore
-    vim.system({
-      -- target the pane we just created
-      "tmux", "set-option", "-t", provider.pane_id,
-      -- disable allow-passthrough so the terminal does not send escape code
-      -- to the vim pane
-      "-p", "allow-passthrough", "off",
-    })
-    -- mark this pane as the opencode pane
-    -- stylua: ignore
-    vim.system({
-      "tmux", "set-option", "-t", provider.pane_id,
-      "-p", "@opencode-pane", "1",
-    })
-    -- set up tmux binding: Ctrl-. in opencode pane zooms the neovim pane,
-    -- otherwise passes through to the application (e.g. neovim)
-    -- stylua: ignore
-    vim.system({
-      "tmux", "bind-key", "-n", "C-.",
-      "if-shell", "-F", "#{==:#{@opencode-pane},1}",
-      "resize-pane -Z",
-      "send-keys C-.",
-    })
-  end)
+  local res = vim.system(OPENCODE_PANE_CMD, { env = env }):wait()
+  if res.code ~= 0 then
+    vim.notify(
+      "Failed to create opencode pane: " .. res.stderr,
+      vim.log.levels.ERROR
+    )
+    return
+  end
+  provider.pane_id = vim.trim(res.stdout)
+  -- stylua: ignore
+  vim.system({
+    -- target the pane we just created
+    "tmux", "set-option", "-t", provider.pane_id,
+    -- disable allow-passthrough so the terminal does not send escape code
+    -- to the vim pane
+    "-p", "allow-passthrough", "off",
+  })
+  -- stylua: ignore
+  vim.system({
+    "tmux", "set-option", "-t", provider.pane_id,
+    "-p", "@opencode-nvim-pane", vim.env.TMUX_PANE,
+  })
+  -- stylua: ignore
+  vim.system({
+    "tmux", "bind-key", "-n", "C-.",
+    "if-shell", "-F", "#{?#{@opencode-nvim-pane},1,0}",
+    [[ run-shell 'tmux select-pane -t "#{@opencode-nvim-pane}"' ]],
+    "send-keys C-.",
+  })
 end
 
 return M

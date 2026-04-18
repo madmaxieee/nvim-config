@@ -73,10 +73,9 @@ return {
       mode = "n",
       function()
         local pane = require("opencode_pane")
+        require("opencode").start()
         if pane.get_pane_id() then
-          vim.system({ "tmux", "resize-pane", "-Z" })
-        else
-          require("opencode").start()
+          vim.system({ "tmux", "select-pane", "-t", pane.get_pane_id() })
         end
       end,
       desc = "Toggle opencode",

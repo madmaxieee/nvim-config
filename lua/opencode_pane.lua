@@ -46,14 +46,29 @@ function M.create_pane(api_key)
       return
     end
     provider.pane_id = vim.trim(res.stdout)
-      -- stylua: ignore
-      vim.system({
-        -- target the pane we just created
-        "tmux", "set-option", "-t", provider.pane_id,
-        -- disable allow-passthrough so the terminal does not send escape code
-        -- to the vim pane
-        "-p", "allow-passthrough", "off",
-      })
+    -- stylua: ignore
+    vim.system({
+      -- target the pane we just created
+      "tmux", "set-option", "-t", provider.pane_id,
+      -- disable allow-passthrough so the terminal does not send escape code
+      -- to the vim pane
+      "-p", "allow-passthrough", "off",
+    })
+    -- mark this pane as the opencode pane
+    -- stylua: ignore
+    vim.system({
+      "tmux", "set-option", "-t", provider.pane_id,
+      "-p", "@opencode-pane", "1",
+    })
+    -- set up tmux binding: Ctrl-. in opencode pane zooms the neovim pane,
+    -- otherwise passes through to the application (e.g. neovim)
+    -- stylua: ignore
+    vim.system({
+      "tmux", "bind-key", "-n", "C-.",
+      "if-shell", "-F", "#{==:#{@opencode-pane},1}",
+      "resize-pane -Z",
+      "send-keys C-.",
+    })
   end)
 end
 

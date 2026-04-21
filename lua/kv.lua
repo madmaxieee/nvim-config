@@ -6,11 +6,12 @@ local config_file = vim.fs.joinpath(vim.fn.stdpath("state"), "kv.json")
 ---@field theme "dark" | "light"
 ---@field colorscheme string
 ---@field colorscheme_light string
+---@field opencode_restore boolean
 
----@alias KvKey "theme" | "colorscheme" | "colorscheme_light"
+---@alias KvKey "theme" | "colorscheme" | "colorscheme_light" | "opencode_restore"
 
 ---@type KvKey[]
-M.keys = { "theme", "colorscheme", "colorscheme_light" }
+M.keys = { "theme", "colorscheme", "colorscheme_light", "opencode_restore" }
 
 ---@type Kv?
 local config = nil
@@ -20,6 +21,7 @@ local default_config = {
   theme = "dark",
   colorscheme = "tokyonight-moon",
   colorscheme_light = "catppuccin-latte",
+  opencode_restore = false,
 }
 
 ---@return Kv

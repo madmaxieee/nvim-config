@@ -96,7 +96,15 @@ map({ "n", "v" }, "<leader>rn", function()
   vim.o.relativenumber = not vim.o.relativenumber
 end, { desc = "Toggle relative number" })
 
-map("n", "<leader>rr", "<cmd>restart<CR>", { desc = "Restart Neovim" })
+map("n", "<leader>rr", function()
+  -- Save flag to restore opencode pane after restart
+  local pane = require("opencode_pane")
+  if pane.get_pane_id() then
+    local state_file = vim.fs.joinpath(vim.fn.stdpath("state"), "opencode_restore")
+    vim.fn.writefile({}, state_file)
+  end
+  vim.cmd("restart")
+end, { desc = "Restart Neovim" })
 
 -- avoid "q:" typo
 map("c", "<C-f>", function()

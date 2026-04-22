@@ -2,41 +2,24 @@ if not require("flags").on_glinux then
   return {}
 end
 
+local co2 = require("co2")
 local utils = require("utils")
 local pane = require("opencode_pane")
 
----@param path string
----@return string?
-local function get_credential_from_pass_sync(path)
-  local result = vim
-    .system({ "pass", path }, {
-      env = { PASSWORD_STORE_GPG_OPTS = "--pinentry-mode cancel" },
-      text = true,
-    })
-    :wait()
-  if result.code ~= 0 then
-    return nil
-  else
-    return vim.trim(result.stdout)
-  end
-end
-
----@param callback fun(passphrase: string)
-local function get_pass_passphrase_from_op(callback)
-  vim.system(
-    { "op", "read", "op://personal/password-store/password" },
-    function(res)
-      if res.code ~= 0 then
-        return
-      end
-      local passphrase = vim.trim(res.stdout)
-      callback(passphrase)
+---@param ctx Co2Context
+local function get_pass_passphrase(ctx)
+  if vim.fn.executable("op") == 1 then
+    local res = ctx.await(
+      vim.system,
+      { "op", "read", "op://personal/password-store/password" },
+      { text = true }
+    )
+    if res.code ~= 0 then
+      return
     end
-  )
-end
+    return vim.trim(res.stdout)
+  end
 
----@param callback fun(passphrase: string)
-local function get_pass_passphrase_from_input(callback)
   local SecretInput = require("plugins.nui.secret_input")
   local event = require("nui.utils.autocmd").event
 
@@ -52,9 +35,7 @@ local function get_pass_passphrase_from_input(callback)
       },
     },
   }, {
-    on_submit = function(value)
-      callback(value)
-    end,
+    on_submit = ctx.resume,
   })
 
   input:map("n", "<Esc>", function()
@@ -70,48 +51,42 @@ local function get_pass_passphrase_from_input(callback)
   end)
 
   input:mount()
+  return ctx.yield()
 end
 
+---@param ctx Co2Context
 ---@param path string
----@param callback fun(api_key: string)
-local function get_credential_from_pass(path, callback)
-  local function unlock_pass(passphrase)
-    vim.system({ "pass", path }, {
-      env = {
-        PASSWORD_STORE_GPG_OPTS = "--passphrase-fd 0 --pinentry-mode loopback",
-      },
-      stdin = passphrase,
-    }, function(res)
-      if res.code ~= 0 then
-        vim.schedule(function()
-          vim.notify("Can't unlock password store", vim.log.levels.ERROR)
-        end)
-        return
-      end
-      local api_key = vim.trim(res.stdout)
-      vim.schedule(function()
-        callback(api_key)
-      end)
-    end)
+---@return string?
+local function get_credential_from_pass(ctx, path)
+  local passphrase = get_pass_passphrase(ctx)
+  if not passphrase then
+    return
   end
-  if vim.fn.executable("op") == 1 then
-    get_pass_passphrase_from_op(unlock_pass)
-  else
-    get_pass_passphrase_from_input(unlock_pass)
+
+  local res = ctx.await(vim.system, { "pass", path }, {
+    text = true,
+    stdin = passphrase,
+    env = {
+      PASSWORD_STORE_GPG_OPTS = "--passphrase-fd 0 --pinentry-mode loopback",
+    },
+  })
+
+  if res.code ~= 0 then
+    vim.notify("Can't unlock password store", vim.log.levels.ERROR)
+    return
   end
+
+  return vim.trim(res.stdout)
 end
 
 utils.on_load("opencode.nvim", function()
-  vim.g.opencode_opts.server.start = function()
-    local api_key = get_credential_from_pass_sync("gemini/cli")
+  vim.g.opencode_opts.server.start = co2.wrap(function(ctx)
+    vim.notify("Starting opencode server...", vim.log.levels.INFO)
+    local api_key = get_credential_from_pass(ctx, "gemini/cli")
     if api_key then
       pane.create_pane(api_key)
-    else
-      get_credential_from_pass("gemini/cli", function(key)
-        pane.create_pane(key)
-      end)
     end
-  end
+  end)
 end)
 
 return {}

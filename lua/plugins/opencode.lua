@@ -10,10 +10,9 @@ return {
     local pane = require("opencode_pane")
 
     -- Restore opencode pane after restart if it was active
-    local state_file =
-      vim.fs.joinpath(vim.fn.stdpath("state"), "opencode_restore")
-    if vim.fn.filereadable(state_file) == 1 then
-      vim.fn.delete(state_file)
+    if require("kv").get("opencode_restore") then
+      require("kv").set("opencode_restore", false)
+      require("kv").save()
       vim.api.nvim_create_autocmd("User", {
         pattern = "LazyDone",
         once = true,

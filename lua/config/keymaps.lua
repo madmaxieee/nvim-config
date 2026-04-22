@@ -100,8 +100,8 @@ map("n", "<leader>rr", function()
   -- Save flag to restore opencode pane after restart
   local pane = require("opencode_pane")
   if pane.get_pane_id() then
-    local state_file = vim.fs.joinpath(vim.fn.stdpath("state"), "opencode_restore")
-    vim.fn.writefile({}, state_file)
+    require("kv").set("opencode_restore", true)
+    require("kv").save()
   end
   vim.cmd("restart")
 end, { desc = "Restart Neovim" })

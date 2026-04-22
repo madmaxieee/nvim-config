@@ -80,7 +80,8 @@ local function get_credential_from_pass(ctx, path)
 end
 
 utils.on_load("opencode.nvim", function()
-  vim.g.opencode_opts.server.start = co2.wrap(function(ctx)
+  local opts = require("opencode.config").opts
+  opts.server.start = co2.wrap(function(ctx)
     vim.notify("Starting opencode server...", vim.log.levels.INFO)
     local api_key = get_credential_from_pass(ctx, "gemini/cli")
     if api_key then

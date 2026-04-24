@@ -199,9 +199,7 @@ local hg_opts = {
     return { dir = root .. "/.hg", file = "dirstate" }
   end,
 
-  get_root = function(path)
-    return get_hg_root(path)
-  end,
+  get_root = get_hg_root,
 
   async_get_ref_text = function(path, callback)
     local dir = vim.fs.dirname(path)
@@ -236,6 +234,10 @@ end
 ---@type DiffSourceOpts
 local jj_opts = {
   name = "jj",
+
+  should_enable = function()
+    return get_jj_root(vim.uv.cwd()) ~= nil
+  end,
 
   setup = function()
     vim.api.nvim_create_user_command("MiniJJDiff", function(opts)
@@ -280,9 +282,7 @@ local jj_opts = {
     return { dir = root .. "/.jj/working_copy", file = "checkout" }
   end,
 
-  get_root = function(path)
-    return get_jj_root(path)
-  end,
+  get_root = get_jj_root,
 
   async_get_ref_text = function(path, callback)
     local dir = vim.fs.dirname(path)

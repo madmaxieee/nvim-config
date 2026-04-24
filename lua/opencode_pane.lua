@@ -20,8 +20,8 @@ function M.get_pane_id()
   return provider.pane_id
 end
 
-function M.get_provider()
-  return provider
+function M.clear_pane_id()
+  provider.pane_id = nil
 end
 
 ---@param api_key string?

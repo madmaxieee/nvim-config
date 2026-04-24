@@ -65,7 +65,7 @@ return {
               -- clear prompt then exit opencode
               "C-c", "/exit",
             })
-            pane.get_provider().pane_id = nil
+            pane.clear_pane_id()
           end
         end,
         toggle = function() end,

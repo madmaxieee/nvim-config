@@ -72,7 +72,7 @@ end, { desc = "Select commented lines" })
 map("n", "<C-u>", "<C-u>zz", { desc = "Go up half screen" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Go down half screen" })
 
-map("n", "<Esc>", "<cmd> noh <CR>", { desc = "Clear highlights" })
+map("n", "<Esc>", "<cmd> set hlsearch! <CR>", { desc = "Clear highlights" })
 map("n", "U", "<C-r>", { desc = "Redo" })
 map("n", "<leader><space>", "<cmd> update <CR>", { desc = "Save file" })
 

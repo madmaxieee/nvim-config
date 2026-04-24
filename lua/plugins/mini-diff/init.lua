@@ -2,7 +2,7 @@ return {
   "nvim-mini/mini.diff",
   event = "VeryLazy",
   config = function()
-    local gen_custom_source = require("plugins.mini-diff.gen-custom-source")
+    local jj_source = require("plugins.mini-diff.jj-source")
 
     require("mini.diff").setup({
       view = {
@@ -26,8 +26,7 @@ return {
         algorithm = "patience",
       },
       source = {
-        gen_custom_source.hg(),
-        gen_custom_source.jj(),
+        jj_source(),
         require("mini.diff").gen_source.git(),
         require("mini.diff").gen_source.save(),
         require("mini.diff").gen_source.none(),

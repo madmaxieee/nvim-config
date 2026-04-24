@@ -1,13 +1,13 @@
 local M = {}
 
-local get_jj_root = require("utils.vcs").get_jj_root
+local find_jj_root = require("utils.jj").find_root
 
 ---@param opts snacks.picker.git.diff.Config
 ---@type snacks.picker.finder
 local function jj_diff_finder(opts, ctx)
   opts = opts or {}
 
-  local cwd = get_jj_root(ctx:cwd())
+  local cwd = find_jj_root(ctx:cwd())
   ctx.picker:set_cwd(cwd)
 
   local Diff = require("snacks.picker.source.diff")

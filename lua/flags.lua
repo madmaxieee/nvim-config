@@ -1,11 +1,8 @@
 ---@class Flags
----@field is_minimal? boolean
----@field is_difftool? boolean
----@field in_google3? boolean
----@field on_glinux? boolean
-
----@type Flags
-local M = {}
+---@field is_minimal boolean
+---@field is_difftool boolean
+---@field in_google3 boolean
+---@field on_glinux boolean
 
 local cwd = vim.uv.cwd() or vim.fn.getcwd()
 
@@ -78,7 +75,8 @@ local function is_glinux_mode()
   return vim.fn.isdirectory("/google/bin") == 1
 end
 
-return setmetatable(M, {
+---@type Flags
+return setmetatable({}, {
   __index = function(t, k)
     local get_flag = {
       is_minimal = is_minimal_mode,

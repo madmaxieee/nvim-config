@@ -121,7 +121,7 @@ utils.on_load("nvim-lspconfig", function()
       -- ciderlsp does not support some methods on certain languages
       local ft = vim.bo[args.buf].filetype
       for _, capability in
-        pairs(CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE[ft] or {})
+        ipairs(CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE[ft] or {})
       do
         ciderlsp_client.server_capabilities[capability] = nil
       end

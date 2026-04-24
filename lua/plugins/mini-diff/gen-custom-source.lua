@@ -157,7 +157,7 @@ local hg_opts = {
   name = "hg",
 
   should_enable = function()
-    return require("flags").in_google3
+    return require("flags").in_google3 and (get_hg_root(vim.uv.cwd()) ~= nil)
   end,
 
   setup = function()

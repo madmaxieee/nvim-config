@@ -1,6 +1,15 @@
 return {
   "madmaxieee/unclash.nvim",
   lazy = false,
+  keys = {
+    {
+      "<leader>fx",
+      function()
+        require("unclash.snacks").pick()
+      end,
+      desc = "Pick Conflicts",
+    },
+  },
   init = function()
     local utils = require("utils")
     utils.map_repeatable_pair("n", {

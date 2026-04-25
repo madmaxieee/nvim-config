@@ -8,11 +8,12 @@ return {
 
   init = function()
     local pane = require("opencode_pane")
+    local kv = require("kv")
 
     -- Restore opencode pane after restart if it was active
-    if require("kv").get("opencode_restore") then
-      require("kv").set("opencode_restore", false)
-      require("kv").save()
+    if kv.get("opencode_restore") then
+      kv.set("opencode_restore", false)
+      kv.save()
       vim.api.nvim_create_autocmd("User", {
         pattern = "LazyDone",
         once = true,

@@ -149,7 +149,7 @@ return {
     },
 
     {
-      "<leader>ws",
+      "<leader>fS",
       function()
         require("snacks").picker.lsp_workspace_symbols()
       end,

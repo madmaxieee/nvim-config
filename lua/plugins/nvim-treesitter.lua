@@ -140,7 +140,10 @@ return {
 
       vim.treesitter.language.register("markdown", "mdx")
 
-      require("nvim-treesitter").install(languages)
+      require("nvim-treesitter").install(
+        languages,
+        require("flags").low_ram and { max_jobs = 1 } or {}
+      )
     end,
   },
 

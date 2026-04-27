@@ -3,6 +3,7 @@
 ---@field is_difftool boolean
 ---@field in_google3 boolean
 ---@field on_glinux boolean
+---@field low_ram boolean
 
 local cwd = vim.uv.cwd() or vim.fn.getcwd()
 
@@ -75,6 +76,10 @@ local function is_glinux_mode()
   return vim.fn.isdirectory("/google/bin") == 1
 end
 
+local function is_low_ram()
+  return (vim.uv.get_total_memory() / (1024 * 1024 * 1024)) < 8
+end
+
 ---@type Flags
 return setmetatable({}, {
   __index = function(t, k)
@@ -83,6 +88,7 @@ return setmetatable({}, {
       is_difftool = is_difftool_mode,
       in_google3 = is_google3_mode,
       on_glinux = is_glinux_mode,
+      low_ram = is_low_ram,
     }
     local flag = get_flag[k]()
     rawset(t, k, flag)

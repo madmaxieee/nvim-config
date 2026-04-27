@@ -21,6 +21,7 @@ require("lazy").setup({
     lazy = true,
     version = false, -- always use the latest git commit
   },
+  concurrency = require("flags").low_ram and 1 or nil,
   install = {
     missing = true,
     colorscheme = { "tokyonight" },

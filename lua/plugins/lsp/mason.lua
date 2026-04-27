@@ -2,6 +2,7 @@ return {
   "williamboman/mason.nvim",
   cmd = "Mason",
   opts = {
+    max_concurrent_installers = require("flags").low_ram and 1 or nil,
     ensure_installed = {},
     registries = {
       "github:mason-org/mason-registry",

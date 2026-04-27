@@ -149,7 +149,7 @@ return {
   {
     "williamboman/mason.nvim",
     opts = {
-      ensure_installed = {
+      ensure_installed = require("flags").low_ram and {} or {
         -- needed for bashls
         "shellcheck",
         "shfmt",
@@ -162,9 +162,10 @@ return {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = vim.tbl_filter(function(server)
-        return not NO_MASON_INSTALL[server]
-      end, SERVERS),
+      ensure_installed = require("flags").low_ram and {}
+        or vim.tbl_filter(function(server)
+          return not NO_MASON_INSTALL[server]
+        end, SERVERS),
       automatic_enable = false,
     },
   },

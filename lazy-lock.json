@@ -52,6 +52,7 @@
   "smart-splits.nvim": { "branch": "master", "commit": "f4e4908fe901444d05feff0ad1cca146ec0be73f" },
   "snacks.nvim": { "branch": "main", "commit": "9912042fc8bca2209105526ac7534e9a0c2071b2" },
   "sqlite.lua": { "branch": "master", "commit": "50092d60feb242602d7578398c6eb53b4a8ffe7b" },
+  "tabular": { "branch": "master", "commit": "12437cd1b53488e24936ec4b091c9324cafee311" },
   "telescope.nvim": { "branch": "master", "commit": "5255aa27c422de944791318024167ad5d40aad20" },
   "tiny-inline-diagnostic.nvim": { "branch": "main", "commit": "ba133b3e932416e4b9507095731a6d7276878fe8" },
   "todo-comments.nvim": { "branch": "main", "commit": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668" },

@@ -84,7 +84,7 @@ return {
   keys = {
     {
       "<C-.>",
-      mode = "n",
+      mode = { "n", "x" },
       function()
         local pane = require("opencode_pane")
         require("opencode").start()

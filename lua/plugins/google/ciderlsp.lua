@@ -6,6 +6,10 @@ local CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE = {
     "documentHighlightProvider",
     "inlayHintProvider",
   },
+  gcl = {
+    "documentHighlightProvider",
+    "inlayHintProvider",
+  },
   markdown = {
     "documentHighlightProvider",
     "inlayHintProvider",

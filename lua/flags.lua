@@ -81,17 +81,10 @@ local function is_low_ram()
 end
 
 ---@type Flags
-return setmetatable({}, {
-  __index = function(t, k)
-    local get_flag = {
-      is_minimal = is_minimal_mode,
-      is_difftool = is_difftool_mode,
-      in_google3 = is_google3_mode,
-      on_glinux = is_glinux_mode,
-      low_ram = is_low_ram,
-    }
-    local flag = get_flag[k]()
-    rawset(t, k, flag)
-    return flag
-  end,
-})
+return {
+  is_minimal = is_minimal_mode(),
+  is_difftool = is_difftool_mode(),
+  in_google3 = is_google3_mode(),
+  on_glinux = is_glinux_mode(),
+  low_ram = is_low_ram(),
+}

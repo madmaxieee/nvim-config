@@ -90,6 +90,21 @@ return {
         end,
         desc = "Toggle terminal",
       },
+      {
+        "<leader>j",
+        mode = { "n", "t" },
+        function()
+          local jj_utils = require("utils.jj")
+          local command
+          if jj_utils.find_root() then
+            command = "lazyjj"
+          else
+            command = "lazygit"
+          end
+          require("snacks").terminal.toggle(command)
+        end,
+        desc = "Toggle terminal",
+      },
     },
 
     ---@module 'snacks'

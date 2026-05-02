@@ -1,5 +1,6 @@
 local map = require("utils").safe_keymap_set
 
+-- setup repeatable plugin
 local repeatable = require("repeatable")
 
 map({ "n", "x", "o" }, ";", function()
@@ -68,14 +69,11 @@ map("x", "ic", function()
   require("vim._comment").textobject()
 end, { desc = "Select commented lines" })
 
--- misc
+-- center after half page movement
 map("n", "<C-u>", "<C-u>zz", { desc = "Go up half screen" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Go down half screen" })
 
-map("n", "<Esc>", "<cmd> nohlsearch <CR>", { desc = "Clear highlights" })
-map("n", "U", "<C-r>", { desc = "Redo" })
-map("n", "<leader>w", "<cmd> update <CR>", { desc = "Save file" })
-
+-- helix style line movement
 map(
   { "n", "x", "o" },
   "gl",
@@ -88,23 +86,6 @@ map(
   "^",
   { desc = "Move to start of line", silent = true }
 )
-
-map("n", "X", ":.lua<CR>", { desc = "Execute current line" })
-map("v", "X", ":lua<CR>", { desc = "Execute selected code" })
-
-map({ "n", "v" }, "<leader>rn", function()
-  vim.o.relativenumber = not vim.o.relativenumber
-end, { desc = "Toggle relative number" })
-
-map("n", "<leader>rr", function()
-  -- Save flag to restore opencode pane after restart
-  local pane = require("opencode_pane")
-  if pane.get_pane_id() then
-    require("kv").set("opencode_restore", true)
-    require("kv").save()
-  end
-  vim.cmd("restart")
-end, { desc = "Restart Neovim" })
 
 -- avoid "q:" typo
 map("c", "<C-f>", function()
@@ -124,3 +105,25 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
     vim.opt_local.relativenumber = false
   end,
 })
+
+-- misc
+map("n", "<Esc>", "<cmd> nohlsearch <CR>", { desc = "Clear highlights" })
+map("n", "U", "<C-r>", { desc = "Redo" })
+map("n", "<leader>w", "<cmd> update <CR>", { desc = "Save file" })
+
+map("n", "X", ":.lua<CR>", { desc = "Execute current line" })
+map("v", "X", ":lua<CR>", { desc = "Execute selected code" })
+
+map({ "n", "v" }, "<leader>rn", function()
+  vim.o.relativenumber = not vim.o.relativenumber
+end, { desc = "Toggle relative number" })
+
+map("n", "<leader>rr", function()
+  -- Save flag to restore opencode pane after restart
+  local pane = require("opencode_pane")
+  if pane.get_pane_id() then
+    require("kv").set("opencode_restore", true)
+    require("kv").save()
+  end
+  vim.cmd("restart")
+end, { desc = "Restart Neovim" })

@@ -43,6 +43,8 @@ return {
           or vim.bo[buf].ft == "noice"
           -- NickvanDyke/opencode.nvim
           or vim.bo[buf].ft == "opencode_terminal"
+          -- hedyhli/outline.nvim
+          or vim.bo[buf].ft == "Outline"
         then
           return false
         end

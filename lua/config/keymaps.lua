@@ -21,10 +21,10 @@ map("n", "<A-k>", "<cmd> m-- <CR>", { desc = "Move current line up" })
 map("n", "<A-down>", "<cmd> m+ <CR>", { desc = "Move current line down" })
 map("n", "<A-up>", "<cmd> m-- <CR>", { desc = "Move current line up" })
 
-map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
-map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
-map("v", "<A-down>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
-map("v", "<A-up>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
+map("x", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
+map("x", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
+map("x", "<A-down>", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
+map("x", "<A-up>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
 
 -- window navigation
 map("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
@@ -48,11 +48,11 @@ map(
 -- move the content in register to the system clipboard
 map("n", "<leader>y", '"+y', { desc = "Copy to clipboard" })
 map("n", "<leader>Y", '"+Y', { desc = "Copy to clipboard" })
-map("v", "<leader>y", '"+y', { desc = "Copy to clipboard" })
+map("x", "<leader>y", '"+y', { desc = "Copy to clipboard" })
 
 -- comment
 map("n", "<leader>/", "gcc", { desc = "Toggle comment line", remap = true })
-map("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
+map("x", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
 map("n", "gC", "gcic", { desc = "Uncomment commented lines", remap = true })
 map(
   "o",
@@ -112,9 +112,9 @@ map("n", "U", "<C-r>", { desc = "Redo" })
 map("n", "<leader>w", "<cmd> update <CR>", { desc = "Save file" })
 
 map("n", "X", ":.lua<CR>", { desc = "Execute current line" })
-map("v", "X", ":lua<CR>", { desc = "Execute selected code" })
+map("x", "X", ":lua<CR>", { desc = "Execute selected code" })
 
-map({ "n", "v" }, "<leader>rn", function()
+map({ "n", "x" }, "<leader>rn", function()
   vim.o.relativenumber = not vim.o.relativenumber
 end, { desc = "Toggle relative number" })
 

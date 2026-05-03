@@ -21,7 +21,7 @@ return {
     },
     {
       "v",
-      mode = { "v" },
+      mode = { "x" },
       function()
         require("flash").treesitter({
           actions = {

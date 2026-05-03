@@ -36,7 +36,7 @@ return {
 
     -- {
     --   "<leader>fw",
-    --   mode = "v",
+    --   mode = "x",
     --   function()
     --     require("snacks").picker.grep_word()
     --   end,

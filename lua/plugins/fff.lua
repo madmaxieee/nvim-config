@@ -56,7 +56,7 @@ return {
         desc = "FFF live grep",
       },
       {
-        mode = "v",
+        mode = "x",
         "fw",
         function()
           require("fff-snacks").grep_word()

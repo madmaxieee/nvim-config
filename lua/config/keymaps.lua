@@ -87,6 +87,9 @@ map(
   { desc = "Move to start of line", silent = true }
 )
 
+-- Make backspace work as black hole cut
+map({ "n", "x" }, "<backspace>", '"_d', { noremap = true })
+
 -- avoid "q:" typo
 map("c", "<C-f>", function()
   vim.g.requested_cmdwin = true

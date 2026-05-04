@@ -97,7 +97,8 @@ return {
           local jj_utils = require("utils.jj")
           local command
           if jj_utils.find_root() then
-            command = "lazyjj"
+            local jj_bin = vim.fn.exepath("jj")
+            command = { "lazyjj", "--jj-bin", jj_bin, "--ignore-jj-version" }
           else
             command = "lazygit"
           end

@@ -1,4 +1,5 @@
 return {
+  cond = false,
   "NickvanDyke/opencode.nvim",
   dependencies = {
     ---@module 'snacks'
@@ -74,7 +75,7 @@ return {
     }
     vim.api.nvim_create_autocmd("VimLeave", {
       group = vim.api.nvim_create_augroup("opencode.cleanup", { clear = true }),
-      desc = "ceanup opencode pane on exit",
+      desc = "cleanup opencode pane on exit",
       callback = function()
         require("opencode").stop()
       end,

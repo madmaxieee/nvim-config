@@ -35,7 +35,6 @@ map("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
 -- new tab and buffer
 map("n", "<leader>tn", "<cmd> tabnew <CR>", { desc = "New tab" })
 map("n", "<leader>tc", "<cmd> tabclose <CR>", { desc = "Close tab" })
-map("n", "<leader>bn", "<cmd> vnew <CR>", { desc = "New buffer" })
 
 -- Terminal mode
 map(

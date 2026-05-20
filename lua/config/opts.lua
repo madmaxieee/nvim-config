@@ -48,6 +48,8 @@ vim.opt.diffopt:append({
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+vim.opt.autoread = true
+
 -- detect utf-16 files
 vim.opt.fileencodings = {
   "ucs-bom",

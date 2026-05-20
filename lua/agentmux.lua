@@ -7,12 +7,12 @@
 
 ---@class AgentMuxProvider
 ---@field command string
----@field env table<string, string>?
+---@field env? table<string, string>
 ---@field stop_agent fun(pane_id: string)
 ---@field on_pane_created? fun(pane_id: string)
 
 ---@class AgentMuxConfig : AgentMuxOptions
----@field providers table<string, AgentMuxProvider>
+---@field providers? table<string, AgentMuxProvider>
 
 ---@type AgentMuxConfig
 local config = {
@@ -40,9 +40,9 @@ local state = {}
 
 local M = {}
 
----@param opts AgentMuxOptions
+---@param opts AgentMuxConfig
 function M.setup(opts)
-  opts = vim.tbl_deep_extend("force", opts, opts or {})
+  config = vim.tbl_deep_extend("force", config, opts or {})
 end
 
 function M.is_active()

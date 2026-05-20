@@ -9,6 +9,10 @@ map({ "n", "x" }, "<C-.>", function()
   agentmux.focus()
 end, {})
 
+map({ "n", "x" }, "<leader>aa", function()
+  agentmux.ask("", { submit = true })
+end, {})
+
 map({ "n", "x" }, "<leader>at", function()
   agentmux.send("@this: ", { submit = false })
   agentmux.focus()

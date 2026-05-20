@@ -36,7 +36,7 @@ local cfg = {
     },
   },
   prompts = {
-    "@diagnostics\n---\nfix these",
+    "@diag\n---\nfix these",
   },
 }
 
@@ -44,6 +44,13 @@ local cfg = {
 local state = {}
 
 local M = {}
+
+-- Define highlight groups
+vim.api.nvim_set_hl(
+  0,
+  "AgentMuxContext",
+  { link = "@lsp.type.enum", default = true }
+)
 
 ---@param opts AgentMuxConfig
 function M.setup(opts)
@@ -198,9 +205,14 @@ function M.ask(text, opts)
 
   opts = opts or {}
 
+  local context = require("agentmux.context")
+
   require("snacks").input({
     prompt = ("Ask %s"):format(cfg.provider),
     default = text,
+    highlight = function(input_text)
+      return context.highlight(input_text)
+    end,
     snacks = {
       icon = "󰚩 ",
       win = {

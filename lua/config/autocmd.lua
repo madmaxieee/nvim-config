@@ -33,3 +33,12 @@ vim.api.nvim_create_autocmd("VimResized", {
   desc = "Resize windows when vim is resized",
   command = "wincmd =",
 })
+
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = vim.api.nvim_create_augroup("FileChangeNotify", { clear = true }),
+  pattern = "*",
+  callback = function()
+    vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.INFO)
+  end,
+  desc = "Notify when a file is changed externally",
+})

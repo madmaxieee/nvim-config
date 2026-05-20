@@ -112,6 +112,12 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
 map("n", "<Esc>", "<cmd> nohlsearch <CR>", { desc = "Clear highlights" })
 map("n", "U", "<C-r>", { desc = "Redo" })
 map("n", "<leader>w", "<cmd> update <CR>", { desc = "Save file" })
+map(
+  "n",
+  "<leader><space>",
+  "<cmd> checktime <CR>",
+  { desc = "Check if file changed outside of Neovim" }
+)
 
 map("n", "X", ":.lua<CR>", { desc = "Execute current line" })
 map("x", "X", ":lua<CR>", { desc = "Execute selected code" })

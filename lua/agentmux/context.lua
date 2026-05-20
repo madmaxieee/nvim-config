@@ -119,6 +119,34 @@ M.contexts = {
     for _, diag in ipairs(diagnostics) do
       table.insert(formatted, format_diagnostic(diag))
     end
+    table.insert(formatted, "")
+    return table.concat(formatted, "\n")
+  end,
+  marx = function(opts)
+    local ok, marx = pcall(require, "marx")
+    if not ok then
+      return nil
+    end
+    local marks = marx.get_marks({ bufnr = opts.buf })
+    if not marks or #marks == 0 then
+      return nil
+    end
+    table.sort(marks, function(a, b)
+      return a.row < b.row
+    end)
+    local formatted = {}
+    for _, mark in ipairs(marks) do
+      table.insert(
+        formatted,
+        string.format(
+          "%s L%d: %s",
+          format_buf(opts.buf),
+          mark.row + 1,
+          mark.title
+        )
+      )
+    end
+    table.insert(formatted, "")
     return table.concat(formatted, "\n")
   end,
 }

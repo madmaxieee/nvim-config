@@ -36,7 +36,8 @@ local cfg = {
     },
   },
   prompts = {
-    "@diag\n---\nfix these",
+    "@diag ---\nfix these",
+    "@marx",
   },
 }
 
@@ -239,6 +240,9 @@ function M.pick_prompts()
   require("snacks").picker.select(cfg.prompts, {
     prompt = "pick prompt",
   }, function(item, _)
+    if not item then
+      return
+    end
     M.send(item, { submit = true })
   end)
 end

@@ -10,12 +10,14 @@
 ---@field env? table<string, string>
 ---@field stop_agent fun(pane_id: string)
 ---@field on_pane_created? fun(pane_id: string)
+---@field format_keys? fun(text: string): string[] construct tmux send-keys arguments from text to send
 
 ---@class AgentMuxConfig : AgentMuxOptions
 ---@field providers? table<string, AgentMuxProvider>
+---@field prompts? string[]
 
 ---@type AgentMuxConfig
-local config = {
+local cfg = {
   provider = "opencode",
   tmux_return_focus_key = "C-.",
   orientation = "horizontal",
@@ -33,6 +35,9 @@ local config = {
       end,
     },
   },
+  prompts = {
+    "@diagnostics\n---\nfix these",
+  },
 }
 
 ---@type {pane_id:string?}
@@ -42,7 +47,7 @@ local M = {}
 
 ---@param opts AgentMuxConfig
 function M.setup(opts)
-  config = vim.tbl_deep_extend("force", config, opts or {})
+  cfg = vim.tbl_deep_extend("force", cfg, opts or {})
 end
 
 function M.is_active()
@@ -65,7 +70,7 @@ function M.start(opts)
     return
   end
 
-  opts = vim.tbl_deep_extend("keep", config, opts or {})
+  opts = vim.tbl_deep_extend("force", cfg, opts or {})
   local provider = opts.providers[opts.provider]
 
   -- stylua: ignore
@@ -116,11 +121,11 @@ function M.stop()
     return
   end
 
-  local provider = config.providers[config.provider]
+  local provider = cfg.providers[cfg.provider]
   provider.stop_agent(pane_id)
 
   -- unbind the keybinding
-  vim.system({ "tmux", "unbind-key", "-n", config.tmux_return_focus_key })
+  vim.system({ "tmux", "unbind-key", "-n", cfg.tmux_return_focus_key })
 end
 
 function M.focus()
@@ -139,14 +144,26 @@ local function send_keys(pane_id, keys)
   vim.system(cmd)
 end
 
----@param str string
----@return string[]
-local function string_to_char_list(str)
+---@text string
+local function default_format_keys(text)
   local chars = {}
-  for char in str:gmatch(".") do
-    table.insert(chars, char)
+  for char in text:gmatch(".") do
+    if char == "\n" then
+      table.insert(chars, "S-Enter")
+    else
+      table.insert(chars, char)
+    end
   end
   return chars
+end
+
+local function format_keys(text)
+  local provider = cfg.providers[cfg.provider]
+  if provider.format_keys then
+    return provider.format_keys(text)
+  else
+    return default_format_keys(text)
+  end
 end
 
 ---@param text string
@@ -163,7 +180,8 @@ function M.send(text, opts)
     win = vim.api.nvim_get_current_win(),
   })
 
-  send_keys(pane_id, string_to_char_list(transformed_text))
+  local keys = format_keys(transformed_text)
+  send_keys(pane_id, keys)
 
   if opts and opts.submit then
     send_keys(pane_id, { "Enter" })
@@ -181,7 +199,7 @@ function M.ask(text, opts)
   opts = opts or {}
 
   require("snacks").input({
-    prompt = ("Ask %s:"):format(config.provider),
+    prompt = ("Ask %s"):format(cfg.provider),
     default = text,
     snacks = {
       icon = "󰚩 ",
@@ -202,6 +220,14 @@ function M.ask(text, opts)
       return
     end
     M.send(input, opts)
+  end)
+end
+
+function M.pick_prompts()
+  require("snacks").picker.select(cfg.prompts, {
+    prompt = "pick prompt",
+  }, function(item, _)
+    M.send(item, { submit = true })
   end)
 end
 

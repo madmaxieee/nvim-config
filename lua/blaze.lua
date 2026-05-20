@@ -200,7 +200,7 @@ end)
 ---@type fun(msg: string, level:integer?, opts: table?)
 local notify = vim.schedule_wrap(vim.notify)
 
----@param cmd_type? "build"|"test"
+---@param cmd_type? "build"|"test"|"coverage"
 ---@param filepath? string
 function M.blaze(cmd_type, filepath)
   filepath = filepath or vim.api.nvim_buf_get_name(0)
@@ -209,8 +209,10 @@ function M.blaze(cmd_type, filepath)
   end
 
   co2.run(function(ctx)
+    cmd_type = cmd_type or infer_command(filepath)
     notify(
-      ("Blaze running on %s..."):format(
+      ("Blaze %s running on %s..."):format(
+        cmd_type,
         vim.fs.relpath(vim.fn.getcwd(), filepath)
       )
     )

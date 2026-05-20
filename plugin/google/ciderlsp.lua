@@ -1,3 +1,7 @@
+if not require("flags").in_google3 then
+  return
+end
+
 local utils = require("utils")
 local lsp_utils = require("plugins.lsp.utils")
 
@@ -147,6 +151,3 @@ vim.filetype.add({
     gcl = "gcl",
   },
 })
-
--- this file is imported as a lazy.nvim spec file
-return {}

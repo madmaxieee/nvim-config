@@ -79,23 +79,4 @@ return {
       glug("googlelib"),
     },
   }),
-
-  glug("blaze", {
-    dependencies = {
-      glug("libgit"),
-      glug("piperlib"),
-    },
-    keys = {
-      {
-        "<leader>bb",
-        "<cmd>Blaze build<CR>",
-        desc = "Blaze build",
-      },
-      {
-        "<leader>bt",
-        "<cmd>Blaze test<CR>",
-        desc = "Blaze test",
-      },
-    },
-  }),
 }

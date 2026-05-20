@@ -201,25 +201,24 @@ end)
 local notify = vim.schedule_wrap(vim.notify)
 
 ---@param cmd_type? "build"|"test"
-function M.blaze(cmd_type)
-  co2.run(function(ctx)
-    local filepath = vim.api.nvim_buf_get_name(0)
-    if not filepath or filepath == "" then
-      return
-    end
+---@param filepath? string
+function M.blaze(cmd_type, filepath)
+  filepath = filepath or vim.api.nvim_buf_get_name(0)
+  if not filepath or filepath == "" then
+    return
+  end
 
+  co2.run(function(ctx)
     notify(
       ("Blaze running on %s..."):format(
         vim.fs.relpath(vim.fn.getcwd(), filepath)
       )
     )
-
     local command = ctx.await(get_cli_command, filepath, cmd_type)
     if not command then
       notify("No blaze targets found for " .. filepath, vim.log.levels.WARN)
       return
     end
-
     vim.schedule(function()
       require("snacks").terminal.open(command, {
         auto_close = false,

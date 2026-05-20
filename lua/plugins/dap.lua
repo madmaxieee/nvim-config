@@ -39,7 +39,9 @@ return {
           local dap = require("dap")
           local ft = vim.bo.filetype
           if ft == "" then
-            print("Filetype option is required to determine which dap configs are available")
+            print(
+              "Filetype option is required to determine which dap configs are available"
+            )
             return
           end
           local configs = dap.configurations[ft]

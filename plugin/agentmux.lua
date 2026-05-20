@@ -49,7 +49,10 @@ vim.api.nvim_create_user_command("AgentMuxProvider", function(opts)
     }, function(choice)
       if choice then
         if agentmux.set_provider(choice) then
-          vim.notify("AgentMux provider set to: " .. choice, vim.log.levels.INFO)
+          vim.notify(
+            "AgentMux provider set to: " .. choice,
+            vim.log.levels.INFO
+          )
         end
       end
     end)

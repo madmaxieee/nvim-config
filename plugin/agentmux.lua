@@ -7,16 +7,20 @@ map({ "n", "x" }, "<C-.>", function()
     agentmux.start()
   end
   agentmux.focus()
-end, {})
+end, { desc = "Toggle agent focus" })
 
 map({ "n", "x" }, "<leader>aa", function()
   agentmux.ask("", { submit = true })
-end, {})
+end, { desc = "Ask agent" })
 
 map({ "n", "x" }, "<leader>at", function()
   agentmux.send("@this: ", { submit = false })
   agentmux.focus()
-end, {})
+end, { desc = "Send context to agent and focus agent" })
+
+map({ "n", "x" }, "<leader>af", function()
+  agentmux.pick_prompts()
+end, { desc = "Pick a predefined prompt" })
 
 local kv = require("kv")
 if kv.get("agentmux_restore") then

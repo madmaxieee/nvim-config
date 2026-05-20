@@ -38,3 +38,31 @@ vim.api.nvim_create_autocmd("VimLeave", {
     agentmux.stop()
   end,
 })
+
+vim.api.nvim_create_user_command("AgentMuxProvider", function(opts)
+  local provider = opts.fargs[1]
+  if not provider or provider == "" then
+    local providers = agentmux.get_providers()
+    local current = agentmux.get_provider()
+    vim.ui.select(providers, {
+      prompt = "Select AgentMux Provider (current: " .. current .. ")",
+    }, function(choice)
+      if choice then
+        if agentmux.set_provider(choice) then
+          vim.notify("AgentMux provider set to: " .. choice, vim.log.levels.INFO)
+        end
+      end
+    end)
+    return
+  end
+
+  if agentmux.set_provider(provider) then
+    vim.notify("AgentMux provider set to: " .. provider, vim.log.levels.INFO)
+  end
+end, {
+  nargs = "?",
+  complete = function()
+    return agentmux.get_providers()
+  end,
+  desc = "Get or set the AgentMux provider",
+})

@@ -231,4 +231,25 @@ function M.pick_prompts()
   end)
 end
 
+function M.get_providers()
+  return vim.tbl_keys(cfg.providers or {})
+end
+
+function M.get_provider()
+  return cfg.provider
+end
+
+---@param name string
+function M.set_provider(name)
+  if not cfg.providers[name] then
+    vim.notify("Provider not found: " .. name, vim.log.levels.ERROR)
+    return false
+  end
+  if M.is_active() then
+    M.stop()
+  end
+  cfg.provider = name
+  return true
+end
+
 return M

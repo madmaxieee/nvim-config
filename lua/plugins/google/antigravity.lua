@@ -1,8 +1,8 @@
 require("agentmux").setup({
-  provider = "jetski",
+  provider = "antigravity",
   providers = {
-    jetski = {
-      command = "jetski",
+    antigravity = {
+      command = "antigravity",
       stop_agent = function(pane_id)
         -- stylua: ignore
         vim.system({

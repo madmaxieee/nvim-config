@@ -207,13 +207,12 @@ function M.ask(text, opts)
   opts = opts or {}
 
   local context = require("agentmux.context")
+  local highlight = require("agentmux.highlight")
 
   require("snacks").input({
     prompt = ("Ask %s"):format(cfg.provider),
     default = text,
-    highlight = function(input_text)
-      return context.highlight(input_text)
-    end,
+    highlight = highlight,
     icon = "󰚩 ",
     win = {
       title_pos = "left",

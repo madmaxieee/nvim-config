@@ -9,7 +9,6 @@ handlers[ms.initialize] = function(params, callback)
     capabilities = {
       completionProvider = {
         resolveProvider = true,
-        triggerCharacters = { "@" },
       },
     },
     serverInfo = {

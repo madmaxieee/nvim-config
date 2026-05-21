@@ -214,19 +214,28 @@ function M.ask(text, opts)
     highlight = function(input_text)
       return context.highlight(input_text)
     end,
-    snacks = {
-      icon = "󰚩 ",
-      win = {
-        title_pos = "left",
-        relative = "cursor",
-        row = -3, -- Row above the cursor
-        col = 0, -- Align with the cursor
-        keys = {
-          i_cr = {
-            desc = "submit",
-          },
+    icon = "󰚩 ",
+    win = {
+      title_pos = "left",
+      relative = "cursor",
+      row = -3, -- Row above the cursor
+      col = 0, -- Align with the cursor
+      keys = {
+        i_cr = {
+          desc = "submit",
         },
       },
+      b = {
+        completion = true,
+      },
+      bo = {
+        filetype = "agentmux_ask",
+      },
+      on_buf = function(win)
+        vim.lsp.start(require("agentmux.cmp"), {
+          bufnr = win.buf,
+        })
+      end,
     },
   }, function(input)
     if not input then

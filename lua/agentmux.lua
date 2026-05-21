@@ -24,7 +24,7 @@ local cfg = {
   percentage = 35,
   providers = {
     opencode = {
-      command = "exec opencode --port",
+      command = "opencode",
       stop_agent = function(pane_id)
         -- stylua: ignore
         vim.system({

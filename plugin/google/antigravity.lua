@@ -1,3 +1,7 @@
+if not require("flags").on_glinux then
+  return {}
+end
+
 require("agentmux").setup({
   provider = "antigravity",
   providers = {
@@ -14,10 +18,3 @@ require("agentmux").setup({
     },
   },
 })
-
-return {
-  {
-    cond = false,
-    "NickvanDyke/opencode.nvim",
-  },
-}

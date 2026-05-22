@@ -20,7 +20,7 @@ local CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE = {
   },
 }
 
-local SHOULD_DISABLE_WITH_CIDERLSP = {
+local LSP_SHOULD_DISABLE_WITH_CIDERLSP = {
   "clangd",
   "copilot",
   "eslint",
@@ -28,6 +28,10 @@ local SHOULD_DISABLE_WITH_CIDERLSP = {
   "jdtls",
   "ruff",
   "ts_ls",
+}
+
+local NULL_LS_SHOULD_DISABLE_WITH_CIDERLSP = {
+  "prettierd",
 }
 
 local function enable_pyright_for_type_check()
@@ -136,8 +140,13 @@ utils.on_load("nvim-lspconfig", function()
       end
 
       -- disable lsps for languages ciderlsp supports
-      for _, name in ipairs(SHOULD_DISABLE_WITH_CIDERLSP) do
+      for _, name in ipairs(LSP_SHOULD_DISABLE_WITH_CIDERLSP) do
         vim.cmd("lsp disable " .. name)
+      end
+
+      -- disable null-ls sources for languages ciderlsp supports
+      for _, name in ipairs(NULL_LS_SHOULD_DISABLE_WITH_CIDERLSP) do
+        require("null-ls").deregister(name)
       end
 
       enable_pyright_for_type_check()

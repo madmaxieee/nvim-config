@@ -204,10 +204,7 @@ function M.blaze(cmd_type, filepath)
       return
     end
 
-    local command = { "blaze", cmd_type }
-    for _, target in ipairs(targets) do
-      table.insert(command, target)
-    end
+    local command = vim.list_extend({ "blaze", cmd_type }, targets)
 
     vim.schedule(function()
       require("snacks").terminal.open(command, {

@@ -62,6 +62,7 @@ local function enable_pyright_for_type_check()
       -- can't find deps not in google3
       ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
         code = { "reportMissingImports" },
+        message = { ".* is unknown import symbol" },
       }),
     },
   })

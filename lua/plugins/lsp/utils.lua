@@ -1,5 +1,17 @@
 local M = {}
 
+local function match_any(patterns, str)
+  if not str then
+    return false
+  end
+  for _, pattern in ipairs(patterns) do
+    if string.match(str, pattern) then
+      return true
+    end
+  end
+  return false
+end
+
 ---@class DiagFilterOpts
 ---@field code (number|string)[]?
 ---@field message string[]?
@@ -15,7 +27,7 @@ function M.make_diagnostics_filter(to_filter)
         local message = params.diagnostics[idx].message
         if
           vim.list_contains(to_filter.code, code)
-          or vim.list_contains(to_filter.message, message)
+          or match_any(to_filter.message, message)
         then
           table.remove(params.diagnostics, idx)
         else

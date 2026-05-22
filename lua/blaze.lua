@@ -178,25 +178,6 @@ local infer_targets = co2.wrap(function(ctx, filepath, cmd_type, callback)
   callback(targets)
 end)
 
--- Get the full blaze CLI command arguments for the given file asynchronously
----@param filepath string
----@param cmd_type? "build"|"test"
----@param callback fun(args: string[]?)
-local get_cli_command = co2.wrap(function(ctx, filepath, cmd_type, callback)
-  cmd_type = cmd_type or infer_command(filepath)
-  local targets = ctx.await(infer_targets, filepath, cmd_type)
-  if not targets or #targets == 0 then
-    callback(nil)
-    return
-  end
-
-  local args = { "blaze", cmd_type, "--color", "yes" }
-  for _, target in ipairs(targets) do
-    table.insert(args, target)
-  end
-  callback(args)
-end)
-
 ---@type fun(msg: string, level:integer?, opts: table?)
 local notify = vim.schedule_wrap(vim.notify)
 
@@ -216,11 +197,18 @@ function M.blaze(cmd_type, filepath)
         vim.fs.relpath(vim.fn.getcwd(), filepath)
       )
     )
-    local command = ctx.await(get_cli_command, filepath, cmd_type)
-    if not command then
+
+    local targets = ctx.await(infer_targets, filepath, cmd_type)
+    if not targets or #targets == 0 then
       notify("No blaze targets found for " .. filepath, vim.log.levels.WARN)
       return
     end
+
+    local command = { "blaze", cmd_type }
+    for _, target in ipairs(targets) do
+      table.insert(command, target)
+    end
+
     vim.schedule(function()
       require("snacks").terminal.open(command, {
         auto_close = false,

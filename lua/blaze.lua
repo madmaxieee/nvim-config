@@ -178,9 +178,6 @@ local infer_targets = co2.wrap(function(ctx, filepath, cmd_type, callback)
   callback(targets)
 end)
 
----@type fun(msg: string, level:integer?, opts: table?)
-local notify = vim.schedule_wrap(vim.notify)
-
 ---@param cmd_type? "build"|"test"|"coverage"
 ---@param filepath? string
 function M.blaze(cmd_type, filepath)
@@ -189,18 +186,23 @@ function M.blaze(cmd_type, filepath)
     return
   end
 
-  co2.run(function(ctx)
-    cmd_type = cmd_type or infer_command(filepath)
-    notify(
-      ("Blaze %s running on %s..."):format(
-        cmd_type,
-        vim.fs.relpath(vim.fn.getcwd(), filepath)
-      )
+  cmd_type = cmd_type or infer_command(filepath)
+  vim.notify(
+    ("Blaze %s running on %s..."):format(
+      cmd_type,
+      vim.fs.relpath(vim.fn.getcwd(), filepath)
     )
+  )
 
+  co2.run(function(ctx)
     local targets = ctx.await(infer_targets, filepath, cmd_type)
     if not targets or #targets == 0 then
-      notify("No blaze targets found for " .. filepath, vim.log.levels.WARN)
+      vim.schedule(function()
+        vim.notify(
+          "No blaze targets found for " .. filepath,
+          vim.log.levels.WARN
+        )
+      end)
       return
     end
 

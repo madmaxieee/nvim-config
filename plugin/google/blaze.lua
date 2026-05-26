@@ -27,3 +27,23 @@ end, { desc = "Blaze all test" })
 map("n", "<leader>bab", function()
   require("blaze").blaze_all("build")
 end, { desc = "Blaze all build" })
+
+vim.api.nvim_create_user_command("Blaze", function(opts)
+  local cmd_type = opts.args ~= "" and opts.args or nil
+  require("blaze").blaze(cmd_type)
+end, {
+  nargs = "?",
+  complete = function()
+    return { "build", "test", "coverage" }
+  end,
+})
+
+vim.api.nvim_create_user_command("BlazeAll", function(opts)
+  local cmd_type = opts.args ~= "" and opts.args or "build"
+  require("blaze").blaze_all(cmd_type)
+end, {
+  nargs = "?",
+  complete = function()
+    return { "build", "test" }
+  end,
+})

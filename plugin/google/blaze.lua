@@ -19,3 +19,11 @@ end, { desc = "Blaze build" })
 map("n", "<leader>bc", function()
   require("blaze").blaze("coverage")
 end, { desc = "Blaze coverage" })
+
+map("n", "<leader>bat", function()
+  require("blaze").blaze_all("test")
+end, { desc = "Blaze all test" })
+
+map("n", "<leader>bab", function()
+  require("blaze").blaze_all("build")
+end, { desc = "Blaze all build" })

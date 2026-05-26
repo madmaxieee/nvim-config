@@ -78,19 +78,14 @@ end
 ---@param g3_root string
 ---@param callback fun(targets: string[])
 local blaze_query = co2.wrap(function(ctx, query, g3_root, callback)
-  if not g3_root then
-    callback({})
-    return
-  end
-
-  local obj = ctx.await(
+  local res = ctx.await(
     vim.system,
     { "blaze", "query", query },
     { cwd = g3_root }
   )
   local targets = {}
-  if obj.code == 0 and obj.stdout then
-    for line in obj.stdout:gmatch("[^\r\n]+") do
+  if res.code == 0 and res.stdout then
+    for line in res.stdout:gmatch("[^\r\n]+") do
       table.insert(targets, line)
     end
   end
@@ -107,6 +102,33 @@ local function infer_command(filepath)
   end
   return "build"
 end
+
+local get_all_affected_targets = co2.wrap(
+  -- Run affected_targets and call callback with list of targets
+  ---@param cmd_type "build"|"test"
+  ---@param g3_root string
+  ---@param callback fun(targets: string[]?)
+  function(ctx, cmd_type, g3_root, callback)
+    local res = ctx.await(vim.system, { "affected_targets" }, { cwd = g3_root })
+
+    if res.code ~= 0 or not res.stdout then
+      callback({})
+      return
+    end
+
+    local targets = {}
+    for line in res.stdout:gmatch("[^\r\n]+") do
+      if
+        cmd_type == "build"
+        or (cmd_type == "test" and line:match("_test$"))
+      then
+        table.insert(targets, line)
+      end
+    end
+
+    callback(targets)
+  end
+)
 
 -- Main Entry Point: Infer targets for source files asynchronously
 ---@param filepath string
@@ -202,6 +224,53 @@ function M.blaze(cmd_type, filepath)
           "No blaze targets found for " .. filepath,
           vim.log.levels.WARN
         )
+      end)
+      return
+    end
+
+    local command = vim.list_extend({ "blaze", cmd_type }, targets)
+
+    vim.schedule(function()
+      require("snacks").terminal.open(command, {
+        auto_close = false,
+        interactive = false,
+        win = {
+          position = "bottom",
+          height = 0.3,
+        },
+      })
+    end)
+  end)
+end
+
+---@param cmd_type "build"|"test"
+function M.blaze_all(cmd_type)
+  if cmd_type ~= "build" and cmd_type ~= "test" then
+    vim.notify(
+      "Invalid command type for blaze_all: " .. tostring(cmd_type),
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  local filepath = vim.api.nvim_buf_get_name(0)
+  if filepath == "" then
+    filepath = vim.fn.getcwd()
+  end
+
+  local g3_root = get_google3_root(filepath)
+  if not g3_root then
+    vim.notify("Not in a google3 workspace", vim.log.levels.ERROR)
+    return
+  end
+
+  vim.notify(("Blaze %s running on all affected targets..."):format(cmd_type))
+
+  co2.run(function(ctx)
+    local targets = ctx.await(get_all_affected_targets, cmd_type, g3_root)
+    if not targets or #targets == 0 then
+      vim.schedule(function()
+        vim.notify("No affected blaze targets found", vim.log.levels.WARN)
       end)
       return
     end

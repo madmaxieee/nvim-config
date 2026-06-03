@@ -25,7 +25,7 @@ return {
     {
       "-",
       mode = "n",
-      "<cmd> Oil <cr>",
+      "<cmd>Oil<cr>",
       desc = "Open oil",
     },
   },
@@ -42,6 +42,8 @@ return {
     },
     keymaps = {
       ["<C-h>"] = {},
+      ["<C-l>"] = {},
+      ["<leader><space>"] = "actions.refresh",
     },
   },
 }

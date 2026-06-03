@@ -1,4 +1,5 @@
 local co2 = require("co2")
+local gutils = require("gutils")
 local M = {}
 
 -- Helper: Check if a file exists
@@ -10,35 +11,6 @@ local function file_exists(path)
     return true
   end
   return false
-end
-
--- Find the google3 root directory
----@param path string
----@return string?
-local function get_google3_root(path)
-  -- If path contains /google3/, extract up to it
-  local g3_index = path:find("/google3")
-  if g3_index then
-    return path:sub(1, g3_index + 7) -- Returns path ending with "/google3"
-  end
-
-  -- Check for CitC pattern: /google/src/cloud/<user>/<workspace>/
-  local citc_pattern = "^(/google/src/cloud/[^/]+/[^/]+/)"
-  local citc_root = path:match(citc_pattern)
-  if citc_root then
-    return citc_root .. "google3"
-  end
-
-  -- Fallback: traverse up looking for google3 directory
-  local dir = vim.fn.fnamemodify(path, ":h")
-  while dir ~= "/" do
-    if vim.fn.isdirectory(dir .. "/google3") == 1 then
-      return dir .. "/google3"
-    end
-    dir = vim.fn.fnamemodify(dir, ":h")
-  end
-
-  return nil
 end
 
 -- Find nearest BUILD file upwards, stopping at g3_root
@@ -148,7 +120,7 @@ local infer_targets = co2.wrap(function(ctx, filepath, cmd_type, callback)
     return
   end
 
-  local g3_root = get_google3_root(filepath)
+  local g3_root = gutils.get_google3_root(filepath)
   if not g3_root then
     callback(nil)
     return
@@ -258,7 +230,7 @@ function M.blaze_all(cmd_type)
     filepath = vim.fn.getcwd()
   end
 
-  local g3_root = get_google3_root(filepath)
+  local g3_root = gutils.get_google3_root(filepath)
   if not g3_root then
     vim.notify("Not in a google3 workspace", vim.log.levels.ERROR)
     return

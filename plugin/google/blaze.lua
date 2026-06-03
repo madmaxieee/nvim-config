@@ -34,7 +34,7 @@ vim.api.nvim_create_user_command("Blaze", function(opts)
 end, {
   nargs = "?",
   complete = function()
-    return { "build", "test", "coverage" }
+    return { "build", "test", "coverage", "run" }
   end,
 })
 

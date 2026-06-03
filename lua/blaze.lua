@@ -161,7 +161,7 @@ local infer_targets = co2.wrap(function(ctx, filepath, cmd_type, callback)
   callback(targets)
 end)
 
----@param cmd_type? "build"|"test"|"coverage"
+---@param cmd_type? "build"|"test"|"coverage"|"run"
 ---@param filepath? string
 function M.blaze(cmd_type, filepath)
   filepath = filepath or vim.api.nvim_buf_get_name(0)
@@ -236,7 +236,8 @@ function M.blaze_all(cmd_type)
       return
     end
 
-    local command = vim.list_extend({ "blaze", cmd_type }, targets)
+    local command =
+      vim.list_extend({ "SKYBUILD=1", "blaze", cmd_type }, targets)
 
     vim.schedule(function()
       require("snacks").terminal.open(command, {

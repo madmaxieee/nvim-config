@@ -101,12 +101,12 @@ utils.on_load("nvim-lspconfig", function()
       "ncl",
       "objc",
       "patchpanel",
+      "pbtext",
       "proto",
       "python",
       "qflow",
       "soy",
       "swift",
-      "textpb",
       "typescript",
     },
     root_dir = function(bufnr, cb)

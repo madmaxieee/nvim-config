@@ -2,17 +2,6 @@ local co2 = require("co2")
 local gutils = require("gutils")
 local M = {}
 
--- Helper: Check if a file exists
----@param path string
-local function file_exists(path)
-  local f = io.open(path, "r")
-  if f then
-    f:close()
-    return true
-  end
-  return false
-end
-
 -- Find nearest BUILD file upwards, stopping at g3_root
 ---@param path string
 ---@param g3_root string
@@ -22,7 +11,7 @@ function M.get_package_path(path, g3_root)
   end
   local dir = vim.fn.fnamemodify(path, ":h")
   while dir ~= "/" do
-    if file_exists(dir .. "/BUILD") then
+    if vim.uv.fs_stat(dir .. "/BUILD") then
       return dir
     end
     if dir == g3_root then

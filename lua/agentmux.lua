@@ -206,7 +206,6 @@ function M.ask(text, opts)
 
   opts = opts or {}
 
-  local context = require("agentmux.context")
   local highlight = require("agentmux.highlight")
 
   require("snacks").input({

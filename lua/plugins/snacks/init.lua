@@ -91,6 +91,15 @@ return {
         desc = "Toggle terminal",
       },
       {
+        "<A-i>",
+        mode = { "n", "t" },
+        function()
+          -- provide a command so it would be floating
+          require("snacks").terminal.toggle("exec $SHELL")
+        end,
+        desc = "Toggle terminal",
+      },
+      {
         "<leader>j",
         mode = { "n", "t" },
         function()

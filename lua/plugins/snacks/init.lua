@@ -37,13 +37,6 @@ return {
         desc = "Select Scratch Buffer",
       },
       {
-        "<leader>z",
-        function()
-          require("snacks").zen()
-        end,
-        desc = "Toggle zen mode",
-      },
-      {
         "<A-e>",
         function()
           require("snacks").explorer()
@@ -86,7 +79,12 @@ return {
         "<A-q>",
         mode = { "n", "t" },
         function()
-          require("snacks").terminal.toggle()
+          require("snacks").terminal.toggle(nil, {
+            win = {
+              position = "float",
+              border = "rounded",
+            },
+          })
         end,
         desc = "Toggle terminal",
       },
@@ -94,8 +92,12 @@ return {
         "<A-i>",
         mode = { "n", "t" },
         function()
-          -- provide a command so it would be floating
-          require("snacks").terminal.toggle("exec $SHELL")
+          require("snacks").terminal.toggle(nil, {
+            win = {
+              position = "float",
+              border = "rounded",
+            },
+          })
         end,
         desc = "Toggle terminal",
       },
@@ -202,4 +204,14 @@ return {
   },
 
   require("plugins.snacks.snacks-picker"),
+
+  -- tiny-term override snacks' buggy terminal implementation
+  -- when toggling the terminal, snacks always render the terminal off by one line
+  {
+    "jellydn/tiny-term.nvim",
+    event = "VeryLazy",
+    opts = {
+      override_snacks = true,
+    },
+  },
 }

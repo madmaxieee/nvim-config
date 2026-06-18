@@ -1,5 +1,6 @@
 return {
   {
+    cond = not require("flags").is_minimal,
     "dmtrKovalenko/fff.nvim",
     build = function()
       require("fff.download").download_or_build_binary()
@@ -8,6 +9,7 @@ return {
   },
 
   {
+    cond = not require("flags").is_minimal,
     "madmaxieee/fff-snacks.nvim",
     lazy = false, -- lazy loaded by design
     ---@module 'fff_snacks'

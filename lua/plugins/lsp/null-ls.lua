@@ -17,6 +17,7 @@ return {
         "checkstyle",
         -- custom
         "cpplint",
+        "kdlfmt",
       },
     },
     opts_extend = { "ensure_installed" },
@@ -85,6 +86,7 @@ return {
         custom.bpfmt,
         custom.cpplint,
         custom.google_java_format,
+        custom.kdlfmt,
         custom.pyformat,
         custom.trailing_ws,
         custom.trailing_ws_action,

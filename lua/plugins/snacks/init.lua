@@ -86,7 +86,14 @@ return {
         "<A-q>",
         mode = { "n", "t" },
         function()
-          require("snacks").terminal.toggle()
+          require("snacks").terminal.toggle(nil, {
+            win = {
+              position = "float",
+              -- not sure why but this is a workaround for the off by one line issue
+              -- only for floating terms, bottom terms don't have backdrops to begin with
+              backdrop = false,
+            },
+          })
         end,
         desc = "Toggle terminal",
       },
@@ -94,8 +101,14 @@ return {
         "<A-i>",
         mode = { "n", "t" },
         function()
-          -- provide a command so it would be floating
-          require("snacks").terminal.toggle("exec $SHELL")
+          require("snacks").terminal.toggle(nil, {
+            win = {
+              position = "float",
+              -- not sure why but this is a workaround for the off by one line issue
+              -- only for floating terms, bottom terms don't have backdrops to begin with
+              backdrop = false,
+            },
+          })
         end,
         desc = "Toggle terminal",
       },

@@ -1,40 +1,7 @@
----@type Terminal
-local _TERM
----@type Terminal
-local _LAZYJJ_OR_GIT_TERM
-
 return {
   {
     cond = not require("flags").is_minimal,
     "akinsho/toggleterm.nvim",
-    cmd = "ToggleTerm",
-    keys = {
-      {
-        "<A-q>",
-        mode = { "n", "t" },
-        function()
-          _TERM:toggle(nil, "float")
-        end,
-        desc = "Toggle terminal",
-      },
-      {
-        "<A-i>",
-        mode = { "n", "t" },
-        function()
-          _TERM:toggle(nil, "float")
-        end,
-        desc = "Toggle terminal",
-      },
-      {
-        "<leader>j",
-        mode = { "n", "t" },
-        function()
-          _LAZYJJ_OR_GIT_TERM:toggle(nil, "float")
-        end,
-        desc = "Toggle lazyjj or lazygit",
-      },
-    },
-
     opts = {
       float_opts = {
         border = "none",
@@ -43,9 +10,37 @@ return {
 
     init = function()
       local Terminal = require("toggleterm.terminal").Terminal
+      local map = require("utils").safe_keymap_set
 
-      _TERM = Terminal:new({ float_opts = { border = "single" } })
+      ---@param term Terminal
+      ---@param key string
+      local function map_term_close(term, key)
+        vim.api.nvim_buf_set_keymap(
+          term.bufnr,
+          "t",
+          key,
+          "<cmd>close<CR>",
+          { noremap = true, silent = true }
+        )
+      end
 
+      --- quick terminal
+      local _TERM = Terminal:new({
+        float_opts = { border = "single" },
+        on_create = function(term)
+          map_term_close(term, "<A-q>")
+          map_term_close(term, "<A-i>")
+        end,
+      })
+
+      map("n", "<A-q>", function()
+        _TERM:toggle(nil, "float")
+      end, { desc = "Toggle terminal" })
+      map("n", "<A-i>", function()
+        _TERM:toggle(nil, "float")
+      end, { desc = "Toggle terminal" })
+
+      --- lazyjj or lazygit
       local jj_utils = require("utils.jj")
       local lazy_command
       if jj_utils.find_root() then
@@ -55,7 +50,16 @@ return {
         lazy_command = "lazygit"
       end
 
-      _LAZYJJ_OR_GIT_TERM = Terminal:new({ cmd = lazy_command })
+      local _LAZYJJ_OR_GIT_TERM = Terminal:new({
+        cmd = lazy_command,
+        on_create = function(term)
+          map_term_close(term, "<leader>j")
+        end,
+      })
+
+      map("n", "<leader>j", function()
+        _LAZYJJ_OR_GIT_TERM:toggle(nil, "float")
+      end, { desc = "Toggle lazyjj or lazygit" })
     end,
   },
 }

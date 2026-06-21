@@ -24,6 +24,11 @@ function M.safe_keymap_set(mode, lhs, rhs, opts)
     opts = opts or {}
     opts.silent = opts.silent ~= false
     vim.keymap.set(modes, lhs, rhs, opts)
+  else
+    vim.notify(
+      ("Keymap for %s already exists"):format(lhs),
+      vim.log.levels.WARN
+    )
   end
 end
 

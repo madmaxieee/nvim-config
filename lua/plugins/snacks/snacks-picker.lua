@@ -172,17 +172,4 @@ return {
       desc = "Find undo history",
     },
   },
-
-  init = function()
-    vim.api.nvim_create_user_command("HereFind", function()
-      local path = vim.fn.expand("%:p:h")
-      path = require("utils").strip_oil_prefix(path)
-      require("snacks").picker.files({ cwd = path })
-    end, { desc = "Find files in current directory" })
-    vim.api.nvim_create_user_command("HereGrep", function()
-      local path = vim.fn.expand("%:p:h")
-      path = require("utils").strip_oil_prefix(path)
-      require("snacks").picker.grep({ cwd = path })
-    end, { desc = "Grep in current directory" })
-  end,
 }

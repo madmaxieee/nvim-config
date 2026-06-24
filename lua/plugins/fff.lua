@@ -75,6 +75,20 @@ return {
         desc = "FFF live grep (fuzzy)",
       },
     },
+
+    init = function()
+      vim.api.nvim_create_user_command("HereFind", function()
+        local path = vim.fn.expand("%:p:h")
+        path = require("utils").strip_oil_prefix(path)
+        require("fff-snacks").find_files({ cwd = path })
+      end, { desc = "Find files in current directory" })
+
+      vim.api.nvim_create_user_command("HereGrep", function()
+        local path = vim.fn.expand("%:p:h")
+        path = require("utils").strip_oil_prefix(path)
+        require("fff-snacks").live_grep({ cwd = path })
+      end, { desc = "Grep in current directory" })
+    end,
   },
 
   {

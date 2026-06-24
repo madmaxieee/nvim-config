@@ -128,4 +128,13 @@ function M.map_repeatable_pair(modes, specs, opts)
   M.safe_keymap_set(modes, specs.prev[1], prev_repeat, specs.prev[3])
 end
 
+---@param path string
+function M.strip_oil_prefix(path)
+  local oil_prefix = "oil://"
+  if vim.startswith(path, oil_prefix) then
+    return path:sub(#oil_prefix + 1)
+  end
+  return path
+end
+
 return M

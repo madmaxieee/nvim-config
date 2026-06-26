@@ -236,8 +236,7 @@ function M.blaze_all(cmd_type)
       return
     end
 
-    local command =
-      vim.list_extend({ "SKYBUILD=1", "blaze", cmd_type }, targets)
+    local command = vim.list_extend({ "blaze", cmd_type }, targets)
 
     vim.schedule(function()
       require("snacks").terminal.open(command, {
@@ -247,6 +246,7 @@ function M.blaze_all(cmd_type)
           position = "bottom",
           height = 0.3,
         },
+        env = { SKYBUILD = "1" },
       })
     end)
   end)

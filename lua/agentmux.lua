@@ -1,5 +1,6 @@
 ---@class AgentMuxOptions
 ---@field provider string
+---@field backend? "auto" | "tmux" | "herdr" pane backend (default: "auto")
 ---@field tmux_return_focus_key? string keybinding to return focus to the vim pane (default: "C-.")
 ---@field orientation? "horizontal" | "vertical" split orientation (default: "horizontal")
 ---@field percentage? integer split percentage 1-100 (default: 35)
@@ -8,7 +9,7 @@
 ---@class AgentMuxProvider
 ---@field command string
 ---@field env? table<string, string>
----@field stop_agent fun(pane_id: string)
+---@field stop_agent? fun(pane_id: string) tmux backend stop hook
 ---@field on_pane_created? fun(pane_id: string)
 ---@field format_keys? fun(text: string): string[] construct tmux send-keys arguments from text to send
 
@@ -19,6 +20,7 @@
 ---@type AgentMuxConfig
 local cfg = {
   provider = "opencode",
+  backend = "auto",
   tmux_return_focus_key = "C-.",
   orientation = "horizontal",
   percentage = 35,
@@ -41,10 +43,12 @@ local cfg = {
   },
 }
 
----@type {pane_id:string?}
+---@type {pane_id:string?, backend:("tmux"|"herdr")?}
 local state = {}
 
 local M = {}
+
+local backend_registry = require("agentmux.backend")
 
 -- Define highlight groups
 vim.api.nvim_set_hl(
@@ -58,18 +62,17 @@ function M.setup(opts)
   cfg = vim.tbl_deep_extend("force", cfg, opts or {})
 end
 
+local function get_backend(opts)
+  local name = opts and opts.backend or state.backend or cfg.backend or "auto"
+  return backend_registry.get(name)
+end
+
 function M.is_active()
   return M.get_pane_id() ~= nil
 end
 
 function M.get_pane_id()
-  if state.pane_id then
-    local res = vim.system({ "tmux", "list-panes", "-t", state.pane_id }):wait()
-    if res.code ~= 0 then
-      state.pane_id = nil
-    end
-  end
-  return state.pane_id
+  return get_backend().get_pane_id(state)
 end
 
 ---@param opts AgentMuxOptions?
@@ -79,48 +82,7 @@ function M.start(opts)
   end
 
   opts = vim.tbl_deep_extend("force", cfg, opts or {})
-  local provider = opts.providers[opts.provider]
-
-  -- stylua: ignore
-  local CREATE_PANE_CMD = {
-    -- create a new pane
-    "tmux", "split-window",
-    -- print the pane id to stdout so we can capture it
-    "-P", "-F", "#{pane_id}",
-    -- split orientation and percentage
-    opts.orientation == "horizontal" and "-h" or "-v",
-    "-p", tostring(opts.percentage),
-    -- the coding agent command
-    provider.command,
-  }
-
-  local res = vim.system(CREATE_PANE_CMD, { env = provider.env }):wait()
-  if res.code ~= 0 then
-    vim.notify(
-      "Failed to create coding agent pane: " .. res.stderr,
-      vim.log.levels.ERROR
-    )
-    return
-  end
-
-  state.pane_id = vim.trim(res.stdout)
-
-  if opts.on_pane_created then
-    opts.on_pane_created(state.pane_id)
-  end
-
-  -- stylua: ignore
-  vim.system({
-    "tmux", "set-option", "-t", state.pane_id,
-    "-p", "@agent-mux-pane", vim.env.TMUX_PANE,
-  })
-  -- stylua: ignore
-  vim.system({
-    "tmux", "bind-key", "-n", opts.tmux_return_focus_key,
-    "if-shell", "-F", "#{?#{@agent-mux-pane},1,0}",
-    [[ run-shell 'tmux select-pane -t "#{@agent-mux-pane}"' ]],
-    ("send-keys %s"):format(opts.tmux_return_focus_key),
-  })
+  get_backend(opts).start(state, opts)
 end
 
 function M.stop()
@@ -129,11 +91,7 @@ function M.stop()
     return
   end
 
-  local provider = cfg.providers[cfg.provider]
-  provider.stop_agent(pane_id)
-
-  -- unbind the keybinding
-  vim.system({ "tmux", "unbind-key", "-n", cfg.tmux_return_focus_key })
+  get_backend().stop(state, cfg, pane_id)
 end
 
 function M.focus()
@@ -141,15 +99,13 @@ function M.focus()
   if not pane_id then
     return
   end
-  vim.system({ "tmux", "select-pane", "-t", pane_id })
+  get_backend().focus(state, pane_id)
 end
 
 ---@param pane_id string
 ---@param keys string[]
 local function send_keys(pane_id, keys)
-  local cmd = { "tmux", "send-keys", "-t", pane_id }
-  vim.list_extend(cmd, keys)
-  vim.system(cmd)
+  get_backend().send_keys(state, pane_id, keys)
 end
 
 ---@text string
@@ -188,8 +144,14 @@ function M.send(text, opts)
     win = vim.api.nvim_get_current_win(),
   })
 
-  local keys = format_keys(transformed_text)
-  send_keys(pane_id, keys)
+  local backend = get_backend()
+  if backend.send_text then
+    backend.send_text(state, pane_id, transformed_text, opts and opts.submit)
+    return
+  else
+    local keys = format_keys(transformed_text)
+    send_keys(pane_id, keys)
+  end
 
   if opts and opts.submit then
     send_keys(pane_id, { "Enter" })

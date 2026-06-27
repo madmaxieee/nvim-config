@@ -35,7 +35,7 @@ if kv.get("agentmux_restore") then
   })
 end
 
-vim.api.nvim_create_autocmd("VimLeave", {
+vim.api.nvim_create_autocmd("VimLeavePre", {
   group = vim.api.nvim_create_augroup("agentmux.cleanup", { clear = true }),
   desc = "cleanup agent pane on exit",
   callback = function()

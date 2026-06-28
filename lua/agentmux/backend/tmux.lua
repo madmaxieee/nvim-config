@@ -1,3 +1,4 @@
+---@type AgentMuxBackend
 local M = {}
 
 local tmux_return_focus_key = "C-."

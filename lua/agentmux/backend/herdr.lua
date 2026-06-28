@@ -1,3 +1,7 @@
+---@class AgentMuxHerdrBackend : AgentMuxBackend
+---@field resolve_pane_id fun(target: string): string?
+
+---@type AgentMuxHerdrBackend
 local M = {}
 
 local function target_name(provider)

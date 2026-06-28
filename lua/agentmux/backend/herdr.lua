@@ -1,5 +1,10 @@
 local M = {}
 
+local function target_name(provider)
+  local cwd_hash = vim.fn.sha256(vim.fn.getcwd()):sub(1, 8)
+  return ("agentmux-%s-%s-%s"):format(provider, cwd_hash, vim.uv.os_getpid())
+end
+
 function M.resolve_pane_id(target)
   local res = vim.system({ "herdr", "agent", "get", target }):wait()
   if res.code ~= 0 then
@@ -27,7 +32,7 @@ end
 
 function M.start(state, opts)
   local provider = opts.providers[opts.provider]
-  local target = ("agentmux-%s"):format(opts.provider)
+  local target = target_name(opts.provider)
   local split = opts.orientation == "horizontal" and "right" or "down"
   local cmd = {
     "herdr",

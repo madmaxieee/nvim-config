@@ -1,5 +1,7 @@
 local M = {}
 
+local tmux_return_focus_key = "C-."
+
 function M.get_pane_id(state)
   if state.pane_id then
     local res = vim.system({ "tmux", "list-panes", "-t", state.pane_id }):wait()
@@ -11,8 +13,8 @@ function M.get_pane_id(state)
   return state.pane_id
 end
 
-function M.start(state, opts)
-  local provider = opts.providers[opts.provider]
+function M.start(state, cfg)
+  local provider = cfg.providers[cfg.provider]
 
   -- stylua: ignore
   local create_pane_cmd = {
@@ -20,9 +22,9 @@ function M.start(state, opts)
     "tmux", "split-window",
     -- print the pane id to stdout so we can capture it
     "-P", "-F", "#{pane_id}",
-    -- split orientation and percentage
-    opts.orientation == "horizontal" and "-h" or "-v",
-    "-p", tostring(opts.percentage),
+    -- split "horizontally", to the right
+    "-h",
+    "-p", "35",
     -- the coding agent command
     provider.command,
   }
@@ -39,10 +41,6 @@ function M.start(state, opts)
   state.pane_id = vim.trim(res.stdout)
   state.backend = "tmux"
 
-  if opts.on_pane_created then
-    opts.on_pane_created(state.pane_id)
-  end
-
   -- stylua: ignore
   vim.system({
     "tmux", "set-option", "-t", state.pane_id,
@@ -50,10 +48,10 @@ function M.start(state, opts)
   })
   -- stylua: ignore
   vim.system({
-    "tmux", "bind-key", "-n", opts.tmux_return_focus_key,
+    "tmux", "bind-key", "-n", tmux_return_focus_key,
     "if-shell", "-F", "#{?#{@agent-mux-pane},1,0}",
     [[ run-shell 'tmux select-pane -t "#{@agent-mux-pane}"' ]],
-    ("send-keys %s"):format(opts.tmux_return_focus_key),
+    ("send-keys %s"):format(tmux_return_focus_key),
   })
 end
 
@@ -66,7 +64,7 @@ function M.stop(state, cfg, pane_id)
   end
 
   -- unbind the keybinding
-  vim.system({ "tmux", "unbind-key", "-n", cfg.tmux_return_focus_key })
+  vim.system({ "tmux", "unbind-key", "-n", tmux_return_focus_key })
   state.pane_id = nil
   state.backend = nil
 end

@@ -30,19 +30,15 @@ function M.get_pane_id(state)
   return state.pane_id
 end
 
-function M.start(state, opts)
-  local provider = opts.providers[opts.provider]
-  local target = target_name(opts.provider)
-  local split = opts.orientation == "horizontal" and "right" or "down"
+function M.start(state, cfg)
+  local provider = cfg.providers[cfg.provider]
+  local target = target_name(cfg.provider)
+
+  -- stylua: ignore
   local cmd = {
-    "herdr",
-    "agent",
-    "start",
-    target,
-    "--cwd",
-    vim.fn.getcwd(),
-    "--split",
-    split,
+    "herdr", "agent", "start", target,
+    "--cwd", vim.fn.getcwd(),
+    "--split", "right",
   }
 
   for key, value in pairs(provider.env or {}) do
@@ -64,10 +60,6 @@ function M.start(state, opts)
 
   state.pane_id = target
   state.backend = "herdr"
-
-  if opts.on_pane_created then
-    opts.on_pane_created(state.pane_id)
-  end
 end
 
 function M.stop(state, _, pane_id)

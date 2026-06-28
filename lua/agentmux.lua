@@ -1,16 +1,11 @@
 ---@class AgentMuxOptions
 ---@field provider string
 ---@field backend? "auto" | "tmux" | "herdr" pane backend (default: "auto")
----@field tmux_return_focus_key? string keybinding to return focus to the vim pane (default: "C-.")
----@field orientation? "horizontal" | "vertical" split orientation (default: "horizontal")
----@field percentage? integer split percentage 1-100 (default: 35)
----@field on_pane_created? fun(pane_id: string) callback that is called after the pane is created with the pane id as argument
 
 ---@class AgentMuxProvider
 ---@field command string
 ---@field env? table<string, string>
----@field stop_agent? fun(pane_id: string) tmux backend stop hook
----@field on_pane_created? fun(pane_id: string)
+---@field tmux_stop_agent? fun(pane_id: string) tmux backend stop hook
 ---@field format_keys? fun(text: string): string[] construct tmux send-keys arguments from text to send
 
 ---@class AgentMuxConfig : AgentMuxOptions
@@ -21,13 +16,10 @@
 local cfg = {
   provider = "opencode",
   backend = "auto",
-  tmux_return_focus_key = "C-.",
-  orientation = "horizontal",
-  percentage = 35,
   providers = {
     opencode = {
       command = "opencode",
-      stop_agent = function(pane_id)
+      tmux_stop_agent = function(pane_id)
         -- stylua: ignore
         vim.system({
           "tmux", "send-keys", "-t", pane_id,

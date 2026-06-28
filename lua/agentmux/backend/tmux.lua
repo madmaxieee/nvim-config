@@ -3,15 +3,28 @@ local M = {}
 
 local tmux_return_focus_key = "C-."
 
+---@class AgentMuxTmuxState
+---@field pane_id string?
+
+---@param state AgentMuxState
+---@return AgentMuxTmuxState
+local function backend_state(state)
+  state.data = state.data or {}
+  ---@cast state.data AgentMuxTmuxState
+  return state.data
+end
+
 function M.get_pane_id(state)
-  if state.pane_id then
-    local res = vim.system({ "tmux", "list-panes", "-t", state.pane_id }):wait()
+  local data = backend_state(state)
+  if data.pane_id then
+    local res = vim.system({ "tmux", "list-panes", "-t", data.pane_id }):wait()
     if res.code ~= 0 then
-      state.pane_id = nil
+      data.pane_id = nil
       state.backend = nil
+      state.data = nil
     end
   end
-  return state.pane_id
+  return data.pane_id
 end
 
 function M.start(state, cfg)
@@ -39,12 +52,13 @@ function M.start(state, cfg)
     return
   end
 
-  state.pane_id = vim.trim(res.stdout)
+  local data = backend_state(state)
+  data.pane_id = vim.trim(res.stdout)
   state.backend = "tmux"
 
   -- stylua: ignore
   vim.system({
-    "tmux", "set-option", "-t", state.pane_id,
+    "tmux", "set-option", "-t", data.pane_id,
     "-p", "@agent-mux-pane", vim.env.TMUX_PANE,
   })
   -- stylua: ignore
@@ -66,8 +80,8 @@ function M.stop(state, cfg, pane_id)
 
   -- unbind the keybinding
   vim.system({ "tmux", "unbind-key", "-n", tmux_return_focus_key })
-  state.pane_id = nil
   state.backend = nil
+  state.data = nil
 end
 
 function M.focus(_, pane_id)

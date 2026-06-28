@@ -4,6 +4,18 @@
 ---@type AgentMuxHerdrBackend
 local M = {}
 
+---@class AgentMuxHerdrState
+---@field target string?
+---@field pane_id string?
+
+---@param state AgentMuxState
+---@return AgentMuxHerdrState
+local function backend_state(state)
+  state.data = state.data or {}
+  ---@cast state.data AgentMuxHerdrState
+  return state.data
+end
+
 local function target_name(provider)
   local cwd_hash = vim.fn.sha256(vim.fn.getcwd()):sub(1, 8)
   return ("agentmux-%s-%s-%s"):format(provider, cwd_hash, vim.uv.os_getpid())
@@ -24,14 +36,16 @@ function M.resolve_pane_id(target)
 end
 
 function M.get_pane_id(state)
-  if state.pane_id then
-    local res = vim.system({ "herdr", "agent", "get", state.pane_id }):wait()
-    if res.code ~= 0 then
-      state.pane_id = nil
+  local data = backend_state(state)
+  if data.target then
+    data.pane_id = M.resolve_pane_id(data.target)
+    if not data.pane_id then
+      data.target = nil
       state.backend = nil
+      state.data = nil
     end
   end
-  return state.pane_id
+  return data.target
 end
 
 function M.start(state, cfg)
@@ -62,17 +76,20 @@ function M.start(state, cfg)
     return
   end
 
-  state.pane_id = target
+  local data = backend_state(state)
+  data.target = target
+  data.pane_id = M.resolve_pane_id(target)
   state.backend = "herdr"
 end
 
 function M.stop(state, _, pane_id)
-  local resolved_pane_id = M.resolve_pane_id(pane_id)
+  local data = backend_state(state)
+  local resolved_pane_id = data.pane_id or M.resolve_pane_id(pane_id)
   if resolved_pane_id then
     vim.system({ "herdr", "pane", "close", resolved_pane_id })
   end
-  state.pane_id = nil
   state.backend = nil
+  state.data = nil
 end
 
 function M.focus(_, pane_id)
@@ -85,10 +102,13 @@ function M.send_keys(_, pane_id, keys)
     return
   end
 
-  local resolved_pane_id = M.resolve_pane_id(pane_id)
+  local data = backend_state(state)
+  local resolved_pane_id = data.pane_id or M.resolve_pane_id(pane_id)
   if not resolved_pane_id then
     return
   end
+
+  data.pane_id = resolved_pane_id
 
   local cmd = { "herdr", "pane", "send-keys", resolved_pane_id }
   vim.list_extend(cmd, keys)

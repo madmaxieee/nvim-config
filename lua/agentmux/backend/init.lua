@@ -1,8 +1,8 @@
 ---@alias AgentMuxBackendName "tmux" | "herdr"
 
 ---@class AgentMuxState
----@field pane_id string?
 ---@field backend AgentMuxBackendName?
+---@field data table?
 
 ---@class AgentMuxBackend
 ---@field get_pane_id fun(state: AgentMuxState): string?

@@ -7,7 +7,7 @@ require("agentmux").setup({
   providers = {
     antigravity = {
       command = "antigravity",
-      stop_agent = function(pane_id)
+      tmux_stop_agent = function(pane_id)
         -- stylua: ignore
         vim.system({
           "tmux", "send-keys", "-t", pane_id,

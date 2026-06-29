@@ -1,7 +1,4 @@
 ---@class AgentMuxHerdrBackend : AgentMuxBackend
----@field resolve_pane_id fun(target: string): string?
-
----@type AgentMuxHerdrBackend
 local M = {}
 
 ---@class AgentMuxHerdrState
@@ -12,8 +9,9 @@ local M = {}
 ---@return AgentMuxHerdrState
 local function backend_state(state)
   state.data = state.data or {}
-  ---@cast state.data AgentMuxHerdrState
-  return state.data
+  local data = state.data
+  ---@cast data AgentMuxHerdrState
+  return data
 end
 
 local function target_name(provider)
@@ -96,7 +94,7 @@ function M.focus(_, pane_id)
   vim.system({ "herdr", "agent", "focus", pane_id })
 end
 
-function M.send_keys(_, pane_id, keys)
+function M.send_keys(state, pane_id, keys)
   if #keys == 1 and keys[1] == "Enter" then
     vim.system({ "herdr", "agent", "send", pane_id, "\n" })
     return
@@ -121,7 +119,7 @@ function M.send_text(_, pane_id, text, submit)
     "agent",
     "send",
     pane_id,
-    submit and text .. "\n" or text,
+    submit and text .. "\r" or text,
   })
 end
 

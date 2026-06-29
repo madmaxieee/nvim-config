@@ -10,8 +10,9 @@ local tmux_return_focus_key = "C-."
 ---@return AgentMuxTmuxState
 local function backend_state(state)
   state.data = state.data or {}
-  ---@cast state.data AgentMuxTmuxState
-  return state.data
+  local data = state.data
+  ---@cast data AgentMuxTmuxState
+  return data
 end
 
 function M.get_pane_id(state)

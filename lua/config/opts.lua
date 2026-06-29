@@ -78,3 +78,19 @@ vim.diagnostic.config({
 
 -- disable built in ftplugin mappings
 vim.g.no_plugin_maps = true
+
+vim.g.clipboard = {
+  name = "OSC 52",
+  copy = {
+    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+  },
+  paste = {
+    ["+"] = function(_)
+      return {}
+    end,
+    ["*"] = function(_)
+      return {}
+    end,
+  },
+}

@@ -7,10 +7,10 @@
 ---@class AgentMuxBackend
 ---@field get_pane_id fun(state: AgentMuxState): string?
 ---@field start fun(state: AgentMuxState, cfg: AgentMuxConfig)
----@field stop fun(state: AgentMuxState, cfg: AgentMuxConfig, pane_id: string)
----@field focus fun(state: AgentMuxState, pane_id: string)
----@field send_keys fun(state: AgentMuxState, pane_id: string, keys: string[])
----@field send_text? fun(state: AgentMuxState, pane_id: string, text: string, submit?: boolean)
+---@field stop fun(state: AgentMuxState, cfg: AgentMuxConfig)
+---@field focus fun(state: AgentMuxState)
+---@field send_keys fun(state: AgentMuxState, keys: string[])
+---@field send_text? fun(state: AgentMuxState, text: string, submit?: boolean)
 
 local M = {}
 

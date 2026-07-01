@@ -43,7 +43,7 @@ function M.get_pane_id(state)
       state.data = nil
     end
   end
-  return data.target
+  return data.pane_id
 end
 
 function M.start(state, cfg)
@@ -94,45 +94,54 @@ function M.start(state, cfg)
   end
 end
 
-function M.stop(state, _, pane_id)
+function M.stop(state)
   local data = backend_state(state)
-  local resolved_pane_id = data.pane_id or M.resolve_pane_id(pane_id)
-  if resolved_pane_id then
-    vim.system({ "herdr", "pane", "close", resolved_pane_id })
+  if data.pane_id then
+    vim.system({ "herdr", "pane", "close", data.pane_id })
   end
   state.backend = nil
   state.data = nil
 end
 
-function M.focus(_, pane_id)
-  vim.system({ "herdr", "agent", "focus", pane_id })
+function M.focus(state)
+  local target = backend_state(state).target
+  if not target then
+    return
+  end
+
+  vim.system({ "herdr", "agent", "focus", target })
 end
 
-function M.send_keys(state, pane_id, keys)
-  if #keys == 1 and keys[1] == "Enter" then
-    vim.system({ "herdr", "agent", "send", pane_id, "\n" })
-    return
-  end
-
+function M.send_keys(state, keys)
   local data = backend_state(state)
-  local resolved_pane_id = data.pane_id or M.resolve_pane_id(pane_id)
-  if not resolved_pane_id then
+
+  if #keys == 1 and keys[1] == "Enter" then
+    if data.target then
+      vim.system({ "herdr", "agent", "send", data.target, "\n" })
+    end
     return
   end
 
-  data.pane_id = resolved_pane_id
+  if not data.pane_id then
+    return
+  end
 
-  local cmd = { "herdr", "pane", "send-keys", resolved_pane_id }
+  local cmd = { "herdr", "pane", "send-keys", data.pane_id }
   vim.list_extend(cmd, keys)
   vim.system(cmd)
 end
 
-function M.send_text(_, pane_id, text, submit)
+function M.send_text(state, text, submit)
+  local target = backend_state(state).target
+  if not target then
+    return
+  end
+
   vim.system({
     "herdr",
     "agent",
     "send",
-    pane_id,
+    target,
     submit and text .. "\r" or text,
   })
 end

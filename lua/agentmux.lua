@@ -78,26 +78,23 @@ function M.start(opts)
 end
 
 function M.stop()
-  local pane_id = M.get_pane_id()
-  if not pane_id then
+  if not M.get_pane_id() then
     return
   end
 
-  get_backend().stop(state, cfg, pane_id)
+  get_backend().stop(state, cfg)
 end
 
 function M.focus()
-  local pane_id = M.get_pane_id()
-  if not pane_id then
+  if not M.get_pane_id() then
     return
   end
-  get_backend().focus(state, pane_id)
+  get_backend().focus(state)
 end
 
----@param pane_id string
 ---@param keys string[]
-local function send_keys(pane_id, keys)
-  get_backend().send_keys(state, pane_id, keys)
+local function send_keys(keys)
+  get_backend().send_keys(state, keys)
 end
 
 ---@text string
@@ -125,8 +122,7 @@ end
 ---@param text string
 ---@param opts { submit: boolean }?
 function M.send(text, opts)
-  local pane_id = M.get_pane_id()
-  if not pane_id then
+  if not M.get_pane_id() then
     vim.notify("Agent pane is not active", vim.log.levels.WARN)
     return
   end
@@ -138,15 +134,15 @@ function M.send(text, opts)
 
   local backend = get_backend()
   if backend.send_text then
-    backend.send_text(state, pane_id, transformed_text, opts and opts.submit)
+    backend.send_text(state, transformed_text, opts and opts.submit)
     return
   else
     local keys = format_keys(transformed_text)
-    send_keys(pane_id, keys)
+    send_keys(keys)
   end
 
   if opts and opts.submit then
-    send_keys(pane_id, { "Enter" })
+    send_keys({ "Enter" })
   end
 end
 

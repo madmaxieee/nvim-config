@@ -71,7 +71,13 @@ function M.start(state, cfg)
   })
 end
 
-function M.stop(state, cfg, pane_id)
+function M.stop(state, cfg)
+  local data = backend_state(state)
+  local pane_id = data.pane_id
+  if not pane_id then
+    return
+  end
+
   local provider = cfg.providers[cfg.provider]
   if provider.stop_agent then
     provider.stop_agent(pane_id)
@@ -85,11 +91,21 @@ function M.stop(state, cfg, pane_id)
   state.data = nil
 end
 
-function M.focus(_, pane_id)
+function M.focus(state)
+  local pane_id = backend_state(state).pane_id
+  if not pane_id then
+    return
+  end
+
   vim.system({ "tmux", "select-pane", "-t", pane_id })
 end
 
-function M.send_keys(_, pane_id, keys)
+function M.send_keys(state, keys)
+  local pane_id = backend_state(state).pane_id
+  if not pane_id then
+    return
+  end
+
   local cmd = { "tmux", "send-keys", "-t", pane_id }
   vim.list_extend(cmd, keys)
   vim.system(cmd)

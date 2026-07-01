@@ -78,6 +78,20 @@ function M.start(state, cfg)
   data.target = target
   data.pane_id = M.resolve_pane_id(target)
   state.backend = "herdr"
+
+  if data.pane_id then
+    vim.system({
+      "herdr",
+      "pane",
+      "resize",
+      "--direction",
+      "right",
+      "--amount",
+      "0.1",
+      "--pane",
+      data.pane_id,
+    })
+  end
 end
 
 function M.stop(state, _, pane_id)

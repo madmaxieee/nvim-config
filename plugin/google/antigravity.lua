@@ -1,4 +1,4 @@
-if not require("flags").on_glinux then
+if vim.fn.executable("antigravity") ~= 1 then
   return {}
 end
 

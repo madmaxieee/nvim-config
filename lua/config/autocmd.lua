@@ -42,14 +42,3 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
   end,
   desc = "Notify when a file is changed externally",
 })
-
-vim.api.nvim_create_autocmd("VimEnter", {
-  group = vim.api.nvim_create_augroup("HerdrRenamePane", { clear = true }),
-  desc = "Rename herdr pane to nvim if inside herdr",
-  callback = function()
-    local herdr_pane_id = vim.env.HERDR_PANE_ID
-    if herdr_pane_id and herdr_pane_id ~= "" then
-      vim.system({ "herdr", "pane", "rename", herdr_pane_id, "nvim" })
-    end
-  end,
-})

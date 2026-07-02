@@ -1,12 +1,12 @@
-if vim.fn.executable("antigravity") ~= 1 then
+if vim.fn.executable("agy") ~= 1 then
   return {}
 end
 
 require("agentmux").setup({
-  provider = "antigravity",
+  provider = "agy",
   providers = {
-    antigravity = {
-      command = "antigravity",
+    agy = {
+      command = "agy",
       tmux_stop_agent = function(pane_id)
         -- stylua: ignore
         vim.system({

@@ -46,6 +46,8 @@ function M.get_pane_id(state)
   return data.pane_id
 end
 
+---@param state AgentMuxState
+---@param cfg AgentMuxConfig
 function M.start(state, cfg)
   local provider = cfg.providers[cfg.provider]
   local target = target_name(cfg.provider)
@@ -55,15 +57,18 @@ function M.start(state, cfg)
     "herdr", "agent", "start", target,
     "--cwd", vim.fn.getcwd(),
     "--split", "right",
+    "--focus",
   }
 
-  for key, value in pairs(provider.env or {}) do
+  -- hint herdr which agent is running for the integration to work
+  local env =
+    vim.tbl_extend("keep", provider.env or {}, { HERDR_AGENT = cfg.provider })
+  for key, value in pairs(env) do
     vim.list_extend(cmd, { "--env", ("%s=%s"):format(key, value) })
   end
 
-  table.insert(cmd, "--focus")
   table.insert(cmd, "--")
-  vim.list_extend(cmd, vim.split(provider.command, " ", { trimempty = true }))
+  vim.list_extend(cmd, provider.command)
 
   local res = vim.system(cmd):wait()
   if res.code ~= 0 then

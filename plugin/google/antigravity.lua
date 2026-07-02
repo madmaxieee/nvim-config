@@ -6,7 +6,7 @@ require("agentmux").setup({
   provider = "agy",
   providers = {
     agy = {
-      command = "agy",
+      command = { "agy" },
       tmux_stop_agent = function(pane_id)
         -- stylua: ignore
         vim.system({

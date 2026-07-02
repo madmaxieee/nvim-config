@@ -3,7 +3,7 @@
 ---@field backend? "auto" | AgentMuxBackendName pane backend (default: "auto")
 
 ---@class AgentMuxProvider
----@field command string
+---@field command string[]
 ---@field env? table<string, string>
 ---@field stop_agent? fun(pane_id: string) backend stop hook
 ---@field format_keys? fun(text: string): string[] construct tmux send-keys arguments from text to send
@@ -18,7 +18,7 @@ local cfg = {
   backend = "auto",
   providers = {
     opencode = {
-      command = "opencode",
+      command = { "opencode" },
       stop_agent = function(pane_id)
         -- stylua: ignore
         vim.system({

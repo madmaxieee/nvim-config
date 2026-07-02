@@ -40,9 +40,9 @@ function M.start(state, cfg)
     -- split "horizontally", to the right
     "-h",
     "-p", "35",
-    -- the coding agent command
-    provider.command,
   }
+
+  vim.list_extend(create_pane_cmd, provider.command)
 
   local res = vim.system(create_pane_cmd, { env = provider.env }):wait()
   if res.code ~= 0 then

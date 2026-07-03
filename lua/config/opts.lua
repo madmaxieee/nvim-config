@@ -52,13 +52,7 @@ vim.opt.smartcase = true
 vim.opt.autoread = true
 
 -- detect utf-16 files
-vim.opt.fileencodings = {
-  "ucs-bom",
-  "utf-8",
-  "utf-16",
-  "default",
-  "latin1",
-}
+vim.opt.fileencodings:append("utf-16")
 
 vim.g.mapleader = vim.keycode("<space>")
 vim.g.maplocalleader = vim.keycode("<space>")

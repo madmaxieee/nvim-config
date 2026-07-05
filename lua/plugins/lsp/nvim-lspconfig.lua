@@ -9,6 +9,7 @@ local SERVERS = {
   "cssls",
   "dockerls",
   "eslint",
+  "fennel_ls",
   "gopls",
   "harper_ls",
   "html",
@@ -34,6 +35,7 @@ local SERVERS = {
 
 local NO_MASON_INSTALL = {
   ["sourcekit"] = true,
+  ["fennel_ls"] = true,
 }
 
 ---@type table<string, vim.lsp.Config | fun(): vim.lsp.Config>

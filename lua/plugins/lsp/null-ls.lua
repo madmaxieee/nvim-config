@@ -85,6 +85,7 @@ return {
         -- custom
         custom.bpfmt,
         custom.cpplint,
+        custom.fnlfmt,
         custom.google_java_format,
         custom.kdlfmt,
         custom.pyformat,

@@ -30,10 +30,6 @@ local LSP_SHOULD_DISABLE_WITH_CIDERLSP = {
   "ts_ls",
 }
 
-local NULL_LS_SHOULD_DISABLE_WITH_CIDERLSP = {
-  "prettierd",
-}
-
 local function enable_pyright_for_type_check()
   -- enable pyright for type checking even if ciderlsp is attached
   vim.api.nvim_create_autocmd("LspAttach", {
@@ -142,11 +138,6 @@ utils.on_load("nvim-lspconfig", function()
       -- disable lsps for languages ciderlsp supports
       for _, name in ipairs(LSP_SHOULD_DISABLE_WITH_CIDERLSP) do
         vim.cmd("lsp disable " .. name)
-      end
-
-      -- disable null-ls sources for languages ciderlsp supports
-      for _, name in ipairs(NULL_LS_SHOULD_DISABLE_WITH_CIDERLSP) do
-        require("null-ls").deregister(name)
       end
 
       enable_pyright_for_type_check()

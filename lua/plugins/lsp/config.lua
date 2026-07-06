@@ -35,26 +35,6 @@ local function lsp_buf_should_enable(client, bufnr)
 end
 
 ---@param client vim.lsp.Client
-local function client_can_format(client)
-  if client:supports_method("textDocument/formatting") then
-    return true
-  end
-  return client.name == "jdtls" or client.name == "lemminx"
-end
-
--- some files like lock files should not be auto formatted
----@param bufnr number
-local function buf_should_auto_format(bufnr)
-  local file_path = vim.api.nvim_buf_get_name(bufnr)
-  -- Get only the filename (tail)
-  local file_name = vim.fn.fnamemodify(file_path, ":t")
-  if file_name == "lazy-lock.json" then
-    return false
-  end
-  return true
-end
-
----@param client vim.lsp.Client
 ---@param bufnr number
 function M.on_attach(client, bufnr)
   set_keymaps(bufnr)
@@ -68,29 +48,6 @@ function M.on_attach(client, bufnr)
     map("i", "<A-l>", function()
       vim.lsp.inline_completion.get()
     end, { buffer = bufnr, desc = "Accept inline completion" })
-  end
-
-  local formatter_filter = lsp_utils.make_formatter_filter(bufnr)
-  if client_can_format(client) and formatter_filter(client) then
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      buffer = bufnr,
-      group = vim.api.nvim_create_augroup(
-        ("lsp.buf[%d].formatOnSave: %s"):format(bufnr, client.name),
-        { clear = true }
-      ),
-      desc = ("Format buffer with %s"):format(client.name),
-      callback = function()
-        if vim.g.FormatOnSave == 0 then
-          return
-        end
-        if not buf_should_auto_format(bufnr) then
-          return
-        end
-        if formatter_filter(client) then
-          vim.lsp.buf.format({ id = client.id })
-        end
-      end,
-    })
   end
 end
 
@@ -133,25 +90,6 @@ function M.init(opts)
       M.on_detach(vim.lsp.get_client_by_id(client_id), bufnr)
     end,
   })
-
-  -- formatting
-  vim.api.nvim_create_user_command("FormatOnSaveEnable", function()
-    vim.g.FormatOnSave = nil
-  end, {})
-  vim.api.nvim_create_user_command("FormatOnSaveDisable", function()
-    vim.g.FormatOnSave = 0
-  end, {})
-
-  vim.api.nvim_create_user_command("Format", function(args)
-    local formatter_filter = lsp_utils.make_formatter_filter()
-    if args.range == 0 then
-      vim.lsp.buf.format({ filter = formatter_filter })
-    else
-      vim.cmd("normal! gv")
-      vim.lsp.buf.format({ filter = formatter_filter })
-    end
-  end, { range = true })
-  vim.cmd.cabbrev("F", "Format")
 
   -- detach lsps from current buffer
   vim.api.nvim_create_user_command("DetachLsp", function()

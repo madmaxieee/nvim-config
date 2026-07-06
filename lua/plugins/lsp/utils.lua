@@ -50,48 +50,6 @@ function M.make_rename_filter(bufnr)
   end
 end
 
-local no_format = {
-  ["eslint"] = true, -- don't auto fix eslint errors
-  ["cmake"] = true,
-}
----@param bufnr number?
-function M.make_formatter_filter(bufnr)
-  local ft = vim.bo[bufnr or 0].filetype
-
-  ---@param client vim.lsp.Client
-  local function formatter_filter(client)
-    if no_format[client.name] then
-      return false
-    end
-    local null_ls = require("null-ls")
-    if ft == "lua" and null_ls.is_registered("stylua") then
-      return client.name == "null-ls"
-    end
-    if
-      vim.tbl_contains({
-        "typescript",
-        "typescriptreact",
-        "javascript",
-        "javascriptreact",
-        "svelte",
-        "json",
-        "jsonc",
-      }, ft) and null_ls.is_registered("prettierd")
-    then
-      return client.name == "null-ls"
-    end
-    if ft == "java" and null_ls.is_registered("google-java-format") then
-      return client.name == "null-ls"
-    end
-    if ft == "python" and null_ls.is_registered("pyformat") then
-      return client.name == "null-ls"
-    end
-    return true
-  end
-
-  return formatter_filter
-end
-
 local default_disabled_lsp = {
   ["copilot"] = true,
   ["cpplint"] = true,
@@ -167,24 +125,6 @@ function M.lsp_disable(server)
       vim.cmd("LspStop " .. server)
       vim.diagnostic.reset(nil, 0)
     end
-  end
-end
-
-function M.null_ls_enable(source_name, source)
-  local null_ls = require("null-ls")
-  set_lsp_enabled_var(source_name, true)
-  if null_ls.is_registered(source_name) then
-    null_ls.enable(source_name)
-  else
-    null_ls.register(source)
-  end
-end
-
-function M.null_ls_disable(source_name)
-  local null_ls = require("null-ls")
-  set_lsp_enabled_var(source_name, false)
-  if null_ls.is_registered(source_name) then
-    null_ls.disable(source_name)
   end
 end
 

@@ -1,0 +1,160 @@
+local function ciderlsp_can_format(bufnr)
+  for _, client in
+    ipairs(vim.lsp.get_clients({ bufnr = bufnr, name = "ciderlsp" }))
+  do
+    if client:supports_method("textDocument/formatting", bufnr) then
+      return true
+    end
+  end
+  return false
+end
+
+local function lsp_format_behavior(bufnr)
+  if ciderlsp_can_format(bufnr) then
+    return "prefer"
+  end
+  return "fallback"
+end
+
+---@type LazySpec
+return {
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    opts = {
+      formatters_by_ft = {
+        -- external
+        bp = { "bpfmt" },
+        d2 = { "d2" },
+        fennel = { "fnlfmt" },
+        fish = { "fish_indent" },
+        java = { "google-java-format" },
+        just = { "just" },
+        nix = { "nixfmt" },
+        -- mason
+        javascript = { "prettierd" },
+        javascriptreact = { "prettierd" },
+        json = { "prettierd" },
+        jsonc = { "prettierd" },
+        kdl = { "kdlfmt" },
+        lua = { "stylua" },
+        markdown = { "prettierd" },
+        mdx = { "prettierd" },
+        svelte = { "prettierd" },
+        typescript = { "prettierd" },
+        typescriptreact = { "prettierd" },
+        typst = { "typstyle" },
+        -- mixed
+        python = function(bufnr)
+          if
+            require("flags").in_google3
+            and require("conform").get_formatter_info("pyformat", bufnr).available
+          then
+            -- external
+            return { "pyformat" }
+          else
+            -- mason
+            return { "ruff_organize_imports", "ruff_format" }
+          end
+        end,
+      },
+      formatters = {
+        bpfmt = function()
+          if vim.env.ANDROID_BUILD_TOP then
+            return {
+              inherit = "bpfmt",
+              command = ("%s/prebuilts/build-tools/linux-x86/bin/bpfmt"):format(
+                vim.env.ANDROID_BUILD_TOP
+              ),
+            }
+          else
+            return { inherit = "bpfmt" }
+          end
+        end,
+        ["google-java-format"] = function()
+          if vim.env.ANDROID_BUILD_TOP then
+            return {
+              inherit = "google-java-format",
+              args = { "--aosp", "-" },
+            }
+          else
+            return { inherit = "google-java-format" }
+          end
+        end,
+        pyformat = { command = "pyformat", args = {}, stdin = true },
+      },
+      default_format_opts = {
+        lsp_format = "fallback",
+      },
+      format_on_save = function(bufnr)
+        if vim.g.DisableAutoFormat or vim.b[bufnr].DisableAutoFormat then
+          return
+        end
+        local file_path = vim.api.nvim_buf_get_name(bufnr)
+        local file_name = vim.fs.basename(file_path)
+        if file_name == "lazy-lock.json" then
+          return
+        end
+        return {
+          lsp_format = lsp_format_behavior(bufnr),
+          timeout_ms = 500,
+        }
+      end,
+    },
+
+    init = function()
+      vim.api.nvim_create_user_command("FormatDisable", function(args)
+        if args.bang then
+          -- FormatDisable! will disable formatting just for this buffer
+          vim.b.DisableAutoFormat = true
+        else
+          vim.g.DisableAutoFormat = true
+        end
+      end, {
+        desc = "Disable autoformat on save",
+        bang = true,
+      })
+      vim.api.nvim_create_user_command("FormatEnable", function()
+        vim.b.DisableAutoFormat = false
+        vim.g.DisableAutoFormat = false
+      end, {
+        desc = "Re-enable autoformat on save",
+      })
+
+      vim.api.nvim_create_user_command("Format", function(args)
+        local range = nil
+        if args.count ~= -1 then
+          local end_line =
+            vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+          range = {
+            start = { args.line1, 0 },
+            ["end"] = { args.line2, end_line:len() },
+          }
+        end
+        require("conform").format({
+          async = true,
+          lsp_format = lsp_format_behavior(0),
+          range = range,
+        })
+      end, { range = true })
+
+      vim.cmd.cabbrev("F", "Format")
+    end,
+  },
+
+  {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "google-java-format",
+        "kdlfmt",
+        "prettierd",
+        "ruff",
+        "stylua",
+        "typstyle",
+      },
+    },
+    opts_extend = { "ensure_installed" },
+  },
+}

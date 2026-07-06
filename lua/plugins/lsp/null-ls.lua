@@ -9,7 +9,6 @@ return {
     opts = {
       ensure_installed = {
         -- formatting
-        "isort",
         "prettierd",
         "stylua",
         "typstyle",
@@ -66,7 +65,6 @@ return {
 
       local sources = {
         -- managed
-        formatting.isort,
         formatting.prettierd,
         formatting.stylua,
         formatting.typstyle,

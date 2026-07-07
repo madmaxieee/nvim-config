@@ -1,21 +1,3 @@
-local function ciderlsp_can_format(bufnr)
-  for _, client in
-    ipairs(vim.lsp.get_clients({ bufnr = bufnr, name = "ciderlsp" }))
-  do
-    if client:supports_method("textDocument/formatting", bufnr) then
-      return true
-    end
-  end
-  return false
-end
-
-local function lsp_format_behavior(bufnr)
-  if ciderlsp_can_format(bufnr) then
-    return "prefer"
-  end
-  return "fallback"
-end
-
 ---@type LazySpec
 return {
   {
@@ -97,7 +79,7 @@ return {
           return
         end
         return {
-          lsp_format = lsp_format_behavior(bufnr),
+          lsp_format = "fallback",
           timeout_ms = 500,
         }
       end,
@@ -134,7 +116,7 @@ return {
         end
         require("conform").format({
           async = true,
-          lsp_format = lsp_format_behavior(0),
+          lsp_format = "fallback",
           range = range,
         })
       end, { range = true })

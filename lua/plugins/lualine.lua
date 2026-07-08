@@ -79,7 +79,9 @@ local function show_file_info()
 end
 
 return {
-  "nvim-lualine/lualine.nvim",
+  "madmaxieee/lualine.nvim",
+  branch = "disable-statusline-option",
+  -- "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
   dependencies = {
     "nvim-tree/nvim-web-devicons",
@@ -95,6 +97,12 @@ return {
         winbar = 1000,
       },
       component_separators = "▕%##",
+      disable_statusline = function(win_id)
+        if vim.w[win_id].oil_preview then
+          return true
+        end
+        return false
+      end,
     },
     sections = {
       lualine_a = {

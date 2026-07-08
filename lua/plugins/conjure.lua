@@ -12,9 +12,4 @@ return {
     ft = { "fennel" },
     config = true,
   },
-
-  -- {
-  --   "gpanders/nvim-parinfer",
-  --   ft = { "fennel" },
-  -- },
 }

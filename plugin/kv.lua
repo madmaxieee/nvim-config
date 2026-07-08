@@ -32,8 +32,6 @@ end, {
         return vim.fn.getcompletion("", "color")
       elseif key == "colorscheme_light" then
         return vim.fn.getcompletion("", "color")
-      elseif key == "opencode_restore" then
-        return { "true", "false" }
       end
     end
   end,

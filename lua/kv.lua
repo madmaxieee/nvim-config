@@ -6,17 +6,15 @@ local config_file = vim.fs.joinpath(vim.fn.stdpath("state"), "kv.json")
 ---@field theme "dark" | "light"
 ---@field colorscheme string
 ---@field colorscheme_light string
----@field opencode_restore boolean
 ---@field agentmux_restore boolean
 
----@alias KvKey "theme" | "colorscheme" | "colorscheme_light" | "opencode_restore" | "agentmux_restore"
+---@alias KvKey "theme" | "colorscheme" | "colorscheme_light" |  "agentmux_restore"
 
 ---@type KvKey[]
 M.keys = {
   "theme",
   "colorscheme",
   "colorscheme_light",
-  "opencode_restore",
   "agentmux_restore",
 }
 

@@ -127,11 +127,8 @@ map({ "n", "x" }, "<leader>rn", function()
 end, { desc = "Toggle relative number" })
 
 map("n", "<leader>rr", function()
-  -- Save flag to restore opencode pane after restart
-  if require("opencode_pane").get_pane_id() then
-    require("kv").set("opencode_restore", true)
-    require("kv").save()
-  elseif require("agentmux").is_active() then
+  -- Save flag to restore agentmux pane after restart
+  if require("agentmux").is_active() then
     require("kv").set("agentmux_restore", true)
     require("kv").save()
   end

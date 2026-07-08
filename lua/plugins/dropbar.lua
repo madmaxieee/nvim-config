@@ -41,8 +41,6 @@ return {
           or vim.bo[buf].ft == "snacks_picker_preview"
           -- folke/noice.nvim
           or vim.bo[buf].ft == "noice"
-          -- NickvanDyke/opencode.nvim
-          or vim.bo[buf].ft == "opencode_terminal"
           -- hedyhli/outline.nvim
           or vim.bo[buf].ft == "Outline"
         then

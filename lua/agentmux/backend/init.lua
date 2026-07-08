@@ -22,7 +22,7 @@ local backends = {
 
 ---@return AgentMuxBackendName
 function M.detect()
-  if vim.env.HERDR_ENV == "1" or vim.env.HERDR_PANE_ID then
+  if require("flags").is_herdr then
     return "herdr"
   end
 

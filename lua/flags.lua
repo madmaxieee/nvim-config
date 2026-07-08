@@ -80,6 +80,10 @@ local function is_low_ram()
   return (vim.uv.get_total_memory() / (1024 * 1024 * 1024)) < 8
 end
 
+local function is_herdr()
+  return vim.env.HERDR_ENV == "1" or vim.env.HERDR_PANE_ID ~= nil
+end
+
 ---@type Flags
 return {
   is_minimal = is_minimal_mode(),
@@ -87,4 +91,5 @@ return {
   in_google3 = is_google3_mode(),
   on_glinux = is_glinux_mode(),
   low_ram = is_low_ram(),
+  is_herdr = is_herdr(),
 }

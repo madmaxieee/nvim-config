@@ -69,7 +69,7 @@ return {
       dashboard = { enabled = false },
       explorer = { enabled = false },
       image = {
-        enabled = true,
+        enabled = not require("flags").is_herdr,
         math = {
           typst = {
             -- change font size

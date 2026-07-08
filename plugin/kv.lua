@@ -38,6 +38,27 @@ end, {
   desc = "Set a kv key",
 })
 
+vim.api.nvim_create_user_command("KvUnSet", function(opts)
+  if #opts.fargs ~= 1 then
+    vim.notify("Usage: KvUnSet <key>", vim.log.levels.ERROR)
+    return
+  end
+  local key = opts.fargs[1]
+  if not vim.tbl_contains(kv.keys, key) then
+    vim.notify("kv: invalid key: " .. key, vim.log.levels.ERROR)
+    return
+  end
+  kv.set(key, nil)
+  kv.save()
+  vim.notify("kv: unset " .. key, vim.log.levels.INFO)
+end, {
+  nargs = 1,
+  complete = function()
+    return kv.keys
+  end,
+  desc = "Unset a kv key",
+})
+
 vim.api.nvim_create_user_command("KvGet", function(opts)
   if #opts.fargs == 0 then
     local msg = "kv settings:"

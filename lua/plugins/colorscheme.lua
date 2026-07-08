@@ -48,7 +48,7 @@ return {
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
-    config = function()
+    init = function()
       startup_colorscheme()
     end,
   },
@@ -57,7 +57,7 @@ return {
     name = "catppuccin",
     lazy = false,
     priority = 1000,
-    config = function()
+    init = function()
       startup_colorscheme()
     end,
   },

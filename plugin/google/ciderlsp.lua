@@ -2,7 +2,6 @@ if not require("flags").in_google3 then
   return
 end
 
-local utils = require("utils")
 local lsp_utils = require("plugins.lsp.utils")
 
 local CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE = {
@@ -70,7 +69,7 @@ local function enable_pyright_for_type_check()
   vim.cmd("lsp enable pyright")
 end
 
-utils.on_load("nvim-lspconfig", function()
+require("utils.lazy").on_load("nvim-lspconfig", function()
   -- http://cl/783896564
   vim.lsp.config("ciderlsp", {
     cmd = {

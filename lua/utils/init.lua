@@ -32,29 +32,6 @@ function M.safe_keymap_set(mode, lhs, rhs, opts)
   end
 end
 
----@param name string
----@param fn fun(name:string)
-function M.on_load(name, fn)
-  local Config = require("lazy.core.config")
-  if Config.plugins[name] and Config.plugins[name]._.loaded then
-    fn(name)
-  else
-    local group_id =
-      vim.api.nvim_create_augroup(("LazyLoad:%s"):format(name), {})
-    vim.api.nvim_create_autocmd("User", {
-      group = group_id,
-      pattern = "LazyLoad",
-      callback = function(event)
-        if event.data == name then
-          vim.api.nvim_del_augroup_by_id(group_id)
-          fn(name)
-          return true
-        end
-      end,
-    })
-  end
-end
-
 ---@param height_ratio number (0.0 - 1.0)
 ---@param width_ratio number (0.0 - 1.0)
 ---@param opts table

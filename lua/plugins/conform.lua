@@ -21,7 +21,7 @@ return {
         jsonc = { "prettierd" },
         kdl = { "kdlfmt" },
         lua = { "stylua" },
-        markdown = { "prettierd" },
+        markdown = { "prettierd", lsp_format = "prefer" },
         mdx = { "prettierd" },
         svelte = { "prettierd" },
         typescript = { "prettierd" },
@@ -78,10 +78,7 @@ return {
         if file_name == "lazy-lock.json" then
           return
         end
-        return {
-          lsp_format = "fallback",
-          timeout_ms = 500,
-        }
+        return { timeout_ms = 500 }
       end,
     },
 
@@ -116,7 +113,6 @@ return {
         end
         require("conform").format({
           async = true,
-          lsp_format = "fallback",
           range = range,
         })
       end, { range = true })

@@ -62,6 +62,31 @@ return {
           end
         end,
       },
+      ["<S-CR>"] = {
+        desc = "Open entry, preserving symlink file path",
+        callback = function()
+          local oil = require("oil")
+          local actions = require("oil.actions")
+
+          local entry = oil.get_cursor_entry()
+          local dir = oil.get_current_dir()
+          if not entry or not dir then
+            actions.select.callback()
+            return
+          end
+
+          local is_symlink_file = entry.type == "link"
+            and vim.tbl_get(entry, "meta", "link_stat", "type") ~= "directory"
+
+          if is_symlink_file then
+            local path = vim.fs.joinpath(dir, entry.name)
+            oil.close()
+            vim.cmd.edit({ args = { path } })
+          else
+            actions.select.callback()
+          end
+        end,
+      },
     },
   },
 }

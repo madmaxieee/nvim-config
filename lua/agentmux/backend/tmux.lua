@@ -79,8 +79,8 @@ function M.stop(state, cfg)
   end
 
   local provider = cfg.providers[cfg.provider]
-  if provider.stop_agent then
-    provider.stop_agent(pane_id)
+  if provider.tmux_stop_agent then
+    provider.tmux_stop_agent(pane_id)
   else
     vim.system({ "tmux", "kill-pane", "-t", pane_id })
   end

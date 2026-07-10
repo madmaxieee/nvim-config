@@ -5,7 +5,7 @@
 ---@class AgentMuxProvider
 ---@field command string[]
 ---@field env? table<string, string>
----@field stop_agent? fun(pane_id: string) backend stop hook
+---@field tmux_stop_agent? fun(pane_id: string) backend stop hook
 ---@field format_keys? fun(text: string): string[] construct tmux send-keys arguments from text to send
 
 ---@class AgentMuxConfig : AgentMuxOptions
@@ -19,13 +19,14 @@ local cfg = {
   providers = {
     opencode = {
       command = { "opencode" },
-      stop_agent = function(pane_id)
-        -- stylua: ignore
-        vim.system({
-          "tmux", "send-keys", "-t", pane_id,
-          -- clear prompt then exit opencode
-          "C-c", "/exit",
-        })
+      tmux_stop_agent = function(pane_id)
+        vim.system({ "tmux", "send-keys", "-t", pane_id, "C-c", "C-d" })
+      end,
+    },
+    codex = {
+      command = { "codex" },
+      tmux_stop_agent = function(pane_id)
+        vim.system({ "tmux", "send-keys", "-t", pane_id, "C-d" })
       end,
     },
   },

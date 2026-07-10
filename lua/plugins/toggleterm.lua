@@ -40,10 +40,14 @@ return {
         _TERM:toggle(nil, "float")
       end, { desc = "Toggle terminal" })
 
+      local function find_jj_root()
+        local path = vim.api.nvim_buf_get_name(0)
+        return vim.fs.root(path == "" and vim.uv.cwd() or path, ".jj")
+      end
+
       --- lazyjj or lazygit
-      local jj_utils = require("utils.jj")
       local lazy_command
-      if jj_utils.find_root() then
+      if find_jj_root() then
         local jj_bin = vim.fn.exepath("jj")
         lazy_command = ("lazyjj --jj-bin %s --ignore-jj-version"):format(jj_bin)
       else

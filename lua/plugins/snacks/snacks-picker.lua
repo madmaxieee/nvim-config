@@ -1,5 +1,6 @@
 return {
   "folke/snacks.nvim",
+  dependencies = { "madmaxieee/jj-diff.nvim" },
   ---@module 'snacks'
   ---@type snacks.Config
   opts = {
@@ -46,8 +47,8 @@ return {
     {
       "<leader>fg",
       function()
-        if require("utils.jj").find_root() ~= nil then
-          require("plugins.snacks.jj").diff()
+        if require("jj-diff").find_root() ~= nil then
+          require("jj-diff.snacks").diff()
         else
           require("snacks").picker.git_status()
         end

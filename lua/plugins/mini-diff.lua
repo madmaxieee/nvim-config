@@ -1,9 +1,8 @@
 return {
   "nvim-mini/mini.diff",
   event = "VeryLazy",
+  dependencies = { "madmaxieee/jj-diff.nvim" },
   config = function()
-    local jj_source = require("plugins.mini-diff.jj-source")
-
     require("mini.diff").setup({
       view = {
         style = "sign",
@@ -26,7 +25,7 @@ return {
         algorithm = "patience",
       },
       source = {
-        jj_source(),
+        require("jj-diff").source(),
         require("mini.diff").gen_source.git(),
         require("mini.diff").gen_source.save(),
         require("mini.diff").gen_source.none(),

@@ -23,6 +23,25 @@ map({ "n", "x" }, "<leader>af", function()
 end, { desc = "Pick a predefined prompt" })
 
 local kv = require("kv")
+vim.api.nvim_create_autocmd("VimEnter", {
+  once = true,
+  callback = function()
+    local provider = kv.get("agentmux_provider")
+    if type(provider) == "string" then
+      agentmux.set_provider(provider)
+    end
+  end,
+})
+
+local function set_provider(provider)
+  if not agentmux.set_provider(provider) then
+    return false
+  end
+  kv.set("agentmux_provider", provider)
+  kv.save()
+  return true
+end
+
 if kv.get("agentmux_restore") then
   kv.set("agentmux_restore", false)
   kv.save()
@@ -52,7 +71,7 @@ vim.api.nvim_create_user_command("AgentMuxProvider", function(opts)
       prompt = "Select AgentMux Provider (current: " .. current .. ")",
     }, function(choice)
       if choice then
-        if agentmux.set_provider(choice) then
+        if set_provider(choice) then
           vim.notify(
             "AgentMux provider set to: " .. choice,
             vim.log.levels.INFO
@@ -63,7 +82,7 @@ vim.api.nvim_create_user_command("AgentMuxProvider", function(opts)
     return
   end
 
-  if agentmux.set_provider(provider) then
+  if set_provider(provider) then
     vim.notify("AgentMux provider set to: " .. provider, vim.log.levels.INFO)
   end
 end, {

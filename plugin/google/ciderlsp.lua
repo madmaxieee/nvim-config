@@ -139,7 +139,24 @@ require("utils.lazy").on_load("nvim-lspconfig", function()
         vim.cmd("lsp disable " .. name)
       end
 
+      -- Python type checking from ciderlsp is not great
       enable_pyright_for_type_check()
+
+      -- Fixes ciderlsp's rename behavior. ciderlsp for some reason does not set
+      -- the default text of the vim.ui.input when renaming by default.
+      vim.keymap.set("n", "<leader>ra", function()
+        vim.ui.input({
+          prompt = "New name",
+          default = vim.fn.expand("<cword>"),
+        }, function(name)
+          if name and name ~= "" then
+            vim.lsp.buf.rename(name)
+          end
+        end)
+      end, {
+        buf = args.buf,
+        desc = "ciderlsp rename",
+      })
 
       vim.api.nvim_del_augroup_by_id(ciderlsp_attach_once_group)
     end,

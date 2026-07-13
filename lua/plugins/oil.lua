@@ -30,7 +30,7 @@ return {
     },
   },
   opts = {
-    delete_to_trash = true,
+    delete_to_trash = not require("flags").in_google3,
     float = {
       border = "rounded",
       -- roughly the same size as snacks.picker

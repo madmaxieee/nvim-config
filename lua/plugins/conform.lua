@@ -78,7 +78,7 @@ return {
         if file_name == "lazy-lock.json" then
           return
         end
-        return { timeout_ms = 500 }
+        return { timeout_ms = 1000 }
       end,
     },
 
@@ -114,6 +114,7 @@ return {
         require("conform").format({
           async = true,
           range = range,
+          timeout_ms = 1000,
         })
       end, { range = true })
 

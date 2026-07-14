@@ -2,9 +2,7 @@ if not require("flags").in_google3 then
   return
 end
 
-local lsp_utils = require("plugins.lsp.utils")
-
-local CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE = {
+local _CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE = {
   bzl = {
     "documentHighlightProvider",
     "inlayHintProvider",
@@ -19,55 +17,16 @@ local CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE = {
   },
 }
 
-local LSP_SHOULD_DISABLE_WITH_CIDERLSP = {
+local _LSP_SHOULD_DISABLE_WITH_CIDERLSP = {
   "clangd",
   "copilot",
   "eslint",
   "gopls",
   "jdtls",
+  "pyrefly",
   "ruff",
   "ts_ls",
 }
-
-local function enable_pyright_for_type_check()
-  -- enable pyright for type checking even if ciderlsp is attached
-  vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("ciderlsp.other", { clear = true }),
-    callback = function(_args)
-      local client = vim.lsp.get_client_by_id(_args.data.client_id)
-      if not client then
-        return
-      end
-      if client.name == "pyright" then
-        client.server_capabilities.completionProvider = nil
-        client.server_capabilities.definitionProvider = nil
-        -- client.server_capabilities.diagnosticProvider = nil
-        client.server_capabilities.documentHighlightProvider = nil
-        client.server_capabilities.documentSymbolProvider = nil
-        client.server_capabilities.hoverProvider = nil
-        client.server_capabilities.implementationProvider = nil
-        client.server_capabilities.inlayHintProvider = nil
-        client.server_capabilities.referencesProvider = nil
-        client.server_capabilities.renameProvider = nil
-        client.server_capabilities.semanticTokensProvider = nil
-        client.server_capabilities.signatureHelpProvider = nil
-        client.server_capabilities.typeDefinitionProvider = nil
-        client.server_capabilities.workspaceSymbolProvider = nil
-      end
-    end,
-  })
-  vim.lsp.config("pyright", {
-    handlers = {
-      -- can't find deps not in google3
-      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
-        code = { "reportMissingImports" },
-        message = { ".* is unknown import symbol" },
-      }),
-    },
-  })
-  vim.cmd("lsp disable pyright")
-  vim.cmd("lsp enable pyright")
-end
 
 require("utils.lazy").on_load("nvim-lspconfig", function()
   -- http://cl/783896564
@@ -129,18 +88,15 @@ require("utils.lazy").on_load("nvim-lspconfig", function()
       -- ciderlsp does not support some methods on certain languages
       local ft = vim.bo[args.buf].filetype
       for _, capability in
-        ipairs(CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE[ft] or {})
+        ipairs(_CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE[ft] or {})
       do
         ciderlsp_client.server_capabilities[capability] = nil
       end
 
       -- disable lsps for languages ciderlsp supports
-      for _, name in ipairs(LSP_SHOULD_DISABLE_WITH_CIDERLSP) do
+      for _, name in ipairs(_LSP_SHOULD_DISABLE_WITH_CIDERLSP) do
         vim.cmd("lsp disable " .. name)
       end
-
-      -- Python type checking from ciderlsp is not great
-      enable_pyright_for_type_check()
 
       -- Fixes ciderlsp's rename behavior. ciderlsp for some reason does not set
       -- the default text of the vim.ui.input when renaming by default.
@@ -166,5 +122,6 @@ end)
 vim.filetype.add({
   extension = {
     gcl = "gcl",
+    txtpb = "pbtext",
   },
 })

@@ -19,7 +19,7 @@ local SERVERS = {
   "lua_ls",
   "nil_ls",
   "ols",
-  "pyright",
+  "pyrefly",
   "ruff",
   "rust_analyzer",
   "sourcekit",

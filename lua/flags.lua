@@ -7,53 +7,63 @@
 
 local cwd = vim.uv.cwd() or vim.fn.getcwd()
 
+local function _is_temp_file(path)
+  -- macOS temp paths may look like this:
+  -- "/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.UDKOra60Bm.fish"
+  -- "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/editor-Hj11cQ.jjdescription"
+  -- "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.0jb32zqIvy.fish"
+  return (
+    vim.fn.has("mac") == 1
+    and string.match(path, "/var/folders/[^/]+/[^/]+/T/")
+  ) or string.match(path, "^/tmp/")
+end
+
 local function is_minimal_mode()
-  -- allow override with `nvim --cmd 'lua vim.g.minimal_mode=true'`
-  if vim.g.minimal_mode then
-    return true
-  end
-
-  -- when nvim used by tmux scrollback buffer
-  if vim.env.TMUX_SCROLLBACK then
-    return true
-  end
-
-  -- when nvim used by git to edit commit messages
-  if vim.env.GIT_EXEC_PATH then
-    return true
-  end
-
-  -- when nvim used by opencode to edit prompt
-  if vim.env.OPENCODE then
+  if
+    -- allow override with `nvim --cmd 'lua vim.g.minimal_mode=true'`
+    vim.g.minimal_mode
+    -- when used in tmux to view scrollback buffer
+    or vim.env.TMUX_SCROLLBACK
+    -- when nvim used by git to edit commit messages
+    or vim.env.GIT_EXEC_PATH
+    -- when used in opencode to edit prompt
+    or vim.env.OPENCODE
+  then
     return true
   end
 
   local argc = vim.fn.argc()
   local argv = vim.fn.argv()
-  -- if on macos then argv will be like this:
-  -- { "/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.UDKOra60Bm.fish" }
-  -- { "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/editor-Hj11cQ.jjdescription" }
-  -- { "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.0jb32zqIvy.fish" }
-  if argc == 1 then
-    if
-      vim.fn.has("mac") == 1
-        and string.match(argv[1], "/var/folders/[^/]+/[^/]+/T/")
-      or vim.fn.has("linux") == 1 and string.match(argv[1], "^/tmp/")
-    then
-      -- when used by fish shell to edit command line
-      if string.match(argv[1], "/tmp%.%w+%.fish$") then
-        return true
-      end
-      -- when used by jujitsu to edit description
-      if string.match(argv[1], "/editor%-%w+%.jjdescription$") then
-        return true
-      end
-    end
-  end
 
-  -- when nvim is used in vipe (my script)
-  if argc == 1 and string.match(argv[1], "^/tmp/vipe%.[0-9]+%.txt$") then
-    return true
+  if argc == 1 and _is_temp_file(argv[1]) then
+    local path = argv[1]
+    local file_name = vim.fs.basename(path)
+    -- when used by fish shell to edit command line
+    if
+      file_name:match("^tmp%.%w+%.fish$")
+      or path:match("/fish%.%w+/command%-line%.fish")
+    then
+      return true
+    end
+    -- when used by jujitsu to edit description
+    if file_name:match("^editor%-%w+%.jjdescription$") then
+      return true
+    end
+    -- when used in vipe (my script)
+    if file_name:match("^vipe%.[0-9]+%.txt$") then
+      return true
+    end
+    -- when used in jetski to edit prompt
+    if file_name:match("^jetski%-prompt%-[0-9]+%.txt$") then
+      return true
+    end
+    -- when used in herdr to view scrollabck buffer
+    if
+      vim.env.HERDR_ENV == "1"
+      and file_name:match("^herdr%-scrollback%-.+%.txt$")
+    then
+      return true
+    end
   end
 
   return false

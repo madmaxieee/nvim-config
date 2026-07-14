@@ -48,12 +48,24 @@ return {
       "<leader>fg",
       function()
         if require("jj-diff").find_root() ~= nil then
-          require("jj-diff.snacks").diff()
+          require("jj-diff.snacks").status()
         else
           require("snacks").picker.git_status()
         end
       end,
-      desc = "Git status",
+      desc = "jj or git status",
+    },
+
+    {
+      "<leader>fd",
+      function()
+        if require("jj-diff").find_root() ~= nil then
+          require("jj-diff.snacks").diff()
+        else
+          require("snacks").picker.git_diff()
+        end
+      end,
+      desc = "jj or git diff",
     },
 
     {
@@ -131,14 +143,6 @@ return {
         require("snacks").picker.git_files()
       end,
       desc = "Find git files",
-    },
-
-    {
-      "<leader>fd",
-      function()
-        require("snacks").picker.diagnostics()
-      end,
-      desc = "Find diagnostics",
     },
 
     {

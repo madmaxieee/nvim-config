@@ -70,27 +70,14 @@ return {
 
   {
     "saghen/blink.pairs",
-    build = "nix run .#build-plugin",
-    event = { "InsertEnter", "CmdlineEnter" },
-    config = function()
-      local opts = {
-        highlights = { enabled = false },
-        mappings = require("blink.pairs.config.mappings").default,
-      }
-      -- TODO: open a PR to blink.pairs
-      table.insert(
-        ---@diagnostic disable-next-line: param-type-mismatch
-        opts.mappings.pairs["'"],
-        ---@type blink.pairs.RuleDefinition
-        {
-          "''",
-          when = function(ctx)
-            return ctx:text_before_cursor(1) == "'"
-          end,
-          languages = { "nix" },
-        }
-      )
-      require("blink.pairs").setup(opts)
+    ---@module 'blink.lib'
+    dependencies = { "saghen/blink.lib" },
+    build = function()
+      require("blink.pairs").build():pwait(60000)
     end,
+    event = { "InsertEnter", "CmdlineEnter" },
+    opts = {
+      highlights = { enabled = false },
+    },
   },
 }

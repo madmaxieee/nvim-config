@@ -7,36 +7,8 @@ local function show_macro_recording()
   end
 end
 
----@diagnostic disable-next-line: unused-local, unused-function
-local function show_git_status()
-  if not vim.b.gitsigns_head or vim.b.gitsigns_git_status then
-    return ""
-  end
-
-  local git_status = vim.b.gitsigns_status_dict
-
-  local added = (git_status.added and git_status.added ~= 0)
-      and ("  " .. git_status.added)
-    or ""
-  local changed = (git_status.changed and git_status.changed ~= 0)
-      and ("  " .. git_status.changed)
-    or ""
-  local removed = (git_status.removed and git_status.removed ~= 0)
-      and ("  " .. git_status.removed)
-    or ""
-  local branch_name = "  " .. git_status.head
-
-  return branch_name .. added .. changed .. removed
-end
-
-local function show_branch()
-  if not vim.b.gitsigns_head or vim.b.gitsigns_git_status then
-    return ""
-  end
-
-  local git_status = vim.b.gitsigns_status_dict
-
-  return "  " .. git_status.head
+local function show_jj_log()
+  return vim.b.jj_desc or ""
 end
 
 local function show_lsp_status()
@@ -78,6 +50,7 @@ local function show_file_info()
   return icon .. name
 end
 
+---@type LazySpec
 return {
   "madmaxieee/lualine.nvim",
   branch = "disable-statusline-option",
@@ -86,6 +59,13 @@ return {
   dependencies = {
     "nvim-tree/nvim-web-devicons",
     "cbochs/grapple.nvim",
+    {
+      url = "https://tangled.org/bpavuk.neocities.org/jj-log.nvim",
+      opts = {
+        out_no_jj_repo = "",
+        out_no_desc = "(no description set)",
+      },
+    },
   },
   opts = {
     options = {
@@ -114,7 +94,7 @@ return {
         { "file-info", fmt = show_file_info },
       },
       lualine_c = {
-        { "_branch", fmt = show_branch },
+        { "jj_log", fmt = show_jj_log },
         "diff",
         "diagnostics",
       },

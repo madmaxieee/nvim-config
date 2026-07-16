@@ -15,6 +15,13 @@ local _CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE = {
     "documentHighlightProvider",
     "inlayHintProvider",
   },
+  proto = {
+    "documentHighlightProvider",
+    "inlayHintProvider",
+  },
+  typescript = {
+    "documentHighlightProvider",
+  },
 }
 
 local _LSP_SHOULD_DISABLE_WITH_CIDERLSP = {

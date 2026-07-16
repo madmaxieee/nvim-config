@@ -1,4 +1,4 @@
----@class AgentmuxContextOpts
+---@class AgentMuxContextOpts
 ---@field buf integer
 ---@field win integer
 
@@ -97,7 +97,7 @@ local function format_diagnostic(diagnostic)
   )
 end
 
----@type table<string, fun(opts: AgentmuxContextOpts): string?>
+---@type table<string, fun(opts: AgentMuxContextOpts): string?>
 M.contexts = {
   this = function(opts)
     local range = get_selection_range(opts.buf)
@@ -152,7 +152,7 @@ M.contexts = {
 }
 
 ---@param text string
----@param opts AgentmuxContextOpts
+---@param opts AgentMuxContextOpts
 ---@return string
 function M.transform(text, opts)
   local output, _ = text:gsub("@(%w+)", function(name)

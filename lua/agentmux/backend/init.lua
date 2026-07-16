@@ -7,6 +7,7 @@
 ---@class AgentMuxBackend
 ---@field get_pane_id fun(state: AgentMuxState): string?
 ---@field start fun(state: AgentMuxState, cfg: AgentMuxConfig)
+---@field restore_or_start fun(state: AgentMuxState, cfg: AgentMuxConfig, restore_opts: AgentMuxRestoreOpts)
 ---@field stop fun(state: AgentMuxState, cfg: AgentMuxConfig)
 ---@field focus fun(state: AgentMuxState)
 ---@field send_keys fun(state: AgentMuxState, keys: string[])

@@ -12,6 +12,11 @@
 ---@field providers? table<string, AgentMuxProvider>
 ---@field prompts? string[]
 
+---@class AgentMuxRestoreOpts
+---@field backend "auto" | AgentMuxBackendName
+---@field provider string
+---@field pane_id string
+
 ---@type AgentMuxConfig
 local cfg = {
   provider = "opencode",
@@ -76,6 +81,11 @@ function M.start(opts)
 
   opts = vim.tbl_deep_extend("force", cfg, opts or {})
   get_backend(opts).start(state, opts)
+end
+
+---@param opts AgentMuxRestoreOpts
+function M.restore(opts)
+  get_backend({ backend = opts.backend }).restore_or_start(state, cfg, opts)
 end
 
 function M.stop()

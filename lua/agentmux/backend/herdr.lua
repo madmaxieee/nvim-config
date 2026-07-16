@@ -1,4 +1,4 @@
----@class AgentMuxHerdrBackend : AgentMuxBackend
+---@class AgentMuxBackend
 local M = {}
 
 ---@class AgentMuxHerdrState
@@ -19,7 +19,7 @@ local function target_name(provider)
   return ("agentmux-%s-%s-%s"):format(provider, cwd_hash, vim.uv.os_getpid())
 end
 
-function M.resolve_pane_id(target)
+local function resolve_pane_id(target)
   local res = vim.system({ "herdr", "agent", "get", target }):wait()
   if res.code ~= 0 then
     return nil
@@ -36,7 +36,7 @@ end
 function M.get_pane_id(state)
   local data = backend_state(state)
   if data.target then
-    data.pane_id = M.resolve_pane_id(data.target)
+    data.pane_id = resolve_pane_id(data.target)
     if not data.pane_id then
       data.target = nil
       state.backend = nil
@@ -81,7 +81,7 @@ function M.start(state, cfg)
 
   local data = backend_state(state)
   data.target = target
-  data.pane_id = M.resolve_pane_id(target)
+  data.pane_id = resolve_pane_id(target)
   state.backend = "herdr"
 
   if data.pane_id then
@@ -96,6 +96,40 @@ function M.start(state, cfg)
       "--pane",
       data.pane_id,
     })
+  end
+end
+
+---@param pane_id string
+---@return string?
+local function get_target_from_pane_id(pane_id)
+  local res = vim.system({ "herdr", "agent", "list" }):wait()
+  if res.code ~= 0 then
+    return
+  end
+
+  local ok, data = pcall(vim.json.decode, res.stdout)
+  if not ok then
+    return
+  end
+
+  local agents = vim.tbl_get(data, "result", "agents")
+  for _, agent_info in ipairs(agents) do
+    if agent_info.pane_id == pane_id then
+      return agent_info.name
+    end
+  end
+end
+
+function M.restore_or_start(state, cfg, restore_opts)
+  local target = get_target_from_pane_id(restore_opts.pane_id)
+  if target then
+    local data = backend_state(state)
+    data.target = target
+    data.pane_id = restore_opts.pane_id
+    state.backend = "herdr"
+    vim.notify("agentmux: restored link to agent pane")
+  else
+    M.start(state, cfg)
   end
 end
 

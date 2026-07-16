@@ -42,19 +42,23 @@ local function set_provider(provider)
   return true
 end
 
-if kv.get("agentmux_restore") then
-  kv.set("agentmux_restore", false)
+local agentmux_restore = kv.get("agentmux_restore")
+if agentmux_restore then
+  kv.set("agentmux_restore", nil)
   kv.save()
   vim.api.nvim_create_autocmd("User", {
     pattern = "LazyDone",
     once = true,
     callback = function()
-      vim.schedule(agentmux.start)
+      vim.schedule(function()
+        require("agentmux").restore(agentmux_restore)
+      end)
     end,
   })
 end
 
-vim.api.nvim_create_autocmd("VimLeavePre", {
+-- does not trigger on :restart
+vim.api.nvim_create_autocmd("UILeave", {
   group = vim.api.nvim_create_augroup("agentmux.cleanup", { clear = true }),
   desc = "cleanup agent pane on exit",
   callback = function()

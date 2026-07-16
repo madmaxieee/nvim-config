@@ -127,9 +127,14 @@ map({ "n", "x" }, "<leader>rn", function()
 end, { desc = "Toggle relative number" })
 
 map("n", "<leader>rr", function()
+  local agentmux = require("agentmux")
   -- Save flag to restore agentmux pane after restart
-  if require("agentmux").is_active() then
-    require("kv").set("agentmux_restore", true)
+  if agentmux.is_active() then
+    require("kv").set("agentmux_restore", {
+      backend = "herdr",
+      pane_id = agentmux.get_pane_id(),
+      provider = agentmux.get_provider(),
+    } --[[@as AgentMuxRestoreOpts]])
     require("kv").save()
   end
   vim.cmd("restart")

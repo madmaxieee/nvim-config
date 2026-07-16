@@ -10,7 +10,7 @@ end, {})
 ---@param conf Kv?
 local function maybe_set_colorscheme(conf)
   if not conf then
-    conf = kv.get()
+    conf = kv.get_all()
   end
   if not conf then
     return

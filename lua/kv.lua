@@ -94,16 +94,20 @@ function M.is_loaded()
   return config ~= nil
 end
 
----@param key KvKey?
+function M.get_all()
+  if not config then
+    config = read_config()
+  end
+  return vim.deepcopy(config or {})
+end
+
+---@param key KvKey
 function M.get(key)
   if not config then
     config = read_config()
   end
   if not config then
     return nil
-  end
-  if key == nil then
-    return vim.deepcopy(config)
   end
   return config[key]
 end

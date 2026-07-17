@@ -69,6 +69,7 @@ return {
       dashboard = { enabled = false },
       explorer = { enabled = false },
       image = {
+        -- herdr has experimental KGP support but is is still buggy with snacks.image
         enabled = not require("flags").is_herdr,
         math = {
           typst = {

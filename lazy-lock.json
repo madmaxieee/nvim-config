@@ -34,6 +34,7 @@
   "mini.diff": { "branch": "main", "commit": "b3d8507929f8df54ab9b08c77564c1afd7d62110" },
   "mini.surround": { "branch": "main", "commit": "c30ec60393b256427512c6996a2b37d9cbcbb66a" },
   "neogit": { "branch": "master", "commit": "95295edaa26e8e8db5a9bc4119256e602311c6bc" },
+  "neojj": { "branch": "main", "commit": "4e24d67ba032710c3a2d198fa7336760f28ed418" },
   "noice.nvim": { "branch": "main", "commit": "7bfd942445fb63089b59f97ca487d605e715f155" },
   "nui.nvim": { "branch": "main", "commit": "de740991c12411b663994b2860f1a4fd0937c130" },
   "nvim-colorizer.lua": { "branch": "master", "commit": "72a05f62c52241bc7441c820eb53946f92b2e6a4" },

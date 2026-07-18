@@ -7,6 +7,7 @@ return {
     opts = {
       formatters_by_ft = {
         -- external
+        -- keep-sorted start
         bp = { "bpfmt" },
         d2 = { "d2" },
         fennel = { "fnlfmt" },
@@ -14,7 +15,10 @@ return {
         java = { "google-java-format" },
         just = { "just" },
         nix = { "nixfmt" },
+        -- keep-sorted end
+
         -- mason
+        -- keep-sorted start
         javascript = { "prettierd" },
         javascriptreact = { "prettierd" },
         json = { "prettierd" },
@@ -27,6 +31,8 @@ return {
         typescript = { "prettierd" },
         typescriptreact = { "prettierd" },
         typst = { "typstyle" },
+        -- keep-sorted end
+
         -- mixed
         python = function(bufnr)
           if
@@ -40,6 +46,10 @@ return {
             return { "ruff_organize_imports", "ruff_format" }
           end
         end,
+
+        -- other
+        ["_"] = { lsp_format = "last" },
+        ["*"] = { "keep-sorted" },
       },
       formatters = {
         bpfmt = function()
@@ -72,9 +82,6 @@ return {
             "MD013.reflow=true",
           },
         },
-      },
-      default_format_opts = {
-        lsp_format = "fallback",
       },
       format_on_save = function(bufnr)
         if vim.g.DisableAutoFormat or vim.b[bufnr].DisableAutoFormat then

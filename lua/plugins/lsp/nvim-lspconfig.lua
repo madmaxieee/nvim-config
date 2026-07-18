@@ -2,6 +2,7 @@ local lsp_config = require("plugins.lsp.config")
 local lsp_utils = require("plugins.lsp.utils")
 
 local SERVERS = {
+  -- keep-sorted start
   "bashls",
   "clangd",
   "cmake",
@@ -31,6 +32,7 @@ local SERVERS = {
   "typos_lsp",
   "yamlls",
   "zls",
+  -- keep-sorted end
 }
 
 local NO_MASON_INSTALL = {
@@ -40,6 +42,7 @@ local NO_MASON_INSTALL = {
 
 ---@type table<string, vim.lsp.Config | fun(): vim.lsp.Config>
 local server_configs = {
+  -- keep-sorted start block=yes
   clangd = {
     cmd = {
       "clangd",
@@ -81,42 +84,9 @@ local server_configs = {
       },
     },
   },
-  rust_analyzer = function()
-    if vim.env.ANDROID_BUILD_TOP then
-      local android_root = vim.env.ANDROID_BUILD_TOP
-      return {
-        cmd = {
-          android_root
-            .. "/prebuilts/rust-toolchain/linux-x86/stable/rust-analyzer",
-        },
-        settings = {
-          ["rust-analyzer"] = {
-            rustfmt = {
-              extraArgs = {
-                "--config-path",
-                (android_root .. "/build/soong/scripts/rustfmt.toml"),
-              },
-            },
-            linkedProjects = { (android_root .. "/rust-project.json") },
-            procMacro = { enable = false },
-          },
-        },
-      }
-    else
-      return {}
-    end
-  end,
   sourcekit = {
     cmd = { "xcrun", "sourcekit-lsp" },
   },
-  tailwindcss = function()
-    local original_ft = vim.lsp.config["tailwindcss"].filetypes or {}
-    return {
-      filetypes = vim.tbl_filter(function(item)
-        return item ~= "markdown"
-      end, original_ft),
-    }
-  end,
   taplo = {
     root_dir = vim.uv.cwd() or vim.fn.getcwd(),
     handlers = {
@@ -145,6 +115,40 @@ local server_configs = {
       },
     },
   },
+  -- keep-sorted end
+  rust_analyzer = function()
+    if vim.env.ANDROID_BUILD_TOP then
+      local android_root = vim.env.ANDROID_BUILD_TOP
+      return {
+        cmd = {
+          android_root
+            .. "/prebuilts/rust-toolchain/linux-x86/stable/rust-analyzer",
+        },
+        settings = {
+          ["rust-analyzer"] = {
+            rustfmt = {
+              extraArgs = {
+                "--config-path",
+                (android_root .. "/build/soong/scripts/rustfmt.toml"),
+              },
+            },
+            linkedProjects = { (android_root .. "/rust-project.json") },
+            procMacro = { enable = false },
+          },
+        },
+      }
+    else
+      return {}
+    end
+  end,
+  tailwindcss = function()
+    local original_ft = vim.lsp.config["tailwindcss"].filetypes or {}
+    return {
+      filetypes = vim.tbl_filter(function(item)
+        return item ~= "markdown"
+      end, original_ft),
+    }
+  end,
 }
 
 return {

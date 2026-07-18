@@ -78,7 +78,7 @@ return {
       },
       component_separators = "▕%##",
       disable_statusline = function(win_id)
-        if vim.w[win_id].oil_preview then
+        if vim.w[win_id].oil_preview or vim.w[win_id].is_oil_win then
           return true
         end
         return false

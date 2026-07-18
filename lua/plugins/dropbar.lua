@@ -48,6 +48,24 @@ return {
         end
         return true
       end,
+      update_events = {
+        win = {
+          -- moving OptionSet:modified event to update_events.win seems to be
+          -- more robust than update_events.buf
+          {
+            event = "OptionSet",
+            pattern = "modified",
+          },
+          "CursorMoved",
+          "WinEnter",
+          "WinResized",
+        },
+        buf = {
+          "FileChangedShellPost",
+          "TextChanged",
+          "ModeChanged",
+        },
+      },
     },
   },
 }

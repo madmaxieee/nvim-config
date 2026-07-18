@@ -21,7 +21,7 @@ return {
         jsonc = { "prettierd" },
         kdl = { "kdlfmt" },
         lua = { "stylua" },
-        markdown = { "prettierd", lsp_format = "prefer" },
+        markdown = { "rumdl", lsp_format = "prefer" },
         mdx = { "prettierd" },
         svelte = { "prettierd" },
         typescript = { "prettierd" },
@@ -56,15 +56,22 @@ return {
         end,
         ["google-java-format"] = function()
           if vim.env.ANDROID_BUILD_TOP then
-            return {
-              inherit = "google-java-format",
-              args = { "--aosp", "-" },
-            }
+            return { prepend_args = { "--aosp" } }
           else
-            return { inherit = "google-java-format" }
+            return {}
           end
         end,
         pyformat = { command = "pyformat", args = {}, stdin = true },
+        rumdl = {
+          prepend_args = {
+            "--config",
+            "MD060.enabled=true",
+            "--config",
+            "MD013.line-length=80",
+            "--config",
+            "MD013.reflow=true",
+          },
+        },
       },
       default_format_opts = {
         lsp_format = "fallback",
@@ -130,6 +137,7 @@ return {
         "kdlfmt",
         "prettierd",
         "ruff",
+        "rumdl",
         "stylua",
         "typstyle",
       },

@@ -192,12 +192,4 @@ return {
       use_default_keymaps = false,
     },
   },
-
-  {
-    "mtrajano/tssorter.nvim",
-    cmd = "TSSort",
-    ---@module "tssorter"
-    ---@type TssorterOpts
-    opts = {},
-  },
 }

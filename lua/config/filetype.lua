@@ -1,15 +1,20 @@
 vim.filetype.add({
   extension = {
-    typ = "typst",
-    mdx = "mdx",
+    -- keep-sorted start
     d2 = "d2",
-    log = "log",
     justfile = "just",
+    log = "log",
+    mdx = "mdx",
+    typ = "typst",
+    -- keep-sorted end
   },
   pattern = {
+    -- keep-sorted start
     [".*/%.env.*"] = "conf",
     [".*/ghostty/config"] = "conf",
-    [".*/logcat%.?%d*"] = "log",
     [".*/kitty/%w+%.conf"] = "kitty",
+    [".*/logcat%.?%d*"] = "log",
+    [".*/logcat.*%.txt"] = "log",
+    -- keep-sorted end
   },
 })

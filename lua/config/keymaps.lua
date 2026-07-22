@@ -96,7 +96,7 @@ map("c", "<C-f>", function()
 end, { expr = true })
 
 vim.api.nvim_create_autocmd("CmdwinEnter", {
-  group = vim.api.nvim_create_augroup("QuitCmdWin", { clear = true }),
+  group = vim.api.nvim_create_augroup("QuitCmdWin", {}),
   callback = function()
     if not vim.g.requested_cmdwin then
       vim.cmd("q")

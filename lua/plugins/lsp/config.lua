@@ -73,7 +73,7 @@ function M.init(opts)
 
   -- do normal on attach/detach work
   vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("lsp.attach", { clear = true }),
+    group = vim.api.nvim_create_augroup("lsp.attach", {}),
     callback = function(args)
       local bufnr = args.buf
       local client_id = args.data.client_id
@@ -83,7 +83,7 @@ function M.init(opts)
     end,
   })
   vim.api.nvim_create_autocmd("LspDetach", {
-    group = vim.api.nvim_create_augroup("lsp.detach", { clear = true }),
+    group = vim.api.nvim_create_augroup("lsp.detach", {}),
     callback = function(args)
       local bufnr = args.buf
       local client_id = args.data.client_id
@@ -104,7 +104,7 @@ function M.init(opts)
 
   -- disable lsp servers per buffer under some conditions
   vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("lsp.disable.buffer", { clear = true }),
+    group = vim.api.nvim_create_augroup("lsp.disable.buffer", {}),
     callback = function(args)
       local bufnr = args.buf
       local client_id = args.data.client_id
@@ -164,7 +164,7 @@ function M.init(opts)
   vim.api.nvim_create_autocmd("SessionLoadPost", {
     group = vim.api.nvim_create_augroup(
       "lsp.disable.project",
-      { clear = true }
+      {}
     ),
     callback = function()
       for _, lsp in ipairs(servers) do

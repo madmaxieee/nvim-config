@@ -83,7 +83,7 @@ end, {
   desc = "Get a kv key value",
 })
 
-local augroup = vim.api.nvim_create_augroup("kv", { clear = true })
+local augroup = vim.api.nvim_create_augroup("kv", {})
 
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",

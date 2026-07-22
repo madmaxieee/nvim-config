@@ -45,7 +45,7 @@ function M.setup_auto_commit(opts)
 
   if git("rev-parse --is-inside-work-tree") == "true\n" then
     local auto_save_group =
-      vim.api.nvim_create_augroup("SaveObsidian", { clear = true })
+      vim.api.nvim_create_augroup("SaveObsidian", {})
     vim.api.nvim_create_autocmd("FocusGained", {
       group = auto_save_group,
       callback = function()

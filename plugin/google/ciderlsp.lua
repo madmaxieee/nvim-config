@@ -82,7 +82,7 @@ require("utils.lazy").on_load("nvim-lspconfig", function()
   vim.lsp.enable("ciderlsp")
 
   local ciderlsp_attach_once_group =
-    vim.api.nvim_create_augroup("ciderlsp.attach.once", { clear = true })
+    vim.api.nvim_create_augroup("ciderlsp.attach.once", {})
 
   vim.api.nvim_create_autocmd("LspAttach", {
     group = ciderlsp_attach_once_group,

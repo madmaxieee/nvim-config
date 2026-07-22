@@ -85,7 +85,7 @@ return {
 
     init = function()
       local group =
-        vim.api.nvim_create_augroup("TreesitterConfig", { clear = true })
+        vim.api.nvim_create_augroup("TreesitterConfig", {})
 
       vim.api.nvim_create_autocmd("User", {
         pattern = "TSUpdate",

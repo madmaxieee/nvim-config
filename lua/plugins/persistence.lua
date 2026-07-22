@@ -18,7 +18,7 @@ return {
     }
 
     local persistence_group =
-      vim.api.nvim_create_augroup("Persistence", { clear = true })
+      vim.api.nvim_create_augroup("Persistence", {})
     local home = vim.fn.expand("~")
     local disabled_dirs = {
       [home] = true,

@@ -1,9 +1,6 @@
 {
   "lazy.nvim spec keys": {
-    "prefix": [
-      "lazykey",
-      "lzk"
-    ],
+    "prefix": ["lazykey", "lzk"],
     "body": [
       "{",
       "  \"${1:<key>}\",",
@@ -16,13 +13,10 @@
     ]
   },
   "autocmd": {
-    "prefix": [
-      "ncac",
-      "autocmd"
-    ],
+    "prefix": ["ncac", "autocmd"],
     "body": [
       "vim.api.nvim_create_autocmd(\"${1}\", {",
-      "  group = vim.api.nvim_create_augroup(\"${2}\", { clear = true }),",
+      "  group = vim.api.nvim_create_augroup(\"${2}\", {}),",
       "  desc = \"${4:description}\",",
       "  callback = function(args)",
       "    ${3}",
@@ -31,10 +25,7 @@
     ]
   },
   "user command": {
-    "prefix": [
-      "ncuc",
-      "usercmd"
-    ],
+    "prefix": ["ncuc", "usercmd"],
     "body": [
       "vim.api.nvim_create_user_command(\"${1:Command}\", function(${2:args})",
       "  ${3}",

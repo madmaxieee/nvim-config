@@ -59,7 +59,7 @@ end
 
 -- does not trigger on :restart
 vim.api.nvim_create_autocmd("UILeave", {
-  group = vim.api.nvim_create_augroup("agentmux.cleanup", { clear = true }),
+  group = vim.api.nvim_create_augroup("agentmux.cleanup", {}),
   desc = "cleanup agent pane on exit",
   callback = function()
     agentmux.stop()

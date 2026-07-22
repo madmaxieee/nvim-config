@@ -105,6 +105,18 @@ require("utils.lazy").on_load("nvim-lspconfig", function()
         vim.cmd("lsp disable " .. name)
       end
 
+      vim.api.nvim_del_augroup_by_id(ciderlsp_attach_once_group)
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("ciderlsp.attach.always", {}),
+    callback = function(args)
+      local ciderlsp_client = vim.lsp.get_client_by_id(args.data.client_id)
+      if not (ciderlsp_client and ciderlsp_client.name == "ciderlsp") then
+        return
+      end
+
       -- Fixes ciderlsp's rename behavior. ciderlsp for some reason does not set
       -- the default text of the vim.ui.input when renaming by default.
       vim.keymap.set("n", "<leader>ra", function()
@@ -120,8 +132,6 @@ require("utils.lazy").on_load("nvim-lspconfig", function()
         buf = args.buf,
         desc = "ciderlsp rename",
       })
-
-      vim.api.nvim_del_augroup_by_id(ciderlsp_attach_once_group)
     end,
   })
 end)

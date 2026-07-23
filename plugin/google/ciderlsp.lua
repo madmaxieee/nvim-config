@@ -2,29 +2,32 @@ if not require("flags").in_google3 then
   return
 end
 
-local _CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE = {
+local _CIDERLSP_UNSUPPORTED_METHODS_BY_FILE_TYPE = {
+  -- keep-sorted start block=yes
   bzl = {
-    "documentHighlightProvider",
-    "inlayHintProvider",
+    ["textDocument/documentHighlight"] = true,
+    ["textDocument/inlayHint"] = true,
   },
   gcl = {
-    "documentHighlightProvider",
-    "inlayHintProvider",
+    ["textDocument/documentHighlight"] = true,
+    ["textDocument/inlayHint"] = true,
   },
   markdown = {
-    "documentHighlightProvider",
-    "inlayHintProvider",
+    ["textDocument/documentHighlight"] = true,
+    ["textDocument/inlayHint"] = true,
   },
   proto = {
-    "documentHighlightProvider",
-    "inlayHintProvider",
+    ["textDocument/documentHighlight"] = true,
+    ["textDocument/inlayHint"] = true,
   },
   typescript = {
-    "documentHighlightProvider",
+    ["textDocument/documentHighlight"] = true,
   },
+  -- keep-sorted end
 }
 
 local _LSP_SHOULD_DISABLE_WITH_CIDERLSP = {
+  -- keep-sorted start
   "clangd",
   "copilot",
   "eslint",
@@ -33,9 +36,14 @@ local _LSP_SHOULD_DISABLE_WITH_CIDERLSP = {
   "pyrefly",
   "ruff",
   "ts_ls",
+  -- keep-sorted end
 }
 
 require("utils.lazy").on_load("nvim-lspconfig", function()
+  for _, name in ipairs(_LSP_SHOULD_DISABLE_WITH_CIDERLSP) do
+    vim.cmd("lsp disable " .. name)
+  end
+
   -- http://cl/783896564
   vim.lsp.config("ciderlsp", {
     cmd = {
@@ -45,6 +53,7 @@ require("utils.lazy").on_load("nvim-lspconfig", function()
       "--cdpush_name=",
     },
     filetypes = {
+      -- keep-sorted start
       "borg",
       "bzl",
       "c",
@@ -69,7 +78,26 @@ require("utils.lazy").on_load("nvim-lspconfig", function()
       "soy",
       "swift",
       "typescript",
+      -- keep-sorted end
     },
+
+    ---@param client vim.lsp.Client
+    on_init = function(client)
+      local orig_supports_method = client.supports_method
+
+      client.supports_method = function(self, method, bufnr)
+        bufnr = vim._resolve_bufnr(bufnr)
+        if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+          local ft = vim.bo[bufnr].filetype
+          local unsupported = _CIDERLSP_UNSUPPORTED_METHODS_BY_FILE_TYPE[ft]
+          if unsupported and unsupported[method] then
+            return false
+          end
+        end
+        return orig_supports_method(self, method, bufnr)
+      end
+    end,
+
     root_dir = function(bufnr, cb)
       local fname = vim.api.nvim_buf_get_name(bufnr)
       local root_dir =
@@ -81,36 +109,8 @@ require("utils.lazy").on_load("nvim-lspconfig", function()
   })
   vim.lsp.enable("ciderlsp")
 
-  local ciderlsp_attach_once_group =
-    vim.api.nvim_create_augroup("ciderlsp.attach.once", {})
-
   vim.api.nvim_create_autocmd("LspAttach", {
-    group = ciderlsp_attach_once_group,
-    callback = function(args)
-      local ciderlsp_client = vim.lsp.get_client_by_id(args.data.client_id)
-      if not (ciderlsp_client and ciderlsp_client.name == "ciderlsp") then
-        return
-      end
-
-      -- ciderlsp does not support some methods on certain languages
-      local ft = vim.bo[args.buf].filetype
-      for _, capability in
-        ipairs(_CIDERLSP_UNSUPPORTED_CAPABILITIES_BY_FILE_TYPE[ft] or {})
-      do
-        ciderlsp_client.server_capabilities[capability] = nil
-      end
-
-      -- disable lsps for languages ciderlsp supports
-      for _, name in ipairs(_LSP_SHOULD_DISABLE_WITH_CIDERLSP) do
-        vim.cmd("lsp disable " .. name)
-      end
-
-      vim.api.nvim_del_augroup_by_id(ciderlsp_attach_once_group)
-    end,
-  })
-
-  vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("ciderlsp.attach.always", {}),
+    group = vim.api.nvim_create_augroup("ciderlsp.attach", {}),
     callback = function(args)
       local ciderlsp_client = vim.lsp.get_client_by_id(args.data.client_id)
       if not (ciderlsp_client and ciderlsp_client.name == "ciderlsp") then

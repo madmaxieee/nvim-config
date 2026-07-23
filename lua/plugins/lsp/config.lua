@@ -39,11 +39,11 @@ end
 function M.on_attach(client, bufnr)
   set_keymaps(bufnr)
 
-  if client.server_capabilities.inlayHintProvider then
+  if client:supports_method("textDocument/inlayHint", bufnr) then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
 
-  if client:supports_method("textDocument/inlineCompletion") then
+  if client:supports_method("textDocument/inlineCompletion", bufnr) then
     vim.lsp.inline_completion.enable(true)
     map("i", "<A-l>", function()
       vim.lsp.inline_completion.get()
@@ -162,10 +162,7 @@ function M.init(opts)
   end, {})
 
   vim.api.nvim_create_autocmd("SessionLoadPost", {
-    group = vim.api.nvim_create_augroup(
-      "lsp.disable.project",
-      {}
-    ),
+    group = vim.api.nvim_create_augroup("lsp.disable.project", {}),
     callback = function()
       for _, lsp in ipairs(servers) do
         if lsp_utils.lsp_should_enable(lsp) then

@@ -84,8 +84,7 @@ return {
     build = ":TSUpdate",
 
     init = function()
-      local group =
-        vim.api.nvim_create_augroup("TreesitterConfig", {})
+      local group = vim.api.nvim_create_augroup("TreesitterConfig", {})
 
       vim.api.nvim_create_autocmd("User", {
         pattern = "TSUpdate",
@@ -105,6 +104,7 @@ return {
         end,
       })
 
+      -- allowlists intentionally left empty for now
       local syntax_on = {}
       local lsp_semantic_token_on = {}
       vim.api.nvim_create_autocmd("FileType", {

@@ -39,17 +39,6 @@ function M.make_diagnostics_filter(to_filter)
   end
 end
 
----@param bufnr number?
-function M.make_rename_filter(bufnr)
-  ---@diagnostic disable-next-line: unused-local
-  local ft = vim.bo[bufnr or 0].filetype
-  ---@param client vim.lsp.Client
-  ---@diagnostic disable-next-line: unused-local
-  return function(client)
-    return true
-  end
-end
-
 local default_disabled_lsp = {
   ["copilot"] = true,
   ["cpplint"] = true,

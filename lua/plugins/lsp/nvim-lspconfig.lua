@@ -42,7 +42,7 @@ local NO_MASON_INSTALL = {
 
 ---@type table<string, vim.lsp.Config | fun(): vim.lsp.Config>
 local server_configs = {
-  -- keep-sorted start block=yes
+  -- keep-sorted start group_start_regex=['\w+ = {','\w+ = function\(\)'] newline_separated=yes
   clangd = {
     cmd = {
       "clangd",
@@ -52,6 +52,7 @@ local server_configs = {
       "--header-insertion=iwyu",
     },
   },
+
   jdtls = {
     handlers = {
       -- 16: file is not a project-file
@@ -60,6 +61,7 @@ local server_configs = {
       }),
     },
   },
+
   lua_ls = {
     settings = {
       Lua = {
@@ -73,6 +75,7 @@ local server_configs = {
       },
     },
   },
+
   nil_ls = {
     settings = {
       ["nil"] = {
@@ -84,38 +87,7 @@ local server_configs = {
       },
     },
   },
-  sourcekit = {
-    cmd = { "xcrun", "sourcekit-lsp" },
-  },
-  taplo = {
-    root_dir = vim.uv.cwd() or vim.fn.getcwd(),
-    handlers = {
-      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
-        message = { "this document has been excluded" },
-      }),
-    },
-  },
-  ts_ls = {
-    handlers = {
-      -- 71007: ignore client component props must be serializable error
-      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
-        code = { 71007 },
-      }),
-    },
-  },
-  typos_lsp = {
-    init_options = {
-      diagnosticSeverity = "Warning",
-    },
-  },
-  zls = {
-    settings = {
-      zls = {
-        enable_build_on_save = true,
-      },
-    },
-  },
-  -- keep-sorted end
+
   rust_analyzer = function()
     if vim.env.ANDROID_BUILD_TOP then
       local android_root = vim.env.ANDROID_BUILD_TOP
@@ -141,6 +113,11 @@ local server_configs = {
       return {}
     end
   end,
+
+  sourcekit = {
+    cmd = { "xcrun", "sourcekit-lsp" },
+  },
+
   tailwindcss = function()
     local original_ft = vim.lsp.config["tailwindcss"].filetypes or {}
     return {
@@ -149,6 +126,39 @@ local server_configs = {
       end, original_ft),
     }
   end,
+
+  taplo = {
+    root_dir = vim.uv.cwd() or vim.fn.getcwd(),
+    handlers = {
+      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
+        message = { "this document has been excluded" },
+      }),
+    },
+  },
+
+  ts_ls = {
+    handlers = {
+      -- 71007: ignore client component props must be serializable error
+      ["textDocument/publishDiagnostics"] = lsp_utils.make_diagnostics_filter({
+        code = { 71007 },
+      }),
+    },
+  },
+
+  typos_lsp = {
+    init_options = {
+      diagnosticSeverity = "Warning",
+    },
+  },
+
+  zls = {
+    settings = {
+      zls = {
+        enable_build_on_save = true,
+      },
+    },
+  },
+  -- keep-sorted end
 }
 
 return {

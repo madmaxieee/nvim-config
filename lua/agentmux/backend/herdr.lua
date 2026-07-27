@@ -2,7 +2,6 @@
 local M = {}
 
 ---@class AgentMuxHerdrState
----@field target string?
 ---@field pane_id string?
 
 ---@param state AgentMuxState
@@ -19,26 +18,12 @@ local function target_name(provider)
   return ("agentmux-%s-%s-%s"):format(provider, cwd_hash, vim.uv.os_getpid())
 end
 
-local function resolve_pane_id(target)
-  local res = vim.system({ "herdr", "agent", "get", target }):wait()
-  if res.code ~= 0 then
-    return nil
-  end
-
-  local ok, data = pcall(vim.json.decode, res.stdout)
-  if not ok then
-    return nil
-  end
-
-  return vim.tbl_get(data, "result", "agent", "pane_id")
-end
-
 function M.get_pane_id(state)
   local data = backend_state(state)
-  if data.target then
-    data.pane_id = resolve_pane_id(data.target)
-    if not data.pane_id then
-      data.target = nil
+  if data.pane_id then
+    local res = vim.system({ "herdr", "agent", "get", data.pane_id }):wait()
+    if res.code ~= 0 then
+      data.pane_id = nil
       state.backend = nil
       state.data = nil
     end
@@ -51,80 +36,97 @@ end
 function M.start(state, cfg)
   local provider = cfg.providers[cfg.provider]
   local target = target_name(cfg.provider)
+  local kind = provider.kind or cfg.provider
 
   -- stylua: ignore
-  local cmd = {
-    "herdr", "agent", "start", target,
+  local split_cmd = {
+    "herdr", "pane", "split",
+    "--direction", "right",
     "--cwd", vim.fn.getcwd(),
-    "--split", "right",
     "--focus",
   }
 
-  -- hint herdr which agent is running for the integration to work
-  local env =
-    vim.tbl_extend("keep", provider.env or {}, { HERDR_AGENT = cfg.provider })
-  for key, value in pairs(env) do
-    vim.list_extend(cmd, { "--env", ("%s=%s"):format(key, value) })
+  for key, value in pairs(provider.env or {}) do
+    vim.list_extend(split_cmd, { "--env", ("%s=%s"):format(key, value) })
   end
 
-  table.insert(cmd, "--")
-  vim.list_extend(cmd, provider.command)
-
-  local res = vim.system(cmd):wait()
-  if res.code ~= 0 then
+  local split_res = vim.system(split_cmd):wait()
+  if split_res.code ~= 0 then
     vim.notify(
-      "Failed to create coding agent pane: " .. res.stderr,
+      "Failed to split pane for coding agent: " .. split_res.stderr,
       vim.log.levels.ERROR
     )
     return
   end
 
-  local data = backend_state(state)
-  data.target = target
-  data.pane_id = resolve_pane_id(target)
-  state.backend = "herdr"
-
-  if data.pane_id then
-    vim.system({
-      "herdr",
-      "pane",
-      "resize",
-      "--direction",
-      "right",
-      "--amount",
-      "0.1",
-      "--pane",
-      data.pane_id,
-    })
-  end
-end
-
----@param pane_id string
----@return string?
-local function get_target_from_pane_id(pane_id)
-  local res = vim.system({ "herdr", "agent", "list" }):wait()
-  if res.code ~= 0 then
-    return
-  end
-
-  local ok, data = pcall(vim.json.decode, res.stdout)
+  local ok, split_data = pcall(vim.json.decode, split_res.stdout)
   if not ok then
+    vim.notify(
+      "Failed to parse pane split response: " .. split_res.stdout,
+      vim.log.levels.ERROR
+    )
     return
   end
 
-  local agents = vim.tbl_get(data, "result", "agents")
-  for _, agent_info in ipairs(agents) do
-    if agent_info.pane_id == pane_id then
-      return agent_info.name
+  local pane_id = vim.tbl_get(split_data, "result", "pane", "pane_id")
+  if not pane_id then
+    vim.notify(
+      "Failed to obtain pane id from split response",
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  -- stylua: ignore
+  vim.system({
+    "herdr", "pane", "resize",
+    "--direction", "right",
+    "--amount", "0.1",
+    "--pane", pane_id,
+  })
+
+  -- stylua: ignore
+  local start_cmd = {
+    "herdr", "agent", "start", target,
+    "--kind", kind,
+    "--pane", pane_id,
+  }
+
+  if #provider.command > 1 then
+    table.insert(start_cmd, "--")
+    for i = 2, #provider.command do
+      table.insert(start_cmd, provider.command[i])
     end
   end
+
+  local res
+  for _ = 1, 30 do
+    res = vim.system(start_cmd):wait()
+    if res.code == 0 then
+      break
+    end
+    vim.uv.sleep(100)
+  end
+
+  if res.code ~= 0 then
+    vim.notify(
+      "Failed to start coding agent in pane: " .. res.stderr,
+      vim.log.levels.ERROR
+    )
+    vim.system({ "herdr", "pane", "close", pane_id })
+    return
+  end
+
+  local data = backend_state(state)
+  data.pane_id = pane_id
+  state.backend = "herdr"
 end
 
 function M.restore_or_start(state, cfg, restore_opts)
-  local target = get_target_from_pane_id(restore_opts.pane_id)
-  if target then
+  local res =
+    vim.system({ "herdr", "agent", "get", restore_opts.pane_id }):wait()
+  if res.code == 0 then
     local data = backend_state(state)
-    data.target = target
     data.pane_id = restore_opts.pane_id
     state.backend = "herdr"
     vim.notify("agentmux: restored link to agent pane")
@@ -143,46 +145,36 @@ function M.stop(state)
 end
 
 function M.focus(state)
-  local target = backend_state(state).target
-  if not target then
+  local pane_id = backend_state(state).pane_id
+  if not pane_id then
     return
   end
 
-  vim.system({ "herdr", "agent", "focus", target })
+  vim.system({ "herdr", "agent", "focus", pane_id })
 end
 
 function M.send_keys(state, keys)
-  local data = backend_state(state)
-
-  if #keys == 1 and keys[1] == "Enter" then
-    if data.target then
-      vim.system({ "herdr", "agent", "send", data.target, "\n" })
-    end
+  local pane_id = backend_state(state).pane_id
+  if not pane_id then
     return
   end
 
-  if not data.pane_id then
-    return
-  end
-
-  local cmd = { "herdr", "pane", "send-keys", data.pane_id }
+  local cmd = { "herdr", "agent", "send-keys", pane_id }
   vim.list_extend(cmd, keys)
   vim.system(cmd)
 end
 
 function M.send_text(state, text, submit)
-  local target = backend_state(state).target
-  if not target then
+  local pane_id = backend_state(state).pane_id
+  if not pane_id then
     return
   end
 
-  vim.system({
-    "herdr",
-    "agent",
-    "send",
-    target,
-    submit and text .. "\r" or text,
-  })
+  if submit then
+    vim.system({ "herdr", "agent", "prompt", pane_id, text })
+  else
+    vim.system({ "herdr", "pane", "send-text", pane_id, text })
+  end
 end
 
 return M

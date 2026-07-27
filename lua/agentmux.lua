@@ -3,6 +3,7 @@
 ---@field backend? "auto" | AgentMuxBackendName pane backend (default: "auto")
 
 ---@class AgentMuxProvider
+---@field kind string?
 ---@field command string[]
 ---@field env? table<string, string>
 ---@field tmux_stop_agent? fun(pane_id: string) backend stop hook

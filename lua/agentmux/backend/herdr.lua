@@ -1,8 +1,11 @@
+local co2 = require("co2")
+
 ---@class AgentMuxBackend
 local M = {}
 
 ---@class AgentMuxHerdrState
 ---@field pane_id string?
+---@field starting boolean?
 
 ---@param state AgentMuxState
 ---@return AgentMuxHerdrState
@@ -31,9 +34,29 @@ function M.get_pane_id(state)
   return data.pane_id
 end
 
+---@param ms number
+---@param callback fun()
+local function async_sleep(ms, callback)
+  local timer = vim.uv.new_timer()
+  if not timer then
+    callback()
+    return
+  end
+  timer:start(ms, 0, function()
+    timer:close()
+    callback()
+  end)
+end
+
 ---@param state AgentMuxState
 ---@param cfg AgentMuxConfig
 function M.start(state, cfg)
+  local data = backend_state(state)
+  if data.starting then
+    return
+  end
+  data.starting = true
+
   local provider = cfg.providers[cfg.provider]
   local target = target_name(cfg.provider)
   local kind = provider.kind or cfg.provider
@@ -50,76 +73,101 @@ function M.start(state, cfg)
     vim.list_extend(split_cmd, { "--env", ("%s=%s"):format(key, value) })
   end
 
-  local split_res = vim.system(split_cmd):wait()
-  if split_res.code ~= 0 then
-    vim.notify(
-      "Failed to split pane for coding agent: " .. split_res.stderr,
-      vim.log.levels.ERROR
-    )
-    return
-  end
-
-  local ok, split_data = pcall(vim.json.decode, split_res.stdout)
-  if not ok then
-    vim.notify(
-      "Failed to parse pane split response: " .. split_res.stdout,
-      vim.log.levels.ERROR
-    )
-    return
-  end
-
-  local pane_id = vim.tbl_get(split_data, "result", "pane", "pane_id")
-  if not pane_id then
-    vim.notify(
-      "Failed to obtain pane id from split response",
-      vim.log.levels.ERROR
-    )
-    return
-  end
-
-  -- stylua: ignore
-  vim.system({
-    "herdr", "pane", "resize",
-    "--direction", "right",
-    "--amount", "0.1",
-    "--pane", pane_id,
-  })
-
-  -- stylua: ignore
-  local start_cmd = {
-    "herdr", "agent", "start", target,
-    "--kind", kind,
-    "--pane", pane_id,
-  }
-
-  if #provider.command > 1 then
-    table.insert(start_cmd, "--")
-    for i = 2, #provider.command do
-      table.insert(start_cmd, provider.command[i])
+  co2.run(function(ctx)
+    local split_res = ctx.await(vim.system, split_cmd, {})
+    if not data.starting then
+      return
     end
-  end
 
-  local res
-  for _ = 1, 30 do
-    res = vim.system(start_cmd):wait()
-    if res.code == 0 then
-      break
+    if split_res.code ~= 0 then
+      data.starting = nil
+      vim.schedule(function()
+        vim.notify(
+          "Failed to split pane for coding agent: " .. (split_res.stderr or ""),
+          vim.log.levels.ERROR
+        )
+      end)
+      return
     end
-    vim.uv.sleep(100)
-  end
 
-  if res.code ~= 0 then
-    vim.notify(
-      "Failed to start coding agent in pane: " .. res.stderr,
-      vim.log.levels.ERROR
-    )
-    vim.system({ "herdr", "pane", "close", pane_id })
-    return
-  end
+    local ok, split_data = pcall(vim.json.decode, split_res.stdout or "")
+    if not ok then
+      data.starting = nil
+      vim.schedule(function()
+        vim.notify(
+          "Failed to parse pane split response: " .. (split_res.stdout or ""),
+          vim.log.levels.ERROR
+        )
+      end)
+      return
+    end
 
-  local data = backend_state(state)
-  data.pane_id = pane_id
-  state.backend = "herdr"
+    local pane_id = vim.tbl_get(split_data, "result", "pane", "pane_id")
+    if not pane_id then
+      data.starting = nil
+      vim.schedule(function()
+        vim.notify(
+          "Failed to obtain pane id from split response",
+          vim.log.levels.ERROR
+        )
+      end)
+      return
+    end
+
+    -- resize the pane as soon as the split is created
+    -- stylua: ignore
+    vim.system({
+      "herdr", "pane", "resize",
+      "--direction", "right",
+      "--amount", "0.1",
+      "--pane", pane_id,
+    })
+
+    -- stylua: ignore
+    local start_cmd = {
+      "herdr", "agent", "start", target,
+      "--kind", kind,
+      "--pane", pane_id,
+    }
+
+    if provider.args and #provider.args > 0 then
+      table.insert(start_cmd, "--")
+      vim.list_extend(start_cmd, provider.args)
+    end
+
+    local res
+    for _ = 1, 10 do
+      res = ctx.await(vim.system, start_cmd, {})
+      if not data.starting or res.code == 0 then
+        break
+      end
+      ctx.await(async_sleep, 100)
+      if not data.starting then
+        break
+      end
+    end
+
+    if not data.starting then
+      vim.system({ "herdr", "pane", "close", pane_id })
+      return
+    end
+
+    if res.code ~= 0 then
+      data.starting = nil
+      vim.schedule(function()
+        vim.notify(
+          "Failed to start coding agent in pane: " .. (res.stderr or ""),
+          vim.log.levels.ERROR
+        )
+      end)
+      vim.system({ "herdr", "pane", "close", pane_id })
+      return
+    end
+
+    data.starting = nil
+    data.pane_id = pane_id
+    state.backend = "herdr"
+  end)
 end
 
 function M.restore_or_start(state, cfg, restore_opts)
@@ -139,6 +187,9 @@ function M.stop(state)
   local data = backend_state(state)
   if data.pane_id then
     vim.system({ "herdr", "pane", "close", data.pane_id })
+  end
+  if data.starting then
+    data.starting = nil
   end
   state.backend = nil
   state.data = nil

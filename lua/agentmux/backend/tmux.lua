@@ -42,7 +42,11 @@ function M.start(state, cfg)
     "-p", "35",
   }
 
-  vim.list_extend(create_pane_cmd, provider.command)
+  local kind = provider.kind or cfg.provider
+  table.insert(create_pane_cmd, kind)
+  if provider.args and #provider.args > 0 then
+    vim.list_extend(create_pane_cmd, provider.args)
+  end
 
   local res = vim.system(create_pane_cmd, { env = provider.env }):wait()
   if res.code ~= 0 then

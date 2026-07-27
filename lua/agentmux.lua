@@ -3,8 +3,8 @@
 ---@field backend? "auto" | AgentMuxBackendName pane backend (default: "auto")
 
 ---@class AgentMuxProvider
----@field kind string?
----@field command string[]
+---@field kind? string agent kind and canonical executable (defaults to provider name)
+---@field args? string[] additional command line arguments passed to the agent executable
 ---@field env? table<string, string>
 ---@field tmux_stop_agent? fun(pane_id: string) backend stop hook
 ---@field format_keys? fun(text: string): string[] construct tmux send-keys arguments from text to send
@@ -24,13 +24,11 @@ local cfg = {
   backend = "auto",
   providers = {
     opencode = {
-      command = { "opencode" },
       tmux_stop_agent = function(pane_id)
         vim.system({ "tmux", "send-keys", "-t", pane_id, "C-c", "C-d" })
       end,
     },
     codex = {
-      command = { "codex" },
       tmux_stop_agent = function(pane_id)
         vim.system({ "tmux", "send-keys", "-t", pane_id, "C-d" })
       end,

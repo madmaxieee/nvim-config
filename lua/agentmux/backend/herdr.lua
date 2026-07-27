@@ -147,6 +147,7 @@ function M.start(state, cfg)
       end
     end
 
+    -- return early if the start action is canceled by M.stop()
     if not data.starting then
       vim.system({ "herdr", "pane", "close", pane_id })
       return

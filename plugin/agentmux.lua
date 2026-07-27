@@ -9,6 +9,14 @@ map({ "n", "x" }, "<C-.>", function()
   agentmux.focus()
 end, { desc = "Toggle agent focus" })
 
+map({ "n", "x" }, "<leader>ax", function()
+  agentmux.stop()
+end, { desc = "Stop agent" })
+
+map({ "n", "x" }, "<leader>an", function()
+  agentmux.new()
+end, { desc = "New session" })
+
 map({ "n", "x" }, "<leader>aa", function()
   agentmux.ask("", { submit = true })
 end, { desc = "Ask agent" })

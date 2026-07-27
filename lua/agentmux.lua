@@ -82,6 +82,15 @@ function M.start(opts)
   get_backend(opts).start(state, opts)
 end
 
+---@param opts AgentMuxOptions?
+function M.new(opts)
+  if M.is_active() then
+    M.send("/new", { submit = true })
+  else
+    M.start(opts)
+  end
+end
+
 ---@param opts AgentMuxRestoreOpts
 function M.restore(opts)
   get_backend({ backend = opts.backend }).restore_or_start(state, cfg, opts)

@@ -25,43 +25,30 @@ return {
         jsonc = { "prettierd" },
         kdl = { "kdlfmt" },
         lua = { "stylua" },
-        markdown = { "rumdl", lsp_format = "prefer" },
+        markdown = { "rumdl" },
         mdx = { "prettierd" },
+        python = { "ruff_organize_imports", "ruff_format" },
         svelte = { "prettierd" },
         typescript = { "prettierd" },
         typescriptreact = { "prettierd" },
         typst = { "typstyle" },
         -- keep-sorted end
 
-        -- mixed
-        python = function(bufnr)
-          if
-            require("flags").in_google3
-            and require("conform").get_formatter_info("pyformat", bufnr).available
-          then
-            -- external
-            return { "pyformat" }
-          else
-            -- mason
-            return { "ruff_organize_imports", "ruff_format" }
-          end
-        end,
-
         -- other
         ["_"] = { lsp_format = "last" },
         ["*"] = { "keep-sorted" },
       },
       formatters = {
+        -- keep-sorted start group_start_regex=['.+ = function\(\)', '.+ = \{'] by_regex=\w+
         bpfmt = function()
           if vim.env.ANDROID_BUILD_TOP then
             return {
-              inherit = "bpfmt",
               command = ("%s/prebuilts/build-tools/linux-x86/bin/bpfmt"):format(
                 vim.env.ANDROID_BUILD_TOP
               ),
             }
           else
-            return { inherit = "bpfmt" }
+            return {}
           end
         end,
         ["google-java-format"] = function()
@@ -71,7 +58,6 @@ return {
             return {}
           end
         end,
-        pyformat = { command = "pyformat", args = {}, stdin = true },
         rumdl = {
           prepend_args = {
             "--config",
@@ -82,6 +68,7 @@ return {
             "MD013.reflow=true",
           },
         },
+        -- keep-sorted end
       },
       format_on_save = function(bufnr)
         if vim.g.DisableAutoFormat or vim.b[bufnr].DisableAutoFormat then

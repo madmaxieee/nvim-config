@@ -46,17 +46,37 @@ local function get_selection_range(buf)
 end
 
 ---@param range ContextRange
-local function format_range(range)
+---@param buf? integer
+local function format_range(range, buf)
   if range.kind == "char" then
-    return string.format(
-      "L%dC%d-L%dC%d",
-      range.from[1],
-      range.from[2],
-      range.to[1],
-      range.to[2]
-    )
+    if range.from[1] == range.to[1] then
+      if buf and vim.api.nvim_buf_is_valid(buf) then
+        local lines = vim.api.nvim_buf_get_lines(
+          buf,
+          range.from[1] - 1,
+          range.from[1],
+          false
+        )
+        if lines and lines[1] then
+          local text = lines[1]:sub(range.from[2] + 1, range.to[2] + 1)
+          return string.format("L%d `%s`", range.from[1], text)
+        end
+      end
+      return string.format(
+        "L%d C%d-C%d",
+        range.from[1],
+        range.from[2],
+        range.to[2]
+      )
+    else
+      return string.format("L%d-L%d", range.from[1], range.to[1])
+    end
   elseif range.kind == "line" then
-    return string.format("L%d-L%d", range.from[1], range.to[1])
+    if range.from[1] == range.to[1] then
+      return string.format("L%d", range.from[1])
+    else
+      return string.format("L%d-L%d", range.from[1], range.to[1])
+    end
   elseif range.kind == "block" then
     return string.format(
       "L%dC%d-L%dC%d",
@@ -69,7 +89,7 @@ local function format_range(range)
 end
 
 ---@param win integer
-local function format_cursor_pos(win)
+local function format_cursor_line(win)
   local pos = vim.api.nvim_win_get_cursor(win)
   return string.format("L%d", pos[1])
 end
@@ -104,7 +124,7 @@ M.contexts = {
     return string.format(
       "%s %s",
       format_buf(opts.buf),
-      range and format_range(range) or format_cursor_pos(opts.win)
+      range and format_range(range, opts.buf) or format_cursor_line(opts.win)
     )
   end,
   file = function(opts)

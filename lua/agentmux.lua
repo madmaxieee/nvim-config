@@ -47,13 +47,6 @@ local M = {}
 
 local backend_registry = require("agentmux.backend")
 
--- Define highlight groups
-vim.api.nvim_set_hl(
-  0,
-  "AgentMuxContext",
-  { link = "@lsp.type.enum", default = true }
-)
-
 ---@param opts AgentMuxConfig
 function M.setup(opts)
   cfg = vim.tbl_deep_extend("force", cfg, opts or {})

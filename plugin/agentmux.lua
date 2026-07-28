@@ -1,5 +1,12 @@
 local agentmux = require("agentmux")
 
+-- Define highlight groups
+vim.api.nvim_set_hl(
+  0,
+  "AgentMuxContext",
+  { link = "@lsp.type.enum", default = true }
+)
+
 local map = require("utils").safe_keymap_set
 
 map({ "n", "x" }, "<C-.>", function()

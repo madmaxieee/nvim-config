@@ -2,7 +2,7 @@ return {
   "hedyhli/outline.nvim",
   cmd = { "Outline", "OutlineOpen" },
   keys = {
-    { "<A-b>", "<cmd>topleft Outline<CR>", desc = "Toggle outline" },
+    { "<A-b>", "<cmd>Outline<CR>", desc = "Toggle outline" },
   },
   init = function()
     vim.api.nvim_create_autocmd("BufEnter", {
@@ -26,6 +26,10 @@ return {
   ---@module 'outline'
   ---@type outline.SetupOpts
   opts = {
+    outline_window = { position = "left" },
+    providers = {
+      priority = { "markdown", "lsp", "norg", "man" },
+    },
     symbols = {
       icons = {
         -- align symbols with dropbar

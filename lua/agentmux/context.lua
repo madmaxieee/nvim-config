@@ -99,7 +99,9 @@ local function format_buf(buf)
   local path = vim.api.nvim_buf_get_name(buf)
   path = vim.fs.abspath(path)
   path = vim.fs.normalize(path)
-  return path
+  local cwd = vim.fs.normalize(vim.fn.getcwd())
+  local rel = vim.fs.relpath(cwd, path)
+  return rel or path
 end
 
 ---@param diagnostic vim.Diagnostic

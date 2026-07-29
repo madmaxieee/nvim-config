@@ -28,6 +28,12 @@ return {
       picker = {
         name = "snacks.pick",
       },
+      note_id_func = function(...)
+        return ("%d-%s"):format(
+          os.time(),
+          require("obsidian.builtin").title_id(...)
+        )
+      end,
     },
 
     init = function()

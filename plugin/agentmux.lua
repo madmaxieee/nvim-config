@@ -72,11 +72,21 @@ if agentmux_restore then
   })
 end
 
-vim.api.nvim_create_autocmd("VimLeave", {
+vim.api.nvim_create_autocmd("VimLeavePre", {
   group = vim.api.nvim_create_augroup("agentmux.cleanup", {}),
   desc = "cleanup agent pane on exit",
   callback = function()
-    if not vim.startswith(vim.v.exitreason, "restart") then
+    if vim.startswith(vim.v.exitreason, "restart") then
+      -- Save flag to restore agentmux pane after restart
+      if agentmux.is_active() then
+        require("kv").set("agentmux_restore", {
+          backend = "herdr",
+          pane_id = agentmux.get_pane_id(),
+          provider = agentmux.get_provider(),
+        } --[[@as AgentMuxRestoreOpts]])
+        require("kv").save()
+      end
+    else
       agentmux.stop()
     end
   end,

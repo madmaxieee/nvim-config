@@ -126,16 +126,4 @@ map({ "n", "x" }, "<leader>rn", function()
   vim.o.relativenumber = not vim.o.relativenumber
 end, { desc = "Toggle relative number" })
 
-map("n", "<leader>rr", function()
-  local agentmux = require("agentmux")
-  -- Save flag to restore agentmux pane after restart
-  if agentmux.is_active() then
-    require("kv").set("agentmux_restore", {
-      backend = "herdr",
-      pane_id = agentmux.get_pane_id(),
-      provider = agentmux.get_provider(),
-    } --[[@as AgentMuxRestoreOpts]])
-    require("kv").save()
-  end
-  vim.cmd("restart")
-end, { desc = "Restart Neovim" })
+map("n", "<leader>rr", "<cmd>restart<CR>", { desc = "Restart Neovim" })

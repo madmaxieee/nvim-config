@@ -1,7 +1,7 @@
 local lsp_config = require("plugins.lsp.config")
 local lsp_utils = require("plugins.lsp.utils")
 
-local SERVERS = {
+local _SERVERS = {
   -- keep-sorted start
   "bashls",
   "clangd",
@@ -35,13 +35,15 @@ local SERVERS = {
   -- keep-sorted end
 }
 
-local NO_MASON_INSTALL = {
-  ["sourcekit"] = true,
+local _NO_MASON_INSTALL = {
+  -- keep-sorted start
   ["fennel_ls"] = true,
+  ["sourcekit"] = true,
+  -- keep-sorted end
 }
 
 ---@type table<string, vim.lsp.Config | fun(): vim.lsp.Config>
-local server_configs = {
+local _SERVER_CONFIGS = {
   -- keep-sorted start group_start_regex=['\w+ = {','\w+ = function\(\)'] newline_separated=yes
   clangd = {
     cmd = {
@@ -161,6 +163,24 @@ local server_configs = {
   -- keep-sorted end
 }
 
+if require("flags").in_google3 then
+  local _LSP_SHOULD_DISABLE_WITH_CIDERLSP = {
+    -- keep-sorted start
+    ["clangd"] = true,
+    ["copilot"] = true,
+    ["eslint"] = true,
+    ["gopls"] = true,
+    ["jdtls"] = true,
+    ["pyrefly"] = true,
+    ["ruff"] = true,
+    ["ts_ls"] = true,
+    -- keep-sorted end
+  }
+  _SERVERS = vim.tbl_filter(function(name)
+    return not _LSP_SHOULD_DISABLE_WITH_CIDERLSP[name]
+  end, _SERVERS)
+end
+
 return {
   {
     "williamboman/mason.nvim",
@@ -180,8 +200,8 @@ return {
     opts = {
       ensure_installed = require("flags").low_ram and {}
         or vim.tbl_filter(function(server)
-          return not NO_MASON_INSTALL[server]
-        end, SERVERS),
+          return not _NO_MASON_INSTALL[server]
+        end, _SERVERS),
       automatic_enable = false,
     },
   },
@@ -195,12 +215,12 @@ return {
       "williamboman/mason-lspconfig.nvim",
     },
     init = function()
-      lsp_config.init({ servers = SERVERS })
+      lsp_config.init({ servers = _SERVERS })
     end,
     config = function()
       lsp_config.setup({
-        servers = SERVERS,
-        server_configs = server_configs,
+        servers = _SERVERS,
+        server_configs = _SERVER_CONFIGS,
       })
     end,
   },

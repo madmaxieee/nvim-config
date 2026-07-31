@@ -70,6 +70,15 @@ vim.diagnostic.config({
   },
 })
 
+vim.opt.sessionoptions = {
+  "buffers",
+  "folds",
+  "help",
+  "tabpages",
+  "winsize",
+  "globals",
+}
+
 -- disable built in ftplugin mappings
 vim.g.no_plugin_maps = true
 

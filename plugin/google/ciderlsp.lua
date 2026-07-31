@@ -44,6 +44,19 @@ require("utils.lazy").on_load("nvim-lspconfig", function()
     vim.cmd("lsp disable " .. name)
   end
 
+  vim.schedule(function()
+    local clients = vim.lsp.get_clients()
+    local active_language_servers = {}
+    for _, c in pairs(clients) do
+      active_language_servers[c.name] = true
+    end
+    for _, name in ipairs(_LSP_SHOULD_DISABLE_WITH_CIDERLSP) do
+      if active_language_servers[name] then
+        vim.cmd("lsp stop " .. name)
+      end
+    end
+  end)
+
   -- http://cl/783896564
   vim.lsp.config("ciderlsp", {
     cmd = {

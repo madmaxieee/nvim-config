@@ -72,12 +72,13 @@ if agentmux_restore then
   })
 end
 
--- does not trigger on :restart
-vim.api.nvim_create_autocmd("UILeave", {
+vim.api.nvim_create_autocmd("VimLeave", {
   group = vim.api.nvim_create_augroup("agentmux.cleanup", {}),
   desc = "cleanup agent pane on exit",
   callback = function()
-    agentmux.stop()
+    if not vim.startswith(vim.v.exitreason, "restart") then
+      agentmux.stop()
+    end
   end,
 })
 

@@ -179,7 +179,7 @@ function M.ask(text, opts)
       title_pos = "left",
       relative = "cursor",
       row = -3, -- Row above the cursor
-      col = 0, -- Align with the cursor
+      col = 0,  -- Align with the cursor
       keys = {
         i_cr = {
           desc = "submit",

@@ -12,7 +12,7 @@
   "dropbar.nvim": { "branch": "master", "commit": "808ba31cde89aec8833e9789f5e04557cd31c9e1" },
   "fff-snacks.nvim": { "branch": "main", "commit": "544305711662dfd29647570218340f0a9ecadbd6" },
   "fff.nvim": { "branch": "main", "commit": "1eb913e509b846e77111cde2aeeb77a05243c003" },
-  "flash.nvim": { "branch": "main", "commit": "b6346946d10d07998efee029fb0f7a593806d0cd" },
+  "flash.nvim": { "branch": "fix/neovim-0.13-search-state", "commit": "c92888d432bebeb145dad09c07ab65cc7c577184" },
   "fluoride": { "branch": "main", "commit": "df30862c6144f250250a340d183d0d324fe6f075" },
   "friendly-snippets": { "branch": "main", "commit": "6cd7280adead7f586db6fccbd15d2cac7e2188b9" },
   "grapple.nvim": { "branch": "main", "commit": "b41ddfc1c39f87f3d1799b99c2f0f1daa524c5f7" },

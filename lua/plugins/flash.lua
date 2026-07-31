@@ -1,5 +1,7 @@
 return {
-  "folke/flash.nvim",
+  "pedro757/flash.nvim",
+  branch = "fix/neovim-0.13-search-state",
+  -- "folke/flash.nvim",
   opts = {
     highlight = {
       priority = 10000,

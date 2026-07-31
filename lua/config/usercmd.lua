@@ -46,7 +46,6 @@ vim.api.nvim_create_user_command("InlayHintToggle", function()
 end, {})
 
 vim.api.nvim_create_user_command("Diffthis", "windo diffthis", {})
-vim.api.nvim_create_user_command("Diffoff", "windo diffoff", {})
 
 vim.api.nvim_create_user_command("CdBuf", "cd %:h", {})
 

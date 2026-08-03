@@ -5,9 +5,6 @@ end
 local map = require("utils").safe_keymap_set
 local gutils = require("gutils")
 
-local G3_PREFIX = "google3/"
-local DEPOT_PREFIX = "//depot/"
-
 map({ "n", "x" }, "gf", function()
   local path
   local mode = vim.fn.mode()
@@ -21,16 +18,7 @@ map({ "n", "x" }, "gf", function()
     path = vim.fn.expand("<cfile>")
   end
 
-  local g3_root = gutils.get_google3_root(vim.fn.getcwd())
-  local depot_root = vim.fs.normalize(vim.fs.joinpath(g3_root, ".."))
-
-  if path:find(G3_PREFIX, nil, true) == 1 then
-    path = path:sub(#G3_PREFIX + 1)
-    path = vim.fs.joinpath(g3_root, path)
-  elseif path:find(DEPOT_PREFIX, nil, true) == 1 then
-    path = path:sub(#DEPOT_PREFIX + 1)
-    path = vim.fs.joinpath(depot_root, path)
-  end
+  path = gutils.google3_path_to_filesystem_path(path)
 
   if vim.uv.fs_stat(path) then
     vim.cmd.edit(path)

@@ -37,7 +37,7 @@ return {
     },
 
     init = function()
-      vim.opt.conceallevel = 2
+      vim.opt.conceallevel = 1
       vim.cmd.cabbrev("O", "Obsidian")
     end,
 

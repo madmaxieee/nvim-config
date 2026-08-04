@@ -38,6 +38,7 @@ return {
         ["_"] = { lsp_format = "last" },
         ["*"] = { "keep-sorted" },
       },
+
       formatters = {
         -- keep-sorted start group_start_regex=['.+ = function\(\)', '.+ = \{'] by_regex=\w+
         bpfmt = function()
@@ -70,7 +71,8 @@ return {
         },
         -- keep-sorted end
       },
-      format_on_save = function(bufnr)
+
+      format_after_save = function(bufnr)
         if vim.g.DisableAutoFormat or vim.b[bufnr].DisableAutoFormat then
           return
         end
@@ -79,7 +81,7 @@ return {
         if file_name == "lazy-lock.json" then
           return
         end
-        return { timeout_ms = 1000 }
+        return {}
       end,
     },
 
@@ -115,7 +117,6 @@ return {
         require("conform").format({
           async = true,
           range = range,
-          timeout_ms = 1000,
         })
       end, { range = true })
 

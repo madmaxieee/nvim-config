@@ -121,7 +121,7 @@ function M.start(state, cfg)
       "--direction", "right",
       "--amount", "0.1",
       "--pane", pane_id,
-    })
+    }, { detach = true })
 
     -- stylua: ignore
     local start_cmd = {

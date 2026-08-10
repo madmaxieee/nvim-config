@@ -17,7 +17,6 @@ if require("flags").in_google3 then
       local bug_id = cleaned_rest:match("/issues/(" .. d8 .. ")")
         or cleaned_rest:match("b/(" .. d8 .. ")")
         or cleaned_rest:match("/(" .. d8 .. ")")
-        or cleaned_rest:match("(" .. d8 .. ")")
 
       if not bug_id then
         return

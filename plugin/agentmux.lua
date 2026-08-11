@@ -25,7 +25,8 @@ map({ "n", "x" }, "<leader>an", function()
 end, { desc = "New session" })
 
 map({ "n", "x" }, "<leader>aa", function()
-  agentmux.ask("", { submit = true })
+  agentmux.ask("", { submit = false })
+  agentmux.focus()
 end, { desc = "Ask agent" })
 
 map({ "n", "x" }, "<leader>at", function()

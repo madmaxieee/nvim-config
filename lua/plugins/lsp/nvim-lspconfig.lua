@@ -118,6 +118,7 @@ local _SERVER_CONFIGS = {
 
   sourcekit = {
     cmd = { "xcrun", "sourcekit-lsp" },
+    filetypes = { "swift", "objc", "objcpp" },
   },
 
   tailwindcss = function()

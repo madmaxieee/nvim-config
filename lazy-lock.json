@@ -9,6 +9,7 @@
   "celeste_comment.nvim": { "branch": "main", "commit": "31bbca532cf4f89f0b235cdb6a2599223e702c13" },
   "conform.nvim": { "branch": "master", "commit": "619363c30309d29ffa631e67c8183f2a72caa373" },
   "conjure": { "branch": "main", "commit": "b7ff6c52b84a555cb57ea0d37b005473d4726a81" },
+  "dial.nvim": { "branch": "master", "commit": "f2634758455cfa52a8acea6f142dcd6271a1bf57" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "dropbar.nvim": { "branch": "master", "commit": "808ba31cde89aec8833e9789f5e04557cd31c9e1" },
   "fff-snacks.nvim": { "branch": "main", "commit": "544305711662dfd29647570218340f0a9ecadbd6" },

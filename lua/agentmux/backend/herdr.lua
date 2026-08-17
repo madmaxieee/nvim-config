@@ -17,8 +17,8 @@ local function backend_state(state)
 end
 
 local function target_name(provider)
-  local cwd_hash = vim.fn.sha256(vim.fn.getcwd()):sub(1, 8)
-  return ("agentmux-%s-%s-%s"):format(provider, cwd_hash, vim.uv.os_getpid())
+  local cwd_hash = vim.fn.sha256(vim.fn.getcwd()):sub(1, 6)
+  return ("amux-%s-%s-%x"):format(provider, cwd_hash, vim.uv.os_getpid())
 end
 
 function M.get_pane_id(state)

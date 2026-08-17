@@ -39,10 +39,11 @@ map({ "n", "x" }, "<leader>af", function()
 end, { desc = "Pick a predefined prompt" })
 
 local kv = require("kv")
-vim.api.nvim_create_autocmd("VimEnter", {
-  once = true,
+
+vim.api.nvim_create_autocmd("SessionLoadPost", {
+  group = vim.api.nvim_create_augroup("agentmux.session", {}),
   callback = function()
-    local provider = kv.get("agentmux_provider")
+    local provider = vim.g.AgentMuxProvider
     if type(provider) == "string" then
       agentmux.set_provider(provider)
     end
@@ -53,8 +54,7 @@ local function set_provider(provider)
   if not agentmux.set_provider(provider) then
     return false
   end
-  kv.set("agentmux_provider", provider)
-  kv.save()
+  vim.g.AgentMuxProvider = provider
   return true
 end
 

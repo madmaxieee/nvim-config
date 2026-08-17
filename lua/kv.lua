@@ -7,9 +7,8 @@ local config_file = vim.fs.joinpath(vim.fn.stdpath("state"), "kv.json")
 ---@field colorscheme string
 ---@field colorscheme_light string
 ---@field agentmux_restore AgentMuxRestoreOpts?
----@field agentmux_provider string
 
----@alias KvKey "theme" | "colorscheme" | "colorscheme_light" | "agentmux_restore" | "agentmux_provider"
+---@alias KvKey "theme" | "colorscheme" | "colorscheme_light" | "agentmux_restore"
 
 ---@type KvKey[]
 M.keys = {
@@ -17,7 +16,6 @@ M.keys = {
   "colorscheme",
   "colorscheme_light",
   "agentmux_restore",
-  "agentmux_provider",
 }
 
 ---@type Kv?
@@ -30,7 +28,6 @@ local default_config = {
   colorscheme_light = "catppuccin-latte",
   opencode_restore = false,
   agentmux_restore = nil,
-  agentmux_provider = "opencode",
 }
 
 ---@return Kv

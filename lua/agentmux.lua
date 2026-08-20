@@ -202,6 +202,9 @@ function M.ask(text, opts)
       return
     end
     M.send(input, opts)
+    if opts.focus then
+      M.focus()
+    end
   end)
 end
 

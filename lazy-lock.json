@@ -14,7 +14,7 @@
   "dropbar.nvim": { "branch": "master", "commit": "808ba31cde89aec8833e9789f5e04557cd31c9e1" },
   "fff-snacks.nvim": { "branch": "main", "commit": "544305711662dfd29647570218340f0a9ecadbd6" },
   "fff.nvim": { "branch": "main", "commit": "e6df25388ac98f46aa1385abbd20f7437b071b81" },
-  "flash.nvim": { "branch": "fix/neovim-0.13-search-state", "commit": "c92888d432bebeb145dad09c07ab65cc7c577184" },
+  "flash.nvim": { "branch": "main", "commit": "5f0f270fdc7c5b0c21d903ee85b9cb06f2ac636a" },
   "friendly-snippets": { "branch": "main", "commit": "6cd7280adead7f586db6fccbd15d2cac7e2188b9" },
   "grapple.nvim": { "branch": "main", "commit": "b41ddfc1c39f87f3d1799b99c2f0f1daa524c5f7" },
   "grug-far.nvim": { "branch": "main", "commit": "11595bf747edc270bce2069d1020502ad4ae56cf" },

@@ -7,10 +7,6 @@ local function show_macro_recording()
   end
 end
 
-local function show_jj_log()
-  return vim.b.jj_desc or ""
-end
-
 local function show_lsp_status()
   local copilot_icon
   if require("plugins.lsp.utils").lsp_should_enable("copilot") then
@@ -57,13 +53,6 @@ return {
   dependencies = {
     "nvim-tree/nvim-web-devicons",
     "cbochs/grapple.nvim",
-    {
-      url = "https://tangled.org/bpavuk.neocities.org/jj-log.nvim",
-      opts = {
-        out_no_jj_repo = "",
-        out_no_desc = "(no description set)",
-      },
-    },
   },
   opts = {
     options = {
@@ -92,7 +81,6 @@ return {
         { "file-info", fmt = show_file_info },
       },
       lualine_c = {
-        { "jj_log", fmt = show_jj_log },
         "diff",
         "diagnostics",
       },

@@ -127,3 +127,8 @@ map({ "n", "x" }, "<leader>rn", function()
 end, { desc = "Toggle relative number" })
 
 map("n", "<leader>rr", "<cmd>restart<CR>", { desc = "Restart Neovim" })
+
+map("n", "gQ", function()
+  local mc_ns = vim.api.nvim_create_namespace("nvim.multicursor")
+  vim.api.nvim_buf_clear_namespace(0, mc_ns, 0, -1)
+end, { desc = "Clear multicursor" })

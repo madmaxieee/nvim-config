@@ -16,6 +16,17 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     { import = "plugins" },
+    -- Keep fork overrides after imports so they take precedence.
+    {
+      "lualine.nvim",
+      url = "https://github.com/madmaxieee/lualine.nvim.git",
+      branch = "disable-statusline-option",
+    },
+    {
+      "snacks.nvim",
+      url = "https://github.com/madmaxieee/snacks.nvim.git",
+      branch = "downscale-png",
+    },
   },
   defaults = {
     lazy = true,

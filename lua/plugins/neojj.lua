@@ -6,8 +6,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "sindrets/diffview.nvim",
-      "madmaxieee/snacks.nvim",
-      -- "folke/snacks.nvim",
+      "folke/snacks.nvim",
     },
     cmd = "Neojj",
     init = function()

@@ -11,9 +11,7 @@ local next_ref_repeat, prev_ref_repeat = repeatable.make_repeatable_move_pair( -
 
 return {
   {
-    "madmaxieee/snacks.nvim",
-    branch = "downscale-png",
-    -- "folke/snacks.nvim",
+    "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
     keys = {

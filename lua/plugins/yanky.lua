@@ -8,8 +8,7 @@ return {
     },
   },
   dependencies = {
-    "madmaxieee/snacks.nvim",
-    -- "folke/snacks.nvim",
+    "folke/snacks.nvim",
   },
   keys = {
     {

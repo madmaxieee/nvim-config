@@ -92,7 +92,9 @@ return {
   },
 
   {
-    "folke/snacks.nvim",
+    "madmaxieee/snacks.nvim",
+    branch = "downscale-png",
+    -- "folke/snacks.nvim",
     ---@module 'snacks'
     ---@type snacks.Config
     opts = {

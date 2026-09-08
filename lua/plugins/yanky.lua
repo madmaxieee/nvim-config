@@ -7,7 +7,10 @@ return {
       on_yank = false,
     },
   },
-  dependencies = { "folke/snacks.nvim" },
+  dependencies = {
+    "madmaxieee/snacks.nvim",
+    -- "folke/snacks.nvim",
+  },
   keys = {
     {
       "<leader>p",

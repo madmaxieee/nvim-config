@@ -1,5 +1,7 @@
 return {
-  "folke/snacks.nvim",
+  "madmaxieee/snacks.nvim",
+  branch = "downscale-png",
+  -- "folke/snacks.nvim",
   dependencies = { "madmaxieee/jj-diff.nvim" },
   ---@module 'snacks'
   ---@type snacks.Config

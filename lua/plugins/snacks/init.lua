@@ -11,7 +11,9 @@ local next_ref_repeat, prev_ref_repeat = repeatable.make_repeatable_move_pair( -
 
 return {
   {
-    "folke/snacks.nvim",
+    "madmaxieee/snacks.nvim",
+    branch = "downscale-png",
+    -- "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
     keys = {
@@ -70,7 +72,7 @@ return {
       explorer = { enabled = false },
       image = {
         -- herdr has experimental KGP support but is is still buggy with snacks.image
-        enabled = not require("flags").is_herdr,
+        enabled = true,
         math = {
           typst = {
             -- change font size

@@ -106,12 +106,27 @@ function M.map_repeatable_pair(modes, specs, opts)
 end
 
 ---@param path string
+---@return string
 function M.strip_oil_prefix(path)
   local oil_prefix = "oil://"
   if vim.startswith(path, oil_prefix) then
     return path:sub(#oil_prefix + 1)
   end
   return path
+end
+
+---@param path string
+---@return boolean
+function M.is_temp_file(path)
+  -- macOS temp paths may look like this:
+  -- "/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.UDKOra60Bm.fish"
+  -- "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/editor-Hj11cQ.jjdescription"
+  -- "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.0jb32zqIvy.fish"
+  if vim.fn.has("mac") == 1 then
+    return string.match(path, "/var/folders/[^/]+/[^/]+/T/")
+  else
+    return string.match(path, "^/tmp/")
+  end
 end
 
 return M

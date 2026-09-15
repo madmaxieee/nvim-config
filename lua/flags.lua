@@ -7,17 +7,6 @@
 
 local cwd = vim.uv.cwd() or vim.fn.getcwd()
 
-local function _is_temp_file(path)
-  -- macOS temp paths may look like this:
-  -- "/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.UDKOra60Bm.fish"
-  -- "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/editor-Hj11cQ.jjdescription"
-  -- "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.0jb32zqIvy.fish"
-  return (
-    vim.fn.has("mac") == 1
-    and string.match(path, "/var/folders/[^/]+/[^/]+/T/")
-  ) or string.match(path, "^/tmp/")
-end
-
 local function is_minimal_mode()
   if
     -- allow override with `nvim --cmd 'lua vim.g.minimal_mode=true'`
@@ -35,7 +24,7 @@ local function is_minimal_mode()
   local argc = vim.fn.argc()
   local argv = vim.fn.argv()
 
-  if argc == 1 and _is_temp_file(argv[1]) then
+  if argc == 1 and require("utils").is_temp_file(argv[1]) then
     local path = argv[1]
     local file_name = vim.fs.basename(path)
     -- when used by fish shell to edit command line

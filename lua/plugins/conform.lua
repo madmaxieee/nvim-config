@@ -59,16 +59,28 @@ return {
             return {}
           end
         end,
-        rumdl = {
-          prepend_args = {
+        rumdl = function(bufnr)
+          local path = vim.uv.fs_realpath(vim.api.nvim_buf_get_name(bufnr))
+          assert(path)
+          local args = {
             "--config",
-            "MD060.enabled=true",
-            "--config",
-            "MD013.line-length=80",
-            "--config",
-            "MD013.reflow=true",
-          },
-        },
+            "MD060.enabled=true", -- table format
+          }
+          if require("utils").is_temp_file(path) then
+            vim.list_extend(args, {
+              "--config",
+              "MD034.enabled=false", -- URLs should be formatted as links
+            })
+          else
+            vim.list_extend(args, {
+              "--config",
+              "MD013.line-length=80",
+              "--config",
+              "MD013.reflow=true",
+            })
+          end
+          return { prepend_args = args }
+        end,
         -- keep-sorted end
       },
 

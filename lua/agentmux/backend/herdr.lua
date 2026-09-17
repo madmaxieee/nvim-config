@@ -71,36 +71,30 @@ function M.start(state, cfg)
 
     if split_res.code ~= 0 then
       data.starting = nil
-      vim.schedule(function()
-        vim.notify(
-          "Failed to split pane for coding agent: " .. (split_res.stderr or ""),
-          vim.log.levels.ERROR
-        )
-      end)
+      vim.notify(
+        "Failed to split pane for coding agent: " .. (split_res.stderr or ""),
+        vim.log.levels.ERROR
+      )
       return
     end
 
     local ok, split_data = pcall(vim.json.decode, split_res.stdout or "")
     if not ok then
       data.starting = nil
-      vim.schedule(function()
-        vim.notify(
-          "Failed to parse pane split response: " .. (split_res.stdout or ""),
-          vim.log.levels.ERROR
-        )
-      end)
+      vim.notify(
+        "Failed to parse pane split response: " .. (split_res.stdout or ""),
+        vim.log.levels.ERROR
+      )
       return
     end
 
     local pane_id = vim.tbl_get(split_data, "result", "pane", "pane_id")
     if not pane_id then
       data.starting = nil
-      vim.schedule(function()
-        vim.notify(
-          "Failed to obtain pane id from split response",
-          vim.log.levels.ERROR
-        )
-      end)
+      vim.notify(
+        "Failed to obtain pane id from split response",
+        vim.log.levels.ERROR
+      )
       return
     end
 
@@ -145,12 +139,10 @@ function M.start(state, cfg)
 
     if res.code ~= 0 then
       data.starting = nil
-      vim.schedule(function()
-        vim.notify(
-          "Failed to start coding agent in pane: " .. (res.stderr or ""),
-          vim.log.levels.ERROR
-        )
-      end)
+      vim.notify(
+        "Failed to start coding agent in pane: " .. (res.stderr or ""),
+        vim.log.levels.ERROR
+      )
       vim.system({ "herdr", "pane", "close", pane_id })
       return
     end

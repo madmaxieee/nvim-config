@@ -1,4 +1,8 @@
-local co2 = require("co2")
+---@diagnostic disable: missing-return-value, missing-return
+-- lua_ls does not seem to recognize the type annotation of vim.async.run
+
+local async = vim.async
+local async_system = require("utils.async").system
 
 ---@class AgentMuxBackend
 local M = {}
@@ -34,20 +38,6 @@ function M.get_pane_id(state)
   return data.pane_id
 end
 
----@param ms number
----@param callback fun()
-local function async_sleep(ms, callback)
-  local timer = vim.uv.new_timer()
-  if not timer then
-    callback()
-    return
-  end
-  timer:start(ms, 0, function()
-    timer:close()
-    callback()
-  end)
-end
-
 ---@param state AgentMuxState
 ---@param cfg AgentMuxConfig
 function M.start(state, cfg)
@@ -73,8 +63,8 @@ function M.start(state, cfg)
     vim.list_extend(split_cmd, { "--env", ("%s=%s"):format(key, value) })
   end
 
-  co2.run(function(ctx)
-    local split_res = ctx.await(vim.system, split_cmd, {})
+  async.run(function()
+    local split_res = async_system(split_cmd, {})
     if not data.starting then
       return
     end
@@ -137,11 +127,11 @@ function M.start(state, cfg)
 
     local res
     for _ = 1, 10 do
-      res = ctx.await(vim.system, start_cmd, {})
+      res = async_system(start_cmd, {})
       if not data.starting or res.code == 0 then
         break
       end
-      ctx.await(async_sleep, 100)
+      async.sleep(100)
       if not data.starting then
         break
       end

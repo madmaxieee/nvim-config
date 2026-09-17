@@ -1,5 +1,10 @@
-local co2 = require("co2")
+---@diagnostic disable: missing-return-value, missing-return
+-- lua_ls does not seem to recognize the type annotation of vim.async.run
+
+local async = vim.async
+local async_system = require("utils.async").system
 local gutils = require("gutils")
+
 local M = {}
 
 -- Find nearest BUILD file upwards, stopping at g3_root
@@ -35,23 +40,19 @@ function M.disk_path_to_blaze_path(disk_path, g3_root)
 end
 
 -- Run blaze query asynchronously and call callback with list of targets
+---@async
 ---@param query string
 ---@param g3_root string
----@param callback fun(targets: string[])
-local blaze_query = co2.wrap(function(ctx, query, g3_root, callback)
-  local res = ctx.await(
-    vim.system,
-    { "blaze", "query", query },
-    { cwd = g3_root }
-  )
+local function blaze_query(query, g3_root)
+  local res = async_system({ "blaze", "query", query }, { cwd = g3_root })
   local targets = {}
   if res.code == 0 and res.stdout then
     for line in res.stdout:gmatch("[^\r\n]+") do
       table.insert(targets, line)
     end
   end
-  callback(targets)
-end)
+  return targets
+end
 
 -- Infer Command (build vs test) based on filename
 ---@param filepath string
@@ -64,38 +65,33 @@ local function infer_command(filepath)
   return "build"
 end
 
-local get_all_affected_targets = co2.wrap(
-  -- Run affected_targets and call callback with list of targets
-  ---@param cmd_type "build"|"test"
-  ---@param g3_root string
-  ---@param callback fun(targets: string[]?)
-  function(ctx, cmd_type, g3_root, callback)
-    local res = ctx.await(vim.system, { "affected_targets" }, { cwd = g3_root })
+-- Run blaze query asynchronously and call callback with list of targets
+---@async
+---@param cmd_type "build"|"test"
+---@param g3_root string
+---@return string[]
+local function get_all_affected_targets(cmd_type, g3_root)
+  local res = async_system({ "affected_targets" }, { cwd = g3_root })
 
-    if res.code ~= 0 or not res.stdout then
-      callback({})
-      return
-    end
-
-    local targets = {}
-    for line in res.stdout:gmatch("[^\r\n]+") do
-      if
-        cmd_type == "build"
-        or (cmd_type == "test" and line:match("_test$"))
-      then
-        table.insert(targets, line)
-      end
-    end
-
-    callback(targets)
+  if res.code ~= 0 or not res.stdout then
+    return {}
   end
-)
+
+  local targets = {}
+  for line in res.stdout:gmatch("[^\r\n]+") do
+    if cmd_type == "build" or (cmd_type == "test" and line:match("_test$")) then
+      table.insert(targets, line)
+    end
+  end
+  return targets
+end
 
 -- Main Entry Point: Infer targets for source files asynchronously
+---@async
 ---@param filepath string
 ---@param cmd_type string
----@param callback fun(targets: string[]?)
-local infer_targets = co2.wrap(function(ctx, filepath, cmd_type, callback)
+---@return string[]?
+local function infer_targets(filepath, cmd_type)
   filepath = vim.fn.fnamemodify(filepath, ":p")
 
   -- Ensure we don't try to process BUILD files here
@@ -105,19 +101,16 @@ local infer_targets = co2.wrap(function(ctx, filepath, cmd_type, callback)
     or filename == "BUILD.bazel"
     or vim.bo.filetype == "bzl"
   then
-    callback(nil)
     return
   end
 
   local g3_root = gutils.get_google3_root(filepath)
   if not g3_root then
-    callback(nil)
     return
   end
 
   local package_path = M.get_package_path(filepath, g3_root)
   if not package_path then
-    callback(nil)
     return
   end
 
@@ -157,9 +150,8 @@ local infer_targets = co2.wrap(function(ctx, filepath, cmd_type, callback)
     )
   end
 
-  local targets = ctx.await(blaze_query, query, g3_root)
-  callback(targets)
-end)
+  return blaze_query(query, g3_root)
+end
 
 ---@param cmd_type? "build"|"test"|"coverage"|"run"
 ---@param filepath? string
@@ -177,8 +169,8 @@ function M.blaze(cmd_type, filepath)
     )
   )
 
-  co2.run(function(ctx)
-    local targets = ctx.await(infer_targets, filepath, cmd_type)
+  async.run(function()
+    local targets = infer_targets(filepath, cmd_type)
     if not targets or #targets == 0 then
       vim.schedule(function()
         vim.notify(
@@ -227,8 +219,8 @@ function M.blaze_all(cmd_type)
 
   vim.notify(("Blaze %s running on all affected targets..."):format(cmd_type))
 
-  co2.run(function(ctx)
-    local targets = ctx.await(get_all_affected_targets, cmd_type, g3_root)
+  async.run(function()
+    local targets = get_all_affected_targets(cmd_type, g3_root)
     if not targets or #targets == 0 then
       vim.schedule(function()
         vim.notify("No affected blaze targets found", vim.log.levels.WARN)

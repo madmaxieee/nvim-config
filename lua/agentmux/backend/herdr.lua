@@ -1,6 +1,3 @@
----@diagnostic disable: missing-return-value, missing-return
--- lua_ls does not seem to recognize the type annotation of vim.async.run
-
 local async = vim.async
 
 local async_utils = require("utils.async")
@@ -39,9 +36,10 @@ function M.get_pane_id(state)
   return data.pane_id
 end
 
+---@async
 ---@param state AgentMuxState
 ---@param cfg AgentMuxConfig
-function M.start(state, cfg)
+local function start_agent(state, cfg)
   local data = backend_state(state)
   if data.starting then
     return
@@ -64,95 +62,97 @@ function M.start(state, cfg)
     vim.list_extend(split_cmd, { "--env", ("%s=%s"):format(key, value) })
   end
 
-  async.run(function()
-    local split_res = async_utils.system(split_cmd, {})
-    if not data.starting then
-      return
-    end
+  local split_res = async_utils.system(split_cmd, {})
+  if not data.starting then
+    return
+  end
 
-    if split_res.code ~= 0 then
-      data.starting = nil
-      vim.notify(
-        "Failed to split pane for coding agent: " .. (split_res.stderr or ""),
-        vim.log.levels.ERROR
-      )
-      return
-    end
-
-    local ok, split_data = pcall(vim.json.decode, split_res.stdout or "")
-    if not ok then
-      data.starting = nil
-      vim.notify(
-        "Failed to parse pane split response: " .. (split_res.stdout or ""),
-        vim.log.levels.ERROR
-      )
-      return
-    end
-
-    local pane_id = vim.tbl_get(split_data, "result", "pane", "pane_id")
-    if not pane_id then
-      data.starting = nil
-      vim.notify(
-        "Failed to obtain pane id from split response",
-        vim.log.levels.ERROR
-      )
-      return
-    end
-
-    -- resize the pane as soon as the split is created
-    -- stylua: ignore
-    vim.system({
-      "herdr", "pane", "resize",
-      "--direction", "right",
-      "--amount", "0.1",
-      "--pane", pane_id,
-    }, { detach = true })
-
-    -- stylua: ignore
-    local start_cmd = {
-      "herdr", "agent", "start", target,
-      "--kind", kind,
-      "--pane", pane_id,
-    }
-
-    if provider.args and #provider.args > 0 then
-      table.insert(start_cmd, "--")
-      vim.list_extend(start_cmd, provider.args)
-    end
-
-    local res
-    for _ = 1, 10 do
-      res = async_utils.system(start_cmd, {})
-      if not data.starting or res.code == 0 then
-        break
-      end
-      async.sleep(100)
-      if not data.starting then
-        break
-      end
-    end
-
-    -- return early if the start action is canceled by M.stop()
-    if not data.starting then
-      vim.system({ "herdr", "pane", "close", pane_id })
-      return
-    end
-
-    if res.code ~= 0 then
-      data.starting = nil
-      vim.notify(
-        "Failed to start coding agent in pane: " .. (res.stderr or ""),
-        vim.log.levels.ERROR
-      )
-      vim.system({ "herdr", "pane", "close", pane_id })
-      return
-    end
-
+  if split_res.code ~= 0 then
     data.starting = nil
-    data.pane_id = pane_id
-    state.backend = "herdr"
-  end)
+    async_utils.notify(
+      "Failed to split pane for coding agent: " .. (split_res.stderr or ""),
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  local ok, split_data = pcall(vim.json.decode, split_res.stdout or "")
+  if not ok then
+    data.starting = nil
+    async_utils.notify(
+      "Failed to parse pane split response: " .. (split_res.stdout or ""),
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  local pane_id = vim.tbl_get(split_data, "result", "pane", "pane_id")
+  if not pane_id then
+    data.starting = nil
+    async_utils.notify(
+      "Failed to obtain pane id from split response",
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  -- resize the pane as soon as the split is created
+  -- stylua: ignore
+  vim.system({
+    "herdr", "pane", "resize",
+    "--direction", "right",
+    "--amount", "0.1",
+    "--pane", pane_id,
+  }, { detach = true })
+
+  -- stylua: ignore
+  local start_cmd = {
+    "herdr", "agent", "start", target,
+    "--kind", kind,
+    "--pane", pane_id,
+  }
+
+  if provider.args and #provider.args > 0 then
+    table.insert(start_cmd, "--")
+    vim.list_extend(start_cmd, provider.args)
+  end
+
+  local res
+  for _ = 1, 10 do
+    res = async_utils.system(start_cmd, {})
+    if not data.starting or res.code == 0 then
+      break
+    end
+    async.sleep(100)
+    if not data.starting then
+      break
+    end
+  end
+
+  -- return early if the start action is canceled by M.stop()
+  if not data.starting then
+    vim.system({ "herdr", "pane", "close", pane_id })
+    return
+  end
+
+  if res.code ~= 0 then
+    data.starting = nil
+    async_utils.notify(
+      "Failed to start coding agent in pane: " .. (res.stderr or ""),
+      vim.log.levels.ERROR
+    )
+    vim.system({ "herdr", "pane", "close", pane_id })
+    return
+  end
+
+  data.starting = nil
+  data.pane_id = pane_id
+  state.backend = "herdr"
 end
+
+-- The task runs synchronously up to its first await, so the `starting` guard
+-- still wins races between two calls.
+M.start = async_utils.wrapped(start_agent)
 
 function M.restore_or_start(state, cfg, restore_opts)
   local res =

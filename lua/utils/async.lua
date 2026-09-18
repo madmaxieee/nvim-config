@@ -3,6 +3,69 @@ local M = {}
 ---@type async fun(cmd: string[], opts?: vim.SystemOpts): vim.SystemCompleted
 M.system = vim.async.wrap(3, vim.system)
 
+---Resumes the task on the main loop.
+---
+---Awaits resume in whatever context completed them, which for `vim.system` and
+---`vim.uv` callbacks is a fast event context where `vim.notify` and most of
+---`vim.api` raise E5560. `vim.async.checkpoint()` is not a substitute: it does
+---not yield to the event loop.
+---@type async fun()
+local schedule = vim.async.wrap(1, vim.schedule)
+
+---Wraps `target` so every call hops to the main loop first, but only when the
+---caller is currently in a fast event context.
+---
+---Calling from outside a task is fine as long as the caller is not in a fast
+---event context, which is where the hop would be needed but impossible.
+---@generic T: table
+---@param target T
+---@return T
+local function main_loop_proxy(target)
+  local cache = {}
+  return setmetatable({}, {
+    __index = function(_, key)
+      if not cache[key] then
+        cache[key] = function(...)
+          if vim.in_fast_event() then
+            schedule()
+          end
+          return target[key](...)
+        end
+      end
+      return cache[key]
+    end,
+  })
+end
+
+---Same shape as `vim.api`, but safe to call after an await.
+---@type table
+M.api = main_loop_proxy(vim.api)
+
+---Same shape as `vim.fn`, but safe to call after an await.
+---@type table
+M.fn = main_loop_proxy(vim.fn)
+
+---Calls `fn` on the main loop and returns its result, for everything the
+---`api` and `fn` proxies do not cover, e.g. third party plugins.
+---@async
+---@generic R
+---@param fn fun(...): R
+---@return R
+function M.main_loop(fn, ...)
+  if vim.in_fast_event() then
+    schedule()
+  end
+  return fn(...)
+end
+
+---@async
+---@param msg string
+---@param level? integer
+---@param opts? table
+function M.notify(msg, level, opts)
+  M.main_loop(vim.notify, msg, level, opts)
+end
+
 ---Only attached (child) task errors propagate to a parent, so a top-level
 ---fire-and-forget task drops its error unless its completion is observed.
 ---@param task vim.async.Task<any>

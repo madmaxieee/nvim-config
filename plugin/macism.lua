@@ -29,13 +29,15 @@ vim.api.nvim_create_autocmd("VimEnter", {
   end),
 })
 
+-- The IME state is shared, so let the latest event win instead of letting
+-- overlapping tasks interleave their `macism` calls.
 vim.api.nvim_create_autocmd("InsertEnter", {
   group = group,
   callback = async_utils.wrapped(function()
     if saved_method and get_current_input_method() ~= saved_method then
       select_input_method(saved_method)
     end
-  end),
+  end, { exclusive = true }),
 })
 
 vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave" }, {
@@ -45,5 +47,5 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave" }, {
     if saved_method ~= _ABC_KEYBOARD then
       select_input_method(_ABC_KEYBOARD)
     end
-  end),
+  end, { exclusive = true }),
 })

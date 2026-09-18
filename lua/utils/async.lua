@@ -8,7 +8,9 @@ M.system = vim.async.wrap(3, vim.system)
 ---@param task vim.async.Task<any>
 local function report_errors(task)
   task:on_complete(function(err)
-    if err == nil then
+    -- `close()` completes the task with "closed", which is a cancellation, not
+    -- a failure.
+    if err == nil or err == "closed" then
       return
     end
     -- `on_complete` may run in a fast event context.
@@ -20,11 +22,26 @@ end
 
 ---Turns an async function into a plain callback, usable from synchronous
 ---contexts such as autocmd callbacks and keymaps.
+---
+---Each call starts an independent task, so tasks from rapidly repeated calls
+---interleave freely at their await points. Pass `exclusive` when only the
+---latest call matters and concurrent tasks would race on shared state.
 ---@param fn async fun(...): ...
+---@param opts? { exclusive?: boolean } exclusive: close the task started by the
+---previous call, if it is still running, before starting a new one
 ---@return fun(...)
-function M.wrapped(fn)
+function M.wrapped(fn, opts)
+  local exclusive = opts and opts.exclusive
+  local prev ---@type vim.async.Task<any>?
+
   return function(...)
-    report_errors(vim.async.run(fn, ...))
+    if exclusive and prev and not prev:completed() then
+      -- Cooperative: the task stops at its next await point. Work already
+      -- started (e.g. a spawned process) is not aborted.
+      prev:close()
+    end
+    prev = vim.async.run(fn, ...)
+    report_errors(prev)
     -- Returns nothing on purpose: a truthy return value from an autocmd
     -- callback deletes the autocmd.
   end

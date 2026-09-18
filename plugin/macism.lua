@@ -34,7 +34,9 @@ vim.api.nvim_create_autocmd("VimEnter", {
 vim.api.nvim_create_autocmd("InsertEnter", {
   group = group,
   callback = async_utils.wrapped(function()
-    if saved_method and get_current_input_method() ~= saved_method then
+    -- Selecting the method we already want is a no-op, and cheaper than
+    -- spawning an extra `macism` just to check the current one.
+    if saved_method then
       select_input_method(saved_method)
     end
   end, { exclusive = true }),

@@ -173,20 +173,25 @@ function M.blaze(cmd_type, filepath)
   async.run(function()
     local targets = infer_targets(filepath, cmd_type)
     if not targets or #targets == 0 then
-      vim.notify("No blaze targets found for " .. filepath, vim.log.levels.WARN)
+      async_utils.notify(
+        "No blaze targets found for " .. filepath,
+        vim.log.levels.WARN
+      )
       return
     end
 
     local command = vim.list_extend({ "blaze", cmd_type }, targets)
 
-    require("snacks").terminal.open(command, {
-      auto_close = false,
-      interactive = false,
-      win = {
-        position = "bottom",
-        height = 0.3,
-      },
-    })
+    async_utils.main_loop(function()
+      require("snacks").terminal.open(command, {
+        auto_close = false,
+        interactive = false,
+        win = {
+          position = "bottom",
+          height = 0.3,
+        },
+      })
+    end)
   end)
 end
 
@@ -216,21 +221,23 @@ function M.blaze_all(cmd_type)
   async.run(function()
     local targets = get_all_affected_targets(cmd_type, g3_root)
     if not targets or #targets == 0 then
-      vim.notify("No affected blaze targets found", vim.log.levels.WARN)
+      async_utils.notify("No affected blaze targets found", vim.log.levels.WARN)
       return
     end
 
     local command = vim.list_extend({ "blaze", cmd_type }, targets)
 
-    require("snacks").terminal.open(command, {
-      auto_close = false,
-      interactive = false,
-      win = {
-        position = "bottom",
-        height = 0.3,
-      },
-      env = { SKYBUILD = "1" },
-    })
+    async_utils.main_loop(function()
+      require("snacks").terminal.open(command, {
+        auto_close = false,
+        interactive = false,
+        win = {
+          position = "bottom",
+          height = 0.3,
+        },
+        env = { SKYBUILD = "1" },
+      })
+    end)
   end)
 end
 

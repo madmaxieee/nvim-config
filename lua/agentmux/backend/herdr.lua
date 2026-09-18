@@ -154,18 +154,29 @@ end
 -- still wins races between two calls.
 M.start = async_utils.wrapped(start_agent)
 
-function M.restore_or_start(state, cfg, restore_opts)
-  local res =
-    vim.system({ "herdr", "agent", "get", restore_opts.pane_id }):wait()
-  if res.code == 0 then
-    local data = backend_state(state)
-    data.pane_id = restore_opts.pane_id
-    state.backend = "herdr"
-    vim.notify("agentmux: restored link to agent pane")
-  else
-    M.start(state, cfg)
+---@async
+---@param state AgentMuxState
+---@param cfg AgentMuxConfig
+---@param restore_opts AgentMuxRestoreOpts
+M.restore_or_start = async_utils.wrapped(function(state, cfg, restore_opts)
+  local res = async_utils.system(
+    { "herdr", "agent", "get", restore_opts.pane_id },
+    {}
+  )
+
+  if res.code ~= 0 then
+    -- Entered inline rather than through M.start, to stay in this task instead
+    -- of spawning a child one. start_agent reads vim.fn before its first
+    -- await, so it has to begin on the main loop.
+    async_utils.main_loop(start_agent, state, cfg)
+    return
   end
-end
+
+  local data = backend_state(state)
+  data.pane_id = restore_opts.pane_id
+  state.backend = "herdr"
+  async_utils.notify("agentmux: restored link to agent pane")
+end)
 
 function M.stop(state)
   local data = backend_state(state)

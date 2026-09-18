@@ -2,7 +2,8 @@
 -- lua_ls does not seem to recognize the type annotation of vim.async.run
 
 local async = vim.async
-local async_system = require("utils.async").system
+
+local async_utils = require("utils.async")
 
 ---@class AgentMuxBackend
 local M = {}
@@ -64,7 +65,7 @@ function M.start(state, cfg)
   end
 
   async.run(function()
-    local split_res = async_system(split_cmd, {})
+    local split_res = async_utils.system(split_cmd, {})
     if not data.starting then
       return
     end
@@ -121,7 +122,7 @@ function M.start(state, cfg)
 
     local res
     for _ = 1, 10 do
-      res = async_system(start_cmd, {})
+      res = async_utils.system(start_cmd, {})
       if not data.starting or res.code == 0 then
         break
       end

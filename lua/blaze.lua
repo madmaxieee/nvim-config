@@ -2,7 +2,8 @@
 -- lua_ls does not seem to recognize the type annotation of vim.async.run
 
 local async = vim.async
-local async_system = require("utils.async").system
+
+local async_utils = require("utils.async")
 local gutils = require("gutils")
 
 local M = {}
@@ -44,7 +45,7 @@ end
 ---@param query string
 ---@param g3_root string
 local function blaze_query(query, g3_root)
-  local res = async_system({ "blaze", "query", query }, { cwd = g3_root })
+  local res = async_utils.system({ "blaze", "query", query }, { cwd = g3_root })
   local targets = {}
   if res.code == 0 and res.stdout then
     for line in res.stdout:gmatch("[^\r\n]+") do
@@ -71,7 +72,7 @@ end
 ---@param g3_root string
 ---@return string[]
 local function get_all_affected_targets(cmd_type, g3_root)
-  local res = async_system({ "affected_targets" }, { cwd = g3_root })
+  local res = async_utils.system({ "affected_targets" }, { cwd = g3_root })
 
   if res.code ~= 0 or not res.stdout then
     return {}

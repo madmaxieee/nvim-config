@@ -45,6 +45,32 @@ M.api = main_loop_proxy(vim.api)
 ---@type table
 M.fn = main_loop_proxy(vim.fn)
 
+local function to_lua_return(err, ...)
+  if err then
+    return nil, err
+  end
+  return ...
+end
+
+---Same shape as synchronous `vim.uv` for its callback-taking functions (`fs_*`,
+---etc.): appends the continuation callback at `argc + 1` and converts Luv's
+---error-first callback `(err, ...)` back to Lua's `(..., err)` convention.
+---@type table
+M.uv = (function()
+  local cache = {}
+  return setmetatable({}, {
+    __index = function(_, key)
+      if not cache[key] then
+        local fn = vim.uv[key]
+        cache[key] = function(...)
+          return to_lua_return(vim.async.await(select("#", ...) + 1, fn, ...))
+        end
+      end
+      return cache[key]
+    end,
+  })
+end)()
+
 ---Calls `fn` on the main loop and returns its result, for everything the
 ---`api` and `fn` proxies do not cover, e.g. third party plugins.
 ---@async

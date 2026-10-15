@@ -10,6 +10,8 @@ vim.api.nvim_create_user_command("G3", function(args)
     return
   end
 
+  path = path:gsub("^https?://", "")
+
   if
     not (
       path:find(gutils.G3_PREFIX, nil, true) == 1

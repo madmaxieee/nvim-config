@@ -18,6 +18,7 @@ map({ "n", "x" }, "gf", function()
     path = vim.fn.expand("<cfile>")
   end
 
+  path = path:gsub("^https?://", "")
   path = gutils.google3_path_to_filesystem_path(path)
 
   if vim.uv.fs_stat(path) then

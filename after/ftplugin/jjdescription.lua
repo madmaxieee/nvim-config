@@ -13,10 +13,11 @@ if require("flags").in_google3 then
       end
 
       local cleaned_rest = (rest:gsub("[#?].*", ""))
-      local d9 = "%d%d%d%d%d%d%d%d%d"
-      local bug_id = cleaned_rest:match("/issues/(" .. d9 .. ")")
-        or cleaned_rest:match("b/(" .. d9 .. ")")
-        or cleaned_rest:match("/(" .. d9 .. ")")
+      -- 9 or 10 digit IDs
+      local id_pat = "%d%d%d%d%d%d%d%d%d%d?"
+      local bug_id = cleaned_rest:match("/issues/(" .. id_pat .. ")")
+        or cleaned_rest:match("b/(" .. id_pat .. ")")
+        or cleaned_rest:match("/(" .. id_pat .. ")")
 
       if not bug_id then
         return

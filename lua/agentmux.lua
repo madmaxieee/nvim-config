@@ -21,7 +21,7 @@
 
 ---@type AgentMuxConfig
 local cfg = {
-  provider = "opencode",
+  provider = "codex",
   backend = "auto",
   providers = {
     opencode = {
@@ -159,15 +159,18 @@ end
 ---@param text string
 ---@param opts { submit: boolean }?
 function M.send(text, opts)
-  if not M.get_pane_id() then
-    vim.notify("Agent pane is not active", vim.log.levels.WARN)
-    return
-  end
-
   local transformed_text = require("agentmux.context").transform(text, {
     buf = vim.api.nvim_get_current_buf(),
     win = vim.api.nvim_get_current_win(),
   })
+
+  if not M.get_pane_id() then
+    vim.fn.setreg("+", transformed_text)
+    vim.fn.setreg("*", transformed_text)
+    vim.fn.setreg('"', transformed_text)
+    vim.notify("Copied to clipboard", vim.log.levels.INFO)
+    return
+  end
 
   local backend = get_backend()
   if backend.send_text then
@@ -186,11 +189,6 @@ end
 ---@param text string
 ---@param opts { submit: boolean, focus: boolean }?
 function M.ask(text, opts)
-  if not M.is_active() then
-    vim.notify("Agent pane is not active", vim.log.levels.WARN)
-    return
-  end
-
   opts = opts or {}
 
   local highlight = require("agentmux.highlight")
@@ -204,7 +202,7 @@ function M.ask(text, opts)
       title_pos = "left",
       relative = "cursor",
       row = -3, -- Row above the cursor
-      col = 0,  -- Align with the cursor
+      col = 0, -- Align with the cursor
       keys = {
         i_cr = {
           desc = "submit",

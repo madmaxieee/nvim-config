@@ -46,6 +46,9 @@ vim.api.nvim_create_user_command("InlayHintToggle", function()
 end, {})
 
 vim.api.nvim_create_user_command("Diffthis", "windo diffthis", {})
+vim.api.nvim_create_user_command("Diffoff", function()
+  vim.cmd("windo diffoff | setlocal foldlevel=1000 foldcolumn=0")
+end, {})
 
 vim.api.nvim_create_user_command("CdBuf", "cd %:h", {})
 

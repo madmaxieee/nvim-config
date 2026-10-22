@@ -7,6 +7,9 @@ require("agentmux").setup({
   providers = {
     agy = {
       command = { "agy" },
+      resume_args = function(session_id)
+        return { "--conversation", session_id }
+      end,
       tmux_stop_agent = function(pane_id)
         -- stylua: ignore
         vim.system({

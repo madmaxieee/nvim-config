@@ -36,10 +36,17 @@ function M.get_pane_id(state)
   return data.pane_id
 end
 
+---@class AgentMuxHerdrStartOpts
+---@field name? string agent name (defaults to target_name(provider))
+---@field cwd? string pane working directory (defaults to vim.fn.getcwd())
+---@field extra_args? string[] appended after provider.args
+
 ---@async
 ---@param state AgentMuxState
 ---@param cfg AgentMuxConfig
-local function start_agent(state, cfg)
+---@param opts? AgentMuxHerdrStartOpts
+local function start_agent(state, cfg, opts)
+  opts = opts or {}
   local data = backend_state(state)
   if data.starting then
     return
@@ -47,14 +54,14 @@ local function start_agent(state, cfg)
   data.starting = true
 
   local provider = cfg.providers[cfg.provider]
-  local target = target_name(cfg.provider)
+  local target = opts.name or target_name(cfg.provider)
   local kind = provider.kind or cfg.provider
 
   -- stylua: ignore
   local split_cmd = {
     "herdr", "pane", "split",
     "--direction", "right",
-    "--cwd", vim.fn.getcwd(),
+    "--cwd", opts.cwd or vim.fn.getcwd(),
     "--focus",
   }
 
@@ -112,9 +119,13 @@ local function start_agent(state, cfg)
     "--pane", pane_id,
   }
 
-  if provider.args and #provider.args > 0 then
+  local agent_args = vim.list_extend(
+    vim.list_extend({}, provider.args or {}),
+    opts.extra_args or {}
+  )
+  if #agent_args > 0 then
     table.insert(start_cmd, "--")
-    vim.list_extend(start_cmd, provider.args)
+    vim.list_extend(start_cmd, agent_args)
   end
 
   local res
@@ -176,6 +187,66 @@ M.restore_or_start = async_utils.wrapped(function(state, cfg, restore_opts)
   data.pane_id = restore_opts.pane_id
   state.backend = "herdr"
   async_utils.notify("agentmux: restored link to agent pane")
+end)
+
+---Closes the agent pane and reopens it with the same agent name, resuming the
+---same agent session.
+---@async
+---@param state AgentMuxState
+---@param cfg AgentMuxConfig
+M.restart = async_utils.wrapped(function(state, cfg)
+  local data = backend_state(state)
+  local pane_id = data.pane_id
+  if not pane_id or data.starting then
+    return
+  end
+
+  local provider = cfg.providers[cfg.provider]
+  if not provider.resume_args then
+    async_utils.notify(
+      ("agentmux: provider %s does not define resume_args"):format(cfg.provider),
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  local get_res = async_utils.system({ "herdr", "agent", "get", pane_id }, {})
+  local ok, get_data = pcall(vim.json.decode, get_res.stdout or "")
+  if get_res.code ~= 0 or not ok then
+    async_utils.notify(
+      "agentmux: failed to query agent: " .. (get_res.stderr or ""),
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  local agent = vim.tbl_get(get_data, "result", "agent") or {}
+  local session_id = vim.tbl_get(agent, "agent_session", "value")
+  if type(session_id) ~= "string" or session_id == "" then
+    async_utils.notify(
+      "agentmux: agent has no session id, not restarting",
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  -- bail out if the pane changed while we were querying it
+  if data ~= state.data or data.pane_id ~= pane_id then
+    return
+  end
+
+  -- close the pane and wait so the agent name is released before reuse
+  state.backend = nil
+  state.data = nil
+  async_utils.system({ "herdr", "pane", "close", pane_id }, {})
+
+  -- start_agent reads vim.fn before its first await, so it has to begin on
+  -- the main loop.
+  async_utils.main_loop(start_agent, state, cfg, {
+    name = type(agent.name) == "string" and agent.name or nil,
+    cwd = type(agent.cwd) == "string" and agent.cwd or nil,
+    extra_args = provider.resume_args(session_id),
+  })
 end)
 
 function M.stop(state)

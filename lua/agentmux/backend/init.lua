@@ -9,6 +9,7 @@
 ---@field start fun(state: AgentMuxState, cfg: AgentMuxConfig)
 ---@field restore_or_start fun(state: AgentMuxState, cfg: AgentMuxConfig, restore_opts: AgentMuxRestoreOpts)
 ---@field stop fun(state: AgentMuxState, cfg: AgentMuxConfig)
+---@field restart? fun(state: AgentMuxState, cfg: AgentMuxConfig)
 ---@field focus fun(state: AgentMuxState)
 ---@field send_keys fun(state: AgentMuxState, keys: string[])
 ---@field send_text? fun(state: AgentMuxState, text: string, submit?: boolean)

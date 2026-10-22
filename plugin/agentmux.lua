@@ -20,6 +20,10 @@ map({ "n", "x" }, "<leader>ax", function()
   agentmux.stop()
 end, { desc = "Stop agent" })
 
+map({ "n", "x" }, "<leader>ar", function()
+  agentmux.restart()
+end, { desc = "Restart agent (same name and session)" })
+
 map({ "n", "x" }, "<leader>an", function()
   agentmux.new()
 end, { desc = "New session" })

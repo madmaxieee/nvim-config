@@ -8,6 +8,7 @@
 ---@field env? table<string, string>
 ---@field tmux_stop_agent? fun(pane_id: string) backend stop hook
 ---@field format_keys? fun(text: string): string[] construct tmux send-keys arguments from text to send
+---@field resume_args? fun(session_id: string): string[] agent arguments that resume the given session
 
 ---@class AgentMuxConfig : AgentMuxOptions
 ---@field providers? table<string, AgentMuxProvider>
@@ -24,11 +25,17 @@ local cfg = {
   backend = "auto",
   providers = {
     opencode = {
+      resume_args = function(session_id)
+        return { "--session", session_id }
+      end,
       tmux_stop_agent = function(pane_id)
         vim.system({ "tmux", "send-keys", "-t", pane_id, "C-c", "C-d" })
       end,
     },
     codex = {
+      resume_args = function(session_id)
+        return { "resume", session_id }
+      end,
       tmux_stop_agent = function(pane_id)
         vim.system({ "tmux", "send-keys", "-t", pane_id, "C-d" })
       end,
@@ -95,6 +102,24 @@ function M.stop()
   end
 
   get_backend().stop(state, cfg)
+end
+
+---Stops the agent and reopens it with the same name, resuming the same session.
+function M.restart()
+  if not M.get_pane_id() then
+    vim.notify("Agent pane is not active", vim.log.levels.WARN)
+    return
+  end
+
+  local backend = get_backend()
+  if not backend.restart then
+    vim.notify(
+      "agentmux: restart is not supported by this backend",
+      vim.log.levels.WARN
+    )
+    return
+  end
+  backend.restart(state, cfg)
 end
 
 function M.focus()

@@ -123,9 +123,10 @@ function M.is_temp_file(path)
   -- "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/editor-Hj11cQ.jjdescription"
   -- "/private/var/folders/pg/4v3k1ztx3bb8bm_mzw0hknqc0000gn/T/tmp.0jb32zqIvy.fish"
   if vim.fn.has("mac") == 1 then
-    return string.match(path, "/var/folders/[^/]+/[^/]+/T/")
+    return path:match("/var/folders/[^/]+/[^/]+/T/")
+      or path:match("^/private/tmp/")
   else
-    return string.match(path, "^/tmp/")
+    return path:match("^/tmp/")
   end
 end
 

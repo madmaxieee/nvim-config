@@ -26,7 +26,7 @@ return {
         },
       },
       picker = {
-        name = "snacks.pick",
+        name = "snacks.picker",
       },
       note_id_func = function(...)
         return ("%d-%s"):format(

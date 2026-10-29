@@ -84,7 +84,7 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
       -- Save flag to restore agentmux pane after restart
       if agentmux.is_active() then
         require("kv").set("agentmux_restore", {
-          backend = "herdr",
+          backend = agentmux.get_backend_name(),
           pane_id = agentmux.get_pane_id(),
           provider = agentmux.get_provider(),
         } --[[@as AgentMuxRestoreOpts]])

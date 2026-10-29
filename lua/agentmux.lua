@@ -68,6 +68,10 @@ function M.is_active()
   return M.get_pane_id() ~= nil
 end
 
+function M.get_backend_name()
+  return state.backend or backend_registry.detect()
+end
+
 function M.get_pane_id()
   return get_backend().get_pane_id(state)
 end

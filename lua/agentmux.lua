@@ -19,9 +19,19 @@
 ---@field provider string
 ---@field pane_id string
 
+local function resolve_default_provider()
+  if vim.fn.executable("codex") == 1 then
+    return "codex"
+  end
+  if vim.fn.executable("agy") == 1 then
+    return "agy"
+  end
+  return "opencode"
+end
+
 ---@type AgentMuxConfig
 local cfg = {
-  provider = "codex",
+  provider = resolve_default_provider(),
   backend = "auto",
   providers = {
     opencode = {
@@ -38,6 +48,20 @@ local cfg = {
       end,
       tmux_stop_agent = function(pane_id)
         vim.system({ "tmux", "send-keys", "-t", pane_id, "C-d" })
+      end,
+    },
+    agy = {
+      command = { "agy" },
+      resume_args = function(session_id)
+        return { "--conversation", session_id }
+      end,
+      tmux_stop_agent = function(pane_id)
+        -- stylua: ignore
+        vim.system({
+          "tmux", "send-keys", "-t", pane_id,
+          -- clear prompt then exit opencode
+          "C-c", "C-c",
+        })
       end,
     },
   },

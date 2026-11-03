@@ -1,3 +1,12 @@
+local rumdl_args = {
+  -- enable markdown table formatting
+  "--config",
+  "MD060.enabled=true",
+  -- don't format URLs as <https://example.com>
+  "--config",
+  "MD034.enabled=false",
+}
+
 ---@type LazySpec
 return {
   {
@@ -59,28 +68,23 @@ return {
             return {}
           end
         end,
-        rumdl = function(bufnr)
-          local path = vim.uv.fs_realpath(vim.api.nvim_buf_get_name(bufnr))
-          assert(path)
-          local args = {
-            "--config",
-            "MD060.enabled=true", -- table format
-          }
-          if require("utils").is_temp_file(path) then
+        rumdl = {
+          prepend_args = rumdl_args,
+        },
+        rumdl_enforce_line_length = {
+          inherit = "rumdl",
+          prepend_args = function(_, ctx)
+            local args = vim.deepcopy(rumdl_args)
             vim.list_extend(args, {
               "--config",
-              "MD034.enabled=false", -- URLs should be formatted as links
-            })
-          else
-            vim.list_extend(args, {
-              "--config",
-              "MD013.line-length=80",
+              "MD013.line-length="
+                .. (vim.b[ctx.buf].rumdl_line_length or "80"),
               "--config",
               "MD013.reflow=true",
             })
-          end
-          return { prepend_args = args }
-        end,
+            return args
+          end,
+        },
         -- keep-sorted end
       },
 
@@ -131,6 +135,26 @@ return {
           range = range,
         })
       end, { range = true })
+
+      vim.api.nvim_create_user_command("RumdlEnforceLineLength", function(opts)
+        if opts.args ~= "" and not opts.args:match("^[1-9]%d*$") then
+          vim.notify(
+            "Line length must be a positive integer",
+            vim.log.levels.ERROR
+          )
+          return
+        end
+
+        local line_length = opts.args ~= "" and opts.args or "80"
+        vim.b.rumdl_line_length = line_length
+        require("conform").format({
+          formatters = { "rumdl_enforce_line_length" },
+          async = true,
+        })
+      end, {
+        nargs = "?",
+        desc = "Format Markdown with rumdl line length enforcement",
+      })
 
       vim.cmd.cabbrev("F", "Format")
     end,

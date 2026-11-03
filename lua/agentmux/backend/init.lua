@@ -1,4 +1,4 @@
----@alias AgentMuxBackendName "tmux" | "herdr" | "rex"
+---@alias AgentMuxBackendName "tmux" | "herdr" | "herdr-app" | "rex"
 
 ---@class AgentMuxState
 ---@field backend AgentMuxBackendName?
@@ -20,20 +20,30 @@ local M = {}
 local backends = {
   tmux = require("agentmux.backend.tmux"),
   herdr = require("agentmux.backend.herdr"),
+  ["herdr-app"] = require("agentmux.backend.herdr_app"),
   rex = require("agentmux.backend.rex"),
 }
 
+---@type AgentMuxBackendName?
+local detected
+
 ---@return AgentMuxBackendName
 function M.detect()
+  if detected then
+    return detected
+  end
+
   if require("flags").is_herdr then
-    return "herdr"
+    detected = "herdr"
+  elseif vim.env.REX_BLOCK and vim.env.REX_SESSION then
+    detected = "rex"
+  elseif vim.env.HC_TERMINAL_ID then
+    detected = "herdr-app"
+  else
+    detected = "tmux"
   end
 
-  if vim.env.REX_BLOCK and vim.env.REX_SESSION then
-    return "rex"
-  end
-
-  return "tmux"
+  return detected
 end
 
 ---@param name "auto" | AgentMuxBackendName | nil

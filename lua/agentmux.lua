@@ -9,6 +9,8 @@
 ---@field tmux_stop_agent? fun(pane_id: string) backend stop hook
 ---@field format_keys? fun(text: string): string[] construct tmux send-keys arguments from text to send
 ---@field resume_args? fun(session_id: string): string[] agent arguments that resume the given session
+---@field resume_last_args? string[] agent arguments that resume the most recent session (used by restart where session ids are unavailable, e.g. herdr-app)
+---@field herdr_app_args? string[] agent arguments added only under the herdr-app backend, before args
 
 ---@class AgentMuxConfig : AgentMuxOptions
 ---@field providers? table<string, AgentMuxProvider>
@@ -38,6 +40,7 @@ local cfg = {
       resume_args = function(session_id)
         return { "--session", session_id }
       end,
+      resume_last_args = { "--continue" },
       tmux_stop_agent = function(pane_id)
         vim.system({ "tmux", "send-keys", "-t", pane_id, "C-c", "C-d" })
       end,
@@ -46,6 +49,10 @@ local cfg = {
       resume_args = function(session_id)
         return { "resume", session_id }
       end,
+      resume_last_args = { "resume", "--last" },
+      -- `hc --skill`: Codex must run with --no-daemon, or its commands execute
+      -- outside herdr-core
+      herdr_app_args = { "--no-daemon" },
       tmux_stop_agent = function(pane_id)
         vim.system({ "tmux", "send-keys", "-t", pane_id, "C-d" })
       end,
@@ -55,6 +62,7 @@ local cfg = {
       resume_args = function(session_id)
         return { "--conversation", session_id }
       end,
+      resume_last_args = { "--continue" },
       tmux_stop_agent = function(pane_id)
         -- stylua: ignore
         vim.system({

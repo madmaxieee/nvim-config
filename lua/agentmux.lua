@@ -25,6 +25,9 @@ local function resolve_default_provider()
   if vim.fn.executable("codex") == 1 then
     return "codex"
   end
+  if vim.fn.executable("claude") == 1 then
+    return "claude"
+  end
   if vim.fn.executable("agy") == 1 then
     return "agy"
   end
@@ -55,6 +58,16 @@ local cfg = {
       herdr_app_args = { "--no-daemon" },
       tmux_stop_agent = function(pane_id)
         vim.system({ "tmux", "send-keys", "-t", pane_id, "C-d" })
+      end,
+    },
+    claude = {
+      resume_args = function(session_id)
+        return { "--resume", session_id }
+      end,
+      resume_last_args = { "--continue" },
+      tmux_stop_agent = function(pane_id)
+        -- Interrupt or clear the prompt, then exit.
+        vim.system({ "tmux", "send-keys", "-t", pane_id, "C-c", "C-c" })
       end,
     },
     agy = {
